@@ -1,0 +1,2 @@
+        .hero-gradient { background: linear-gradient(180deg, #0047BB 0%, #002D72 100%); }
+        .card-shadow:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: 0.3s; }
