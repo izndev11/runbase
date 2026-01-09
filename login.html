@@ -34,58 +34,153 @@
     </header>
 
 <section class="banner-login-final" 
-    style="position: relative; 
-           width: calc(100% - 20px); 
-           margin: 20px auto; 
-           border-radius: 40px; 
-           background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/fundo2.png'); 
-           background-size: cover; 
-           background-position: center; 
-           background-repeat: no-repeat; 
-           min-height: 850px; 
-           display: flex; 
-           justify-content: center; 
-           align-items: center;
-           /* FONTE ADICIONADA AQUI */
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    style="position: relative; width: calc(100% - 20px); margin: 20px auto; border-radius: 40px; background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/fundo2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 850px; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-    <div class="login-card" style="background-color: #ffffff !important; padding: 40px; border-radius: 30px; width: 90%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        
-        <h3 style="color: #333 !important; font-size: 24px; margin-bottom: 10px; font-weight: 600;">Login para participantes</h3>
-        <p style="color: #666 !important; margin-bottom: 25px;">Você é um organizador? <a href="#" style="color: #0095ff; text-decoration: none; font-weight: bold;">Clique aqui.</a></p>
+    <div id="loginCard" style="background-color: #ffffff !important; padding: 40px; border-radius: 30px; width: 90%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center;">
+        <h3 style="color: #333; font-size: 24px; margin-bottom: 10px;">Login para participantes</h3>
+        <p style="color: #666;">Você é um organizador? <a href="#" style="color: #0095ff; text-decoration: none; font-weight: bold;">Clique aqui.</a></p>
         
         <form>
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label style="color: #333 !important; font-weight: bold; font-size: 13px; display: block; margin-bottom: 8px;">E-mail ou Documento de Identificação</label>
-                <input type="text" placeholder="O seu e-mail@dominio.com" style="width: 100%; padding: 14px; border: 1.5px solid #0095ff; border-radius: 12px; outline: none !important; color: #333 !important; box-sizing: border-box; font-family: inherit;">
-            </div>
-            
             <div style="text-align: left; margin-bottom: 15px;">
-                <label style="color: #333 !important; font-weight: bold; font-size: 13px; display: block; margin-bottom: 8px;">Palavra-passe</label>
-                <input type="password" placeholder="********" style="width: 100%; padding: 14px; border: 1.5px solid #0095ff; border-radius: 12px; outline: none !important; color: #333 !important; box-sizing: border-box; font-family: inherit;">
-                <div style="text-align: right; margin-top: 5px;">
-                    <a href="#" style="color: #0095ff; text-decoration: none; font-size: 12px;">Esqueceu-se</a>
-                </div>
+                <label style="color: #333; font-weight: bold; font-size: 13px;">E-mail ou Documento de Identificação</label>
+                <input type="text" placeholder="O seu e-mail@dominio.com" style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
             </div>
-
-            <div style="background-color: #f9f9f9; border: 1px solid #d3d3d3; border-radius: 3px; padding: 10px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; height: 74px; width: 300px; margin-left: auto; margin-right: auto;">
-                <div style="display: flex; align-items: center;">
-                    <input type="checkbox" style="width: 24px; height: 24px; cursor: pointer; margin-right: 10px;">
-                    <span style="color: #333; font-size: 14px;">Não sou um robô</span>
-                </div>
-                <div style="text-align: center;">
-                    <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" width="30" height="30" alt="reCAPTCHA logo">
-                    <div style="font-size: 8px; color: #555;">reCAPTCHA</div>
-                    <div style="font-size: 7px; color: #555;">Privacidade - Termos</div>
-                </div>
+            <div style="text-align: left; margin-bottom: 15px;">
+                <label style="color: #333; font-weight: bold; font-size: 13px;">Palavra-passe</label>
+                <input type="password" placeholder="********" style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
             </div>
-            
-            <button type="submit" style="width: 100%; background-color: #0095ff; color: white !important; border: none; padding: 16px; border-radius: 35px; font-weight: bold; cursor: pointer; font-size: 16px; font-family: inherit;">ENTRAR</button>
+            <button type="submit" style="width: 100%; background-color: #0095ff; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; font-family: inherit;">ENTRAR</button>
         </form>
-        
-        <p style="margin-top: 25px; color: #666 !important;">Novo no Logo Sports? <a href="#" style="color: #0095ff; text-decoration: none; font-weight: bold;">Registar-me</a></p>
+        <p style="margin-top: 25px; color: #666;">Novo no Logo Sports? <a href="javascript:void(0)" onclick="abrirCadastro()" style="color: #0095ff; text-decoration: none; font-weight: bold;">Registar-me</a></p>
+    </div>
 
+   <div id="cadastroModal" style="display: none; position: absolute; background-color: #ffffff; padding: 30px; border-radius: 30px; width: 95%; max-width: 750px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 100; max-height: 90vh; overflow-y: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: #333; margin: 0;">Cadastro</h3>
+        <button onclick="fecharCadastro()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+    </div>
+
+    <form style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Nome</label>
+            <input type="text" placeholder="Seu nome" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Nascimento</label>
+            <input type="date" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Sobrenome</label>
+            <input type="text" placeholder="Seu sobrenome" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">País</label>
+            <select style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+                <option>Brasil</option>
+            </select>
+        </div>
+
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Documento (CPF)</label>
+            <input type="text" placeholder="000.000.000-00" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Gênero</label>
+            <div style="display: flex; gap: 15px;">
+                <label style="font-size: 12px; color: #333;"><input type="radio" name="genero"> Feminino</label>
+                <label style="font-size: 12px; color: #333;"><input type="radio" name="genero"> Masculino</label>
+            </div>
+        </div>
+
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Estado</label>
+            <select id="estado" onchange="carregarCidades()" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+                <option value="">Selecione o Estado</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Cidade</label>
+            <select id="cidade" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+                <option value="">Selecione a Cidade</option>
+            </select>
+        </div>
+
+        <div style="grid-column: span 2;">
+            <label style="font-size: 12px; font-weight: bold; color: #333;">E-mail</label>
+            <input type="email" placeholder="seuemail@exemplo.com" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Senha</label>
+            <input type="password" placeholder="********" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+        <div>
+            <label style="font-size: 12px; font-weight: bold; color: #333;">Confirmar Senha</label>
+            <input type="password" placeholder="********" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+        </div>
+
+        <button type="button" style="grid-column: span 2; background-color: #0095ff; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; font-family: inherit;">FINALIZAR CADASTRO</button>
+    </form>
+</div>
+        </form>
     </div>
 </section>
+
+<script>
+    function abrirCadastro() {
+        // Esconde o card de login
+        document.getElementById('loginCard').style.display = 'none';
+        // Mostra o card de cadastro
+        document.getElementById('cadastroModal').style.display = 'block';
+    }
+
+    function fecharCadastro() {
+        // Esconde o card de cadastro
+        document.getElementById('cadastroModal').style.display = 'none';
+        // Mostra o card de login novamente
+        document.getElementById('loginCard').style.display = 'block';
+    }
+
+    // Função para carregar estados do IBGE ao abrir a página
+window.onload = function() {
+    fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+        .then(response => response.json())
+        .then(data => {
+            const estadoSelect = document.getElementById('estado');
+            data.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado.sigla;
+                option.text = estado.nome;
+                estadoSelect.appendChild(option);
+            });
+        });
+};
+
+// Função para carregar cidades quando o estado mudar
+function carregarCidades() {
+    const estadoSigla = document.getElementById('estado').value;
+    const cidadeSelect = document.getElementById('cidade');
+    
+    cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
+
+    if (!estadoSigla) {
+        cidadeSelect.innerHTML = '<option value="">Selecione o Estado primeiro</option>';
+        return;
+    }
+
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSigla}/municipios`)
+        .then(response => response.json())
+        .then(data => {
+            cidadeSelect.innerHTML = '<option value="">Selecione a Cidade</option>';
+            data.forEach(cidade => {
+                const option = document.createElement('option');
+                option.value = cidade.nome;
+                option.text = cidade.nome;
+                cidadeSelect.appendChild(option);
+            });
+        });
+}
+</script>
 </body>
 </html>
