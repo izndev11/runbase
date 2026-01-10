@@ -14,9 +14,14 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
             <!-- Logo -->
-            <div class="text-2xl font-bold text-blue-700">
-                LOGO<span class="text-orange-500">SPORTS</span>
-            </div>
+             <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+    <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+        <img src="img/logosite.png" alt="Logo" 
+             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+             onmouseover="this.style.transform='scale(1.1)'" 
+             onmouseout="this.style.transform='scale(1.0)'">
+    </a>
+</div>
 
             <!-- Navegação -->
             <nav class="hidden md:flex space-x-6 font-medium">
@@ -34,29 +39,39 @@
     </header>
 
     <section class="text-white bg-cover bg-no-repeat" 
-    style="margin: 10px; 
+    style="margin: 20px 10px; 
            overflow: hidden; 
            border-radius: 40px; 
-           box-shadow: 0 0 5px rgba(0, 0, 0, 0.8); 
+           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
            background-position: center; 
+           background-size: cover; /* Garante que a imagem preencha tudo */
            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('img/fundo1.png');
-           height: 450px; 
+           
+           /* AUMENTEI AQUI: de 450px para 650px para igualar a sua Home */
+           min-height: 600px; 
+           
            display: flex; 
-           flex-direction: column; /* Empilha o texto verticalmente */
-           justify-content: center; /* Centraliza verticalmente */
-           align-items: center; /* Centraliza horizontalmente */
-           text-align: center; /* Garante que as linhas de texto fiquem no meio */
-           font-family: sans-serif;">
+           flex-direction: column; 
+           justify-content: center; 
+           align-items: center; 
+           text-align: center; 
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-    <h1 style="font-size: 48px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">
+    <h1 style="font-size: 56px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1;">
         O SEU <span style="color: #ff4800;">PRÓXIMO EVENTO</span> ESTÁ AQUI
     </h1>
 
-    <p style="font-size: 24px; font-weight: 400; opacity: 0.9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <p style="font-size: 26px; font-weight: 400; opacity: 0.9;">
         Confira o calendário completo.
     </p>
 
 </section>
-
+ <div class="search-container">
+  <div class="filter-group">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="Procurar eventos...">
+  </div>
+  <button class="btn-search">PROCURAR</button>
+</div>
 </body>
 </html>
