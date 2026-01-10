@@ -59,7 +59,7 @@
   
   /* POSICIONAMENTO PARA DESCER A BARRA */
   position: absolute;
-  bottom: 220px; /* Empurra para a borda de baixo. Se quiser mais baixo, aumente para -40px ou -50px */
+  bottom: 210px; /* Empurra para a borda de baixo. Se quiser mais baixo, aumente para -40px ou -50px */
   left: 50%;
   transform: translateX(-50%);
   margin: 0; /* Remova o margin auto anterior */
