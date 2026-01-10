@@ -1,91 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!-- Configurações básicas -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Plataforma de Inscrições - Corridas</title>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Script -->
-    <script src="js/script.js"></script>
+    
+    <style>
+        /* Estilo da barra de busca para ficar entre a foto e o corpo da página */
+        .search-overlap {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: 100%;
+            z-index: 40;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- ===== HEADER / MENU ===== -->
     <header class="bg-white sticky top-0 z-50 shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-            <!-- Logo -->
-          <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
-    <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
-        <img src="img/logosite.png" alt="Logo" 
-             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
-             onmouseover="this.style.transform='scale(1.1)'" 
-             onmouseout="this.style.transform='scale(1.0)'">
-    </a>
-</div>
+            <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+                <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+                    <img src="img/logosite.png" alt="Logo" 
+                         style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+                         onmouseover="this.style.transform='scale(1.1)'" 
+                         onmouseout="this.style.transform='scale(1.0)'">
+                </a>
+            </div>
 
-            <!-- Navegação -->
             <nav class="hidden md:flex space-x-6 font-medium">
-                <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+                <a href="index.html" class="text-blue-600">Página Inicial</a>
                 <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
                 <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
             </nav>
 
-            <!-- Botão de login -->
-            <a href="login.html"
-               class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-               Login
+            <a href="login.html" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+                Login
             </a>
         </div>
     </header>
 
-    <!-- ===== IMAGEM PRINCIPAL / BUSCA ===== -->
-    <section class="py-24 text-white bg-cover bg-no-repeat" style="margin: 10px; overflow: hidden; border-radius: 40px; box-shadow: 0 0 5px rgba(0, 0, 0, 0.8); background-position: center 70%; background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/imgpginicial.png');">
+    <section class="relative h-[600px] m-4 md:m-6 overflow-visible">
+        <div class="absolute inset-0 z-0 overflow-hidden rounded-[40px] shadow-2xl">
+            <img src="img/imgpginicial.png" class="w-full h-full object-cover" alt="Banner">
+            <div class="absolute inset-0 bg-black/30"></div>
+        </div>
 
-    <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-    <main class="container mx-auto px-4 py-12">
+        <div class="relative z-10 container mx-auto h-full px-10 flex flex-col justify-center">
+            <h2 class="text-white text-3xl font-black mb-6 drop-shadow-lg flex items-center">
+                <span class="w-2 h-8 bg-blue-500 mr-4 rounded-full"></span>
+                Próximos Eventos
+            </h2>
 
-        <h2 class="text-2xl font-bold mb-8 border-l-4 border-white-600 pl-3">
-            Eventos
-        </h2>
-
-        <!-- Grid de eventos -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-
-                <!-- texto -->
-                <div class="card-container">
-            <div class="card">
-                <h2>Participe</h2>
-                <p>Inscreva-se nas melhores corridas e eventos</p>
-                <a href="calendario.html" class="btn-blue">Calendário</a>
+            <div class="bg-white p-8 rounded-[32px] shadow-2xl max-w-sm">
+                <h3 class="text-3xl font-extrabold text-gray-900 mb-3">Participe</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed">Inscreva-se nas melhores corridas e eventos esportivos.</p>
+                <a href="calendario.html" class="block text-center bg-blue-600 text-white px-6 py-4 rounded-2xl font-black hover:bg-blue-700 transition shadow-lg">
+                    CALENDÁRIO
+                </a>
             </div>
+        </div>
+
+        <div class="search-overlap">
+            <div class="max-w-4xl mx-auto px-4">
+                <div class="bg-white rounded-full shadow-2xl p-2 flex items-center border border-gray-100">
+                    <div class="flex items-center flex-grow px-6">
+                        <i class="fas fa-search text-gray-400 text-xl mr-4"></i>
+                        <input type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-700 py-3 text-lg">
+                    </div>
+                    <button class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
+                        Procurar
+                    </button>
+                </div>
             </div>
-                
+        </div>
+    </section>
+
+    <main class="flex-grow container mx-auto px-10 pt-24 pb-12">
+        </main>
+
+    <footer class="bg-[#1a1a1a] text-white pt-16 pb-8">
+        <div class="container mx-auto px-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Login</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
+                        <li><a href="#" class="hover:text-white transition">Termos de Compra</a></li>
+                    </ul>
+                    <div class="mt-8">
+                        <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
+                        <div class="flex gap-4">
+                            <a href="#" class="text-white text-xl hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-red-600 transition"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Sobre a plataforma</a></li>
+                        <li><a href="#" class="hover:text-white transition">Solicite um orçamento</a></li>
+                        <li><a href="#" class="hover:text-white transition">Suporte</a></li>
+                        <li><a href="#" class="hover:text-white transition">HUB</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Login</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Quem somos</a></li>
+                        <li><a href="#" class="hover:text-white transition">Trabalhe conosco</a></li>
+                        <li><a href="#" class="hover:text-white transition">Política de privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-gray-800 mb-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] text-gray-500">
+                    © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
+                </p>
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
+                    <div class="flex gap-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
                     </div>
                 </div>
             </div>
-            <!-- Fim card -->
-
         </div>
-    </main>
-
-    <div class="search-container">
-  <div class="filter-group">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Procurar eventos...">
-  </div>
-  <button class="btn-search">PROCURAR</button>
-</div>
+    </footer>
 
 </body>
 </html>

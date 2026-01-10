@@ -5,74 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário de Corridas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Ajuste para a barra de busca ficar entre a foto e o corpo */
+        .search-overlap {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: 100%;
+            max-width: 900px;
+            z-index: 40;
+            padding: 0 20px;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- ===== HEADER / MENU ===== -->
-    <header class="bg-white sticky top-0 z-50 shadow-lg">
+     <header class="bg-white sticky top-0 z-50 shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-            <!-- Logo -->
-             <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
-    <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
-        <img src="img/logosite.png" alt="Logo" 
-             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
-             onmouseover="this.style.transform='scale(1.1)'" 
-             onmouseout="this.style.transform='scale(1.0)'">
-    </a>
-</div>
+            <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+                <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+                    <img src="img/logosite.png" alt="Logo" 
+                         style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+                         onmouseover="this.style.transform='scale(1.1)'" 
+                         onmouseout="this.style.transform='scale(1.0)'">
+                </a>
+            </div>
 
-            <!-- Navegação -->
             <nav class="hidden md:flex space-x-6 font-medium">
-                <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+                <a href="index.html" class="text-blue-600">Página Inicial</a>
                 <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
                 <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
             </nav>
 
-            <!-- Botão de login -->
-            <a href="login.html"
-               class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-               Login
+            <a href="login.html" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+                Login
             </a>
         </div>
     </header>
 
-    <section class="text-white bg-cover bg-no-repeat" 
-    style="margin: 20px 10px; 
-           overflow: hidden; 
-           border-radius: 40px; 
-           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
-           background-position: center; 
-           background-size: cover; /* Garante que a imagem preencha tudo */
-           background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('img/fundo1.png');
-           
-           /* AUMENTEI AQUI: de 450px para 650px para igualar a sua Home */
-           min-height: 600px; 
-           margin-top: 17px;
-           
-           display: flex; 
-           flex-direction: column; 
-           justify-content: center; 
-           align-items: center; 
-           text-align: center; 
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <section class="relative text-white bg-cover bg-no-repeat" 
+        style="margin: 20px 10px; 
+               overflow: visible; /* Mudei para visible para a barra de busca não sumir */
+               border-radius: 40px; 
+               box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+               background-position: center; 
+               background-size: cover; 
+               background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('img/fundo1.png');
+               min-height: 600px; 
+               margin-top: 17px;
+               display: flex; 
+               flex-direction: column; 
+               justify-content: center; 
+               align-items: center; 
+               text-align: center; 
+               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-    <h1 style="font-size: 56px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1;">
-        O SEU <span style="color: #ff4800;">PRÓXIMO EVENTO</span> ESTÁ AQUI
-    </h1>
+        <h1 style="font-size: 56px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1;">
+            O SEU <span style="color: #ff4800;">PRÓXIMO EVENTO</span> ESTÁ AQUI
+        </h1>
 
-    <p style="font-size: 26px; font-weight: 400; opacity: 0.9;">
-        Confira o calendário completo.
-    </p>
+        <p style="font-size: 26px; font-weight: 400; opacity: 0.9;">
+            Confira o calendário completo.
+        </p>
 
-</section>
- <div class="search-container">
-  <div class="filter-group">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Procurar eventos...">
-  </div>
-  <button class="btn-search">PROCURAR</button>
-</div>
+        <div class="search-overlap">
+            <div class="bg-white rounded-full shadow-2xl p-2 flex items-center border border-gray-100">
+                <div class="flex items-center flex-grow px-6">
+                    <i class="fas fa-search text-gray-400 text-xl mr-4"></i>
+                    <input type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-800 py-3 text-lg bg-transparent">
+                </div>
+                <button class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
+                    PROCURAR
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <main class="flex-grow pt-20">
+        </main>
+
+    <footer class="bg-[#1a1a1a] text-white pt-16 pb-8 mt-auto">
+        <div class="container mx-auto px-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Login</a></li>
+                        <li><a href="#" class="hover:text-white">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white">Central de Ajuda</a></li>
+                        <li><a href="#" class="hover:text-white">Termos de Compra</a></li>
+                    </ul>
+                    <div class="mt-8">
+                        <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
+                        <div class="flex gap-4">
+                            <a href="#" class="text-white text-xl hover:text-blue-500"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-pink-500"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-red-600"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Sobre a plataforma</a></li>
+                        <li><a href="#" class="hover:text-white">Solicite um orçamento</a></li>
+                        <li><a href="#" class="hover:text-white">Suporte</a></li>
+                        <li><a href="#" class="hover:text-white">HUB</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Login</a></li>
+                        <li><a href="#" class="hover:text-white">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white">Central de Ajuda</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Quem somos</a></li>
+                        <li><a href="#" class="hover:text-white">Trabalhe conosco</a></li>
+                        <li><a href="#" class="hover:text-white">Política de privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-gray-800 mb-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] text-gray-500">
+                    © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
+                </p>
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
+                    <div class="flex gap-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>

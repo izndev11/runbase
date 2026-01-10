@@ -5,37 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organização</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 
-    <!-- ===== HEADER / MENU ===== -->
     <header class="bg-white sticky top-0 z-50 shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-            <!-- Logo -->
-             <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
-    <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
-        <img src="img/logosite.png" alt="Logo" 
-             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
-             onmouseover="this.style.transform='scale(1.1)'" 
-             onmouseout="this.style.transform='scale(1.0)'">
-    </a>
-</div>
+            <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+                <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+                    <img src="img/logosite.png" alt="Logo" 
+                         style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+                         onmouseover="this.style.transform='scale(1.1)'" 
+                         onmouseout="this.style.transform='scale(1.0)'">
+                </a>
+            </div>
 
-            <!-- Navegação -->
             <nav class="hidden md:flex space-x-6 font-medium">
                 <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
                 <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
                 <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
             </nav>
 
-            <!-- Botão de login -->
             <a href="login.html"
                class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-               Login
+                Login
             </a>
         </div>
     </header>
+
+    <section class="relative overflow-hidden" 
+        style="margin: 20px 15px; 
+               border-radius: 40px; 
+               background-image: url('img/org1.png');
+               background-size: contain; 
+               background-position: center; 
+               background-repeat: no-repeat;
+               background-color: #fff; 
+               border: 1px solid rgba(0, 0, 0, 0.05); 
+               box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05); 
+               width: 80%; 
+               max-width: 1800px; 
+               margin-left: auto;
+               margin-right: auto;
+               aspect-ratio: 16 / 9; 
+               max-height: 900px; 
+               display: flex; 
+               align-items: center; 
+               padding: 0 8%;
+               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+        <div class="absolute inset-0 opacity-10 pointer-events-none" 
+             style="background-image: url('img/linhas_curvas.png'); 
+                    background-size: contain; 
+                    background-position: right; 
+                    background-repeat: no-repeat;">
+        </div>
+
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10">
+            <div class="text-left">
+                <h1 style="font-size: clamp(22px, 3.8vw, 46px); font-weight: 800; color: #1a1a1a; line-height: 1.1; margin-bottom: 24px;">
+                    Uma plataforma de vendas de inscrições para <span style="color: #0082ff;">corridas</span><br>
+                </h1>
+                <p style="font-size: clamp(14px, 1.5vw, 18px); color: #666; margin-bottom: 32px; max-width: 480px; line-height: 1.6;">
+                    O SpeedRun entrega experiências criadas para você que é apaixonado por corridas.
+                </p>
+                <a href="#" style="background-color: #0082ff; color: white; padding: 14px 32px; border-radius: 50px; font-weight: bold; text-decoration: none; box-shadow: 0 10px 25px rgba(0, 130, 255, 0.3); display: inline-block; transition: 0.3s; font-size: clamp(12px, 1.2vw, 16px);">
+                    SOLICITE SUA PROPOSTA AGORA
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="flex-grow"></div>
+
+    <footer class="bg-[#1a1a1a] text-white pt-16 pb-8">
+        <div class="container mx-auto px-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Login</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
+                        <li><a href="#" class="hover:text-white transition">Termos de Compra</a></li>
+                    </ul>
+                    <div class="mt-8">
+                        <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
+                        <div class="flex gap-4">
+                            <a href="#" class="text-white text-xl hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white text-xl hover:text-red-600 transition"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Sobre a plataforma</a></li>
+                        <li><a href="#" class="hover:text-white transition">Solicite um orçamento</a></li>
+                        <li><a href="#" class="hover:text-white transition">Suporte</a></li>
+                        <li><a href="#" class="hover:text-white transition">HUB</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Login</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Quem somos</a></li>
+                        <li><a href="#" class="hover:text-white transition">Trabalhe conosco</a></li>
+                        <li><a href="#" class="hover:text-white transition">Política de privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="border-gray-800 mb-8">
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] text-gray-500 uppercase font-bold">
+                    © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
+                </p>
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
+                    <div class="flex gap-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>
