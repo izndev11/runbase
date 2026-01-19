@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "prisma-client-js"
+  provider = "mysql"
 }
 
 model Evento {
