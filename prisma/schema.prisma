@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "mysql"
+  url      = "mysql://root:izanio2007@localhost:3306/sistemaCorridas"
+}
+
+datasource db {
+  provider = "prisma-client-js"
+}
+
+model Evento {
+  id    Int     @id @default(autoincrement())
+  nome  String
+  data  String
+  preco Float
+  vagas Int
+  inscricoes Inscricao[]
+}
+
+model Inscricao {
+  id          Int    @id @default(autoincrement())
+  usuarioId   Int
+  status      String @default("Pendente")
+  valor       Float
+  eventoId    Int
+  evento      Evento @relation(fields: [eventoId], references: [id])
+}

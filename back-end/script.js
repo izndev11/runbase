@@ -1,65 +1,70 @@
 const express = require('express');
 const cors = require('cors');
+const { PrismaClient } = require('@prisma/client'); // Importa a conexão com o banco
 
 const app = express();
+const prisma = new PrismaClient(); // Inicializa o Prisma
 
 app.use(cors());
 app.use(express.json());
 
-let eventos = [
-    { id: 1, nome: 'Corrida 1', data: '2026-03-02', preco: 45, vagas: 100 },
-    { id: 2, nome: 'Corrida 2', data: '2026-01-19', preco: 45, vagas: 100},
-    { id: 3, nome: 'Corrida 3', data: '2026-01-26', preco: 45, vagas: 100}
-];
-
-let inscricoes = [];
-
-// rota de busca de eventos (faz o campo procurar eventos apartir do filtro ou do texto digitado)//
-api.get('api/eventos', (req, res) => {
+// Rota de busca de eventos (Agora lendo do MySQL)
+app.get('/api/eventos', async (req, res) => { // Note o 'async'
     const termoBusca = req.query.nome;
 
-    if (termoBusca) {
-        const filtrados = eventos.filter(evento => evento.nome.toLowerCase().includes(termoBusca.toLowerCase()));
-        return res.json(filtrados);
+    try {
+        const eventosBanco = await prisma.evento.findMany({
+            where: termoBusca ? {
+                nome: { contains: termoBusca } // O Prisma faz o filtro direto no SQL
+            } : {}
+        });
+        return res.json(eventosBanco);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar eventos" });
     }
-
-    return res.json(eventos);
 });
 
-// rota de inscrição nos eventos //
-api.post('/api/inscrever', (req, res) => {
-    //envio do id do usuario, id do evento e categoria da inscrição//
-    const { usuarioId, eventoId, categoria } = req.body;
-    //verifica se há vagas disponíveis no evento//
-    const evento = eventos.find(evento => evento.id === eventoId);
+// Rota de inscrição (Agora salvando no MySQL)
+app.post('/api/inscrever', async (req, res) => {
+    const { usuarioId, eventoId } = req.body;
 
-    if (evento.vagas <= 0) {
-        return res.status(400).json({ mensagem: 'Evento sem vagas disponíveis.' });
+    // Busca o evento no banco para checar vagas
+    const evento = await prisma.evento.findUnique({
+        where: { id: eventoId }
+    });
+
+    if (!evento || evento.vagas <= 0) {
+        return res.status(400).json({ mensagem: 'Evento sem vagas ou não encontrado.' });
     }
 
-    const novaInscricao = {
-        idInscricao: Math.random().toString(36).substr(2, 9),
-        usuarioId,
-        eventoId,
-        status: 'Pendente', //fica como pendente até o pagamento ser confirmado//
-        valor: evento.preco,
-    };
+    // Cria a inscrição no banco e atualiza o evento em uma "Transação"
+    // Isso garante que se um falhar, o outro não acontece (segurança de dados)
+    try {
+        const resultado = await prisma.$transaction([
+            prisma.inscricao.create({
+                data: {
+                    usuarioId: parseInt(usuarioId),
+                    eventoId: eventoId,
+                    valor: evento.preco,
+                    status: 'Pendente'
+                }
+            }),
+            prisma.evento.update({
+                where: { id: eventoId },
+                data: { vagas: { decrement: 1 } } // Diminui o número de vagas no banco
+            })
+        ]);
 
-    inscricoes.push(novaInscricao);
-    evento.vagas--; //diminui o número de vagas disponíveis//
-
-    res.status(201).json({ 
-        mensagem: 'Inscrição realizada com sucesso.', 
-        inscricao: novaInscricao 
-    });
+        res.status(201).json({ 
+            mensagem: 'Inscrição salva no banco com sucesso!', 
+            inscricao: resultado[0] 
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao processar inscrição" });
+    }
 });
 
 const PORTA = 3000;
 app.listen(PORTA, () => {
     console.log(`Servidor rodando em http://localhost:${PORTA}`);
-    console.log("O seu front-end agora pode pedir dados para este endereço!");
 });
-
-
-
-
