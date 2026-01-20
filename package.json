@@ -1,6 +1,14 @@
 {
   "dependencies": {
     "@prisma/client": "^7.2.0",
+    "@prisma/config": "^7.2.0",
+    "@prisma/sdk": "^3.15.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "prisma": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.9"
   }
 }

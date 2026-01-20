@@ -68,3 +68,8 @@ const PORTA = 3000;
 app.listen(PORTA, () => {
     console.log(`Servidor rodando em http://localhost:${PORTA}`);
 });
+
+fetch('http://localhost:3000/api/eventos')
+  .then(res => res.json())
+  .then(data => console.log("✅ Conexão OK! Dados recebidos:", data))
+  .catch(err => console.error("❌ Erro de link: O Front não achou o Back", err));

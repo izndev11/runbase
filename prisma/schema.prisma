@@ -1,32 +1,56 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "mysql"
-  url      = "mysql://root:izanio2007@localhost:3306/sistemaCorridas"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
+}
+
+model Usuario {
+  id               Int         @id @default(autoincrement())
+  nome_completo             String
+  email            String      @unique
+  cpf              String      @unique
+  senha_hash            String
+  data_nascimento   DateTime
+  inscricoes       Inscricao[]
+  criadoEm         DateTime    @default(now())
 }
 
 model Evento {
-  id    Int     @id @default(autoincrement())
-  nome  String
-  data  String
-  preco Float
-  vagas Int
-  inscricoes Inscricao[]
+  id          Int         @id @default(autoincrement())
+  titulo      String
+  dataEvento  DateTime
+  local       String
+  categorias  Categoria[]
+  inscricoes  Inscricao[]
+}
+
+model Categoria {
+  id               Int         @id @default(autoincrement())
+  nome             String      // Ex: 5km, 10km, Kids
+  preco            Decimal     @db.Decimal(10, 2)
+  vagasTotais      Int
+  vagasDisponiveis Int
+  eventoId         Int
+  evento           Evento      @relation(fields: [eventoId], references: [id])
+  inscricoes       Inscricao[]
 }
 
 model Inscricao {
-  id          Int    @id @default(autoincrement())
-  usuarioId   Int
-  status      String @default("Pendente")
-  valor       Float
-  eventoId    Int
-  evento      Evento @relation(fields: [eventoId], references: [id])
+  id              String    @id @default(uuid())
+  status          String    @default("PENDENTE") // PENDENTE, PAGO, CANCELADO
+  tamanhoCamiseta String?
+  valorPago       Decimal   @db.Decimal(10, 2)
+  
+  usuarioId       Int
+  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
+  
+  eventoId        Int
+  evento          Evento    @relation(fields: [eventoId], references: [id])
+  
+  categoriaId     Int
+  categoria       Categoria @relation(fields: [categoriaId], references: [id])
+  
+  criadoEm        DateTime  @default(now())
 }

@@ -51,3 +51,8 @@ function carregarCidades() {
             });
         });
 }
+
+fetch('http://localhost:3000/api/eventos')
+  .then(res => res.json())
+  .then(dados => console.log("Conexão bem sucedida! Corridas:", dados))
+  .catch(err => console.error("O Front ainda não vê o Back. Verifique se o node server.js está rodando."));
