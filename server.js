@@ -3,7 +3,9 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client'); // Importa a conexão com o banco
 
 const app = express();
-const prisma = new PrismaClient(); // Inicializa o Prisma
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DATABASE_URL,
+}); // Inicializa o Prisma
 
 app.use(cors());
 app.use(express.json());
