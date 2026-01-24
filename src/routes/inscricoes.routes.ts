@@ -135,4 +135,46 @@ router.get("/minhas", authMiddleware, async (req, res) => {
   }
 });
 
+//ROTA PAGAR INSCRIÇÃO//
+router.patch("/:id/pagar", authMiddleware, async (req, res) => {
+  try {
+    const userId = (req.user as any).userId;
+    const id = req.params.id as string;
+
+    const inscricao = await prisma.inscricao.findUnique({
+      where: { id },
+    });
+
+    if (!inscricao) {
+      return res.status(404).json({ error: "Inscrição não encontrada" });
+    }
+
+    if (inscricao.usuarioId !== userId) {
+      return res.status(403).json({ error: "Acesso negado" });
+    }
+
+    if (inscricao.status !== "PENDENTE") {
+      return res.status(400).json({
+        error: "Inscrição não pode ser paga",
+        statusAtual: inscricao.status,
+      });
+    }
+
+    const inscricaoPaga = await prisma.inscricao.update({
+      where: { id },
+      data: {
+        status: "PAGO",
+      },
+    });
+
+    return res.json({
+      message: "Pagamento realizado com sucesso",
+      inscricao: inscricaoPaga,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao processar pagamento" });
+  }
+});
+
 export default router;
