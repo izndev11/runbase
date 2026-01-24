@@ -4,7 +4,35 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Seed rodando sem dor de cabeça 🚀')
+  const usuario = await prisma.usuario.create({
+    data: {
+      nome_completo: 'João Silva',
+      email: 'joao@email.com',
+      cpf: '12345678900',
+      senha_hash: 'hash123',
+      data_nascimento: new Date('1995-01-01'),
+    },
+  })
+
+  const evento = await prisma.evento.create({
+    data: {
+      titulo: 'Corrida da Cidade',
+      dataEvento: new Date('2026-05-10'),
+      local: 'São Paulo',
+    },
+  })
+
+  await prisma.categoria.create({
+    data: {
+      nome: '5km',
+      preco: 89.9,
+      vagasTotais: 100,
+      vagasDisponiveis: 100,
+      eventoId: evento.id,
+    },
+  })
+
+  console.log('Seed concluído 🚀')
 }
 
 main()
