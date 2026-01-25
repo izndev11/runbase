@@ -232,4 +232,41 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/minhas", authMiddleware, async (req, res) => {
+  try {
+    const userId = (req.user as any).userId;
+
+    const inscricoes = await prisma.inscricao.findMany({
+      where: {
+        usuarioId: userId,
+      },
+      include: {
+        evento: {
+          select: {
+            id: true,
+            titulo: true,
+            dataEvento: true,
+            local: true,
+          },
+        },
+        categoria: {
+          select: {
+            id: true,
+            nome: true,
+            preco: true,
+          },
+        },
+      },
+      orderBy: {
+        criadoEm: "desc",
+      },
+    });
+
+    return res.json(inscricoes);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao listar inscrições" });
+  }
+});
+
 export default router;
