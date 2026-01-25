@@ -177,4 +177,59 @@ router.patch("/:id/pagar", authMiddleware, async (req, res) => {
   }
 });
 
+//ROTA CANCELAR INSCRIÇÃO//
+router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
+  try {
+    const userId = (req.user as any).userId;
+    const id = req.params.id as string;
+
+    const inscricao = await prisma.inscricao.findUnique({
+      where: { id },
+      include: { categoria: true },
+    });
+
+    if (!inscricao) {
+      return res.status(404).json({ error: "Inscrição não encontrada" });
+    }
+
+    if (inscricao.usuarioId !== userId) {
+      return res.status(403).json({ error: "Acesso negado" });
+    }
+
+    if (inscricao.status === "PAGO") {
+      return res.status(400).json({
+        error: "Inscrição paga não pode ser cancelada",
+      });
+    }
+
+    if (inscricao.status === "CANCELADO") {
+      return res.status(400).json({
+        error: "Inscrição já está cancelada",
+      });
+    }
+
+    const inscricaoCancelada = await prisma.inscricao.update({
+      where: { id },
+      data: { status: "CANCELADO" },
+    });
+
+    await prisma.categoria.update({
+      where: { id: inscricao.categoriaId },
+      data: {
+        vagasDisponiveis: {
+          increment: 1,
+        },
+      },
+    });
+
+    return res.json({
+      message: "Inscrição cancelada com sucesso",
+      inscricao: inscricaoCancelada,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao cancelar inscrição" });
+  }
+});
+
 export default router;
