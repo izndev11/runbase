@@ -7,6 +7,7 @@ import categoriasRoutes from "./routes/categorias.routes";
 import inscricoesRoutes from "./routes/inscricoes.routes";
 import authRoutes from "./routes/auth.routes";
 
+
 const app = express();
 
 app.use(express.json());

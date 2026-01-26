@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middlewares/auth";
+import { apiError } from "../utils/apiError";
 
 const router = Router();
 
@@ -100,8 +101,9 @@ router.get("/me", authMiddleware, async (req, res) => {
     });
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuário não encontrado" });
-    }
+  return apiError(res, 404, "Usuário não encontrado");
+}
+
 
     return res.json(usuario);
   } catch (error) {

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../middlewares/auth";
+import { apiError } from "../utils/apiError";
 
 const router = Router();
 
@@ -146,7 +147,7 @@ router.patch("/:id/pagar", authMiddleware, async (req, res) => {
     });
 
     if (!inscricao) {
-      return res.status(404).json({ error: "Inscrição não encontrada" });
+      return apiError(res, 404, "Inscrição não encontrada");
     }
 
     if (inscricao.usuarioId !== userId) {
@@ -189,7 +190,7 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
     });
 
     if (!inscricao) {
-      return res.status(404).json({ error: "Inscrição não encontrada" });
+      return apiError(res, 404, "Inscrição não encontrada");
     }
 
     if (inscricao.usuarioId !== userId) {
