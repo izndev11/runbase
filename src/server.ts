@@ -6,16 +6,17 @@ import eventosRoutes from "./routes/eventos.routes";
 import categoriasRoutes from "./routes/categorias.routes";
 import inscricoesRoutes from "./routes/inscricoes.routes";
 import authRoutes from "./routes/auth.routes";
-
+import routes from "./routes/index";
 
 const app = express();
 
 app.use(express.json());
 app.use("/usuarios", usuariosRoutes);
 app.use("/eventos", eventosRoutes);
-app.use("/categorias", categoriasRoutes);
-app.use("/inscricoes", inscricoesRoutes);
+app.use("/api/categorias", categoriasRoutes);
+app.use("/api/inscricoes", inscricoesRoutes);
 app.use("/auth", authRoutes);
+app.use("/api", routes);
 
 app.get("/", (req, res) => {
   res.send("API rodando 🚀");

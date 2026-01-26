@@ -56,50 +56,40 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/", authMiddleware, async (req, res) => {
-  try {
-    const userId = (req.user as any).userId;
-    const { eventoId, categoriaId, tamanhoCamiseta } = req.body;
+  const { eventoId, categoriaId, tamanhoCamiseta } = req.body;
+  const userId = (req.user as any).userId;
 
-    if (!eventoId || !categoriaId) {
-      return res.status(400).json({
-        error: "eventoId e categoriaId são obrigatórios",
-      });
-    }
-
-    const categoria = await prisma.categoria.findUnique({
-      where: { id: categoriaId },
-    });
-
-    if (!categoria) {
-      return res.status(404).json({ error: "Categoria não encontrada" });
-    }
-
-    if (categoria.vagasDisponiveis <= 0) {
-      return res.status(400).json({ error: "Categoria sem vagas disponíveis" });
-    }
-
-    const inscricao = await prisma.inscricao.create({
-      data: {
-        usuarioId: userId,
-        eventoId,
-        categoriaId,
-        tamanhoCamiseta,
-        valorPago: categoria.preco,
-      },
-    });
-
-    await prisma.categoria.update({
-      where: { id: categoriaId },
-      data: {
-        vagasDisponiveis: categoria.vagasDisponiveis - 1,
-      },
-    });
-
-    return res.status(201).json(inscricao);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Erro ao criar inscrição" });
+  if (!eventoId || !categoriaId) {
+    return res.status(400).json({ error: "Dados obrigatórios faltando" });
   }
+
+  const categoria = await prisma.categoria.findUnique({
+    where: { id: categoriaId },
+  });
+
+  if (!categoria || categoria.vagasDisponiveis <= 0) {
+    return res.status(400).json({ error: "Categoria sem vagas disponíveis" });
+  }
+
+  const inscricao = await prisma.inscricao.create({
+    data: {
+      usuarioId: userId,
+      eventoId,
+      categoriaId,
+      tamanhoCamiseta,
+      valorPago: categoria.preco,
+      status: "PENDENTE",
+    },
+  });
+
+  await prisma.categoria.update({
+    where: { id: categoriaId },
+    data: {
+      vagasDisponiveis: { decrement: 1 },
+    },
+  });
+
+  res.status(201).json(inscricao);
 });
 
 router.get("/minhas", authMiddleware, async (req, res) => {
@@ -138,44 +128,30 @@ router.get("/minhas", authMiddleware, async (req, res) => {
 
 //ROTA PAGAR INSCRIÇÃO//
 router.patch("/:id/pagar", authMiddleware, async (req, res) => {
-  try {
-    const userId = (req.user as any).userId;
-    const id = req.params.id as string;
+  const { id } = req.params;
 
-    const inscricao = await prisma.inscricao.findUnique({
-      where: { id },
-    });
+  const inscricao = await prisma.inscricao.findUnique({
+    where: { id },
+  });
 
-    if (!inscricao) {
-      return apiError(res, 404, "Inscrição não encontrada");
-    }
-
-    if (inscricao.usuarioId !== userId) {
-      return res.status(403).json({ error: "Acesso negado" });
-    }
-
-    if (inscricao.status !== "PENDENTE") {
-      return res.status(400).json({
-        error: "Inscrição não pode ser paga",
-        statusAtual: inscricao.status,
-      });
-    }
-
-    const inscricaoPaga = await prisma.inscricao.update({
-      where: { id },
-      data: {
-        status: "PAGO",
-      },
-    });
-
-    return res.json({
-      message: "Pagamento realizado com sucesso",
-      inscricao: inscricaoPaga,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Erro ao processar pagamento" });
+  if (!inscricao) {
+    return res.status(404).json({ error: "Inscrição não encontrada" });
   }
+
+  if (inscricao.status !== "PENDENTE") {
+    return res
+      .status(400)
+      .json({ error: "Inscrição não está pendente" });
+  }
+
+  const inscricaoPaga = await prisma.inscricao.update({
+    where: { id },
+    data: {
+      status: "PAGO",
+    },
+  });
+
+  res.json(inscricaoPaga);
 });
 
 //ROTA CANCELAR INSCRIÇÃO//

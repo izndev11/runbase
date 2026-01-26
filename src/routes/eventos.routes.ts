@@ -4,27 +4,22 @@ import { authMiddleware } from "../middlewares/auth";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const { titulo, dataEvento, local } = req.body;
+router.post("/", authMiddleware, async (req, res) => {
+  const { titulo, dataEvento, local } = req.body;
 
-    if (!titulo || !dataEvento || !local) {
-      return res.status(400).json({ error: "Dados obrigatórios faltando" });
-    }
-
-    const evento = await prisma.evento.create({
-      data: {
-        titulo,
-        dataEvento: new Date(dataEvento),
-        local
-      }
-    });
-
-    return res.status(201).json(evento);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Erro ao criar evento" });
+  if (!titulo || !dataEvento || !local) {
+    return res.status(400).json({ error: "Dados obrigatórios faltando" });
   }
+
+  const evento = await prisma.evento.create({
+    data: {
+      titulo,
+      dataEvento: new Date(dataEvento),
+      local,
+    },
+  });
+
+  res.status(201).json(evento);
 });
 
 router.get("/", async (req, res) => {
