@@ -126,6 +126,26 @@ router.get("/minhas", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/me", authMiddleware, async (req, res) => {
+  const usuarioId = (req.user as any).id;
+  
+  const inscricoes = await prisma.inscricao.findMany({
+    where: {
+      usuarioId,
+    },
+    include: {
+      evento: true,
+      categoria: true,
+    },
+    orderBy: {
+      criadoEm: "desc",
+    },
+  });
+
+  res.json(inscricoes);
+});
+
+
 //ROTA PAGAR INSCRIÇÃO//
 router.patch("/:id/pagar", authMiddleware, async (req, res) => {
   const { id } = req.params;
