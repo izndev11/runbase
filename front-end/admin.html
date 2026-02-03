@@ -96,7 +96,12 @@
   </div>
 
   <div class="mt-8 bg-white rounded-2xl shadow-lg p-6">
-    <h2 class="text-xl font-bold mb-4">Inscrições do evento</h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold">Inscrições do evento</h2>
+      <button id="adminExportCsv" class="hidden bg-emerald-600 text-white px-4 py-2 rounded-full font-bold hover:bg-emerald-700">
+        Exportar CSV
+      </button>
+    </div>
     <div id="adminInscricoesList" class="text-gray-700"></div>
   </div>
 </main>
