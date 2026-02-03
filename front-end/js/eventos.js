@@ -3,7 +3,7 @@ const listEl = document.getElementById("eventosList");
 const statusEl = document.getElementById("eventosStatus");
 
 if (!token) {
-  alert("FaÃ§a login primeiro");
+  alert("Faça login primeiro");
   window.location.href = "login.html";
 }
 
@@ -22,23 +22,37 @@ function renderEventos(eventos) {
 
   eventos.forEach((evento) => {
     const card = document.createElement("div");
-    card.className = "bg-white p-5 rounded-2xl shadow-md";
+    card.className = "bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100";
 
     const dataFmt = evento.dataEvento
       ? new Date(evento.dataEvento).toLocaleDateString("pt-BR")
       : "-";
 
     card.innerHTML = `
-      <h3 class="text-xl font-bold mb-1">${evento.titulo}</h3>
-      <p class="text-gray-600 mb-1">Data: ${dataFmt}</p>
-      <p class="text-gray-600 mb-4">Local: ${evento.local}</p>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-700">
-        Inscrever-se
-      </button>
-      <div class="mt-3 text-sm text-gray-600" data-status></div>
-      <button class="mt-3 hidden bg-green-600 text-white px-4 py-2 rounded-full font-bold hover:bg-green-700" data-pay>
-        Pagar
-      </button>
+      <div class="h-28 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-400"></div>
+      <div class="p-5">
+        <div class="flex items-center gap-2 mb-2 text-sm text-gray-600">
+          <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Data: ${dataFmt}</span>
+          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Local: ${evento.local}</span>
+        </div>
+        <h3 class="text-xl font-bold mb-3">${evento.titulo}</h3>
+        <div class="mb-3 text-sm">
+          <a class="text-blue-600 font-semibold hover:underline" href="minhas-inscricoes.html">
+            Ver minhas inscrições
+          </a>
+        </div>
+
+        <div class="flex gap-3 items-center">
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-700">
+            Inscrever-se
+          </button>
+          <button class="hidden bg-green-600 text-white px-4 py-2 rounded-full font-bold hover:bg-green-700" data-pay>
+            Pagar
+          </button>
+        </div>
+
+        <div class="mt-3 text-sm text-gray-600" data-status></div>
+      </div>
     `;
 
     const btn = card.querySelector("button");
@@ -48,7 +62,7 @@ function renderEventos(eventos) {
     btn.addEventListener("click", async () => {
       try {
         btn.disabled = true;
-        status.textContent = "Criando inscriÃ§Ã£o...";
+        status.textContent = "Criando inscrição...";
 
         const response = await fetch("http://localhost:3000/api/inscricoes", {
           method: "POST",
@@ -67,12 +81,12 @@ function renderEventos(eventos) {
           return;
         }
 
-        status.textContent = "InscriÃ§Ã£o criada. Clique em pagar para finalizar.";
+        status.textContent = "Inscrição criada. Clique em pagar para finalizar.";
         payBtn.classList.remove("hidden");
         payBtn.dataset.inscricaoId = data.id;
       } catch (err) {
         console.error(err);
-        status.textContent = "Erro de conexÃ£o com o servidor";
+        status.textContent = "Erro de conexão com o servidor";
         btn.disabled = false;
       }
     });
@@ -106,7 +120,7 @@ function renderEventos(eventos) {
         status.textContent = "Pagamento registrado!";
       } catch (err) {
         console.error(err);
-        status.textContent = "Erro de conexÃ£o com o servidor";
+        status.textContent = "Erro de conexao com o servidor";
         payBtn.disabled = false;
       }
     });
@@ -130,7 +144,7 @@ async function carregarEventos() {
     renderEventos(eventos);
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexÃ£o com o servidor");
+    setStatus("Erro de conexão com o servidor");
   }
 }
 

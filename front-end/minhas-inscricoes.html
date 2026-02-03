@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eventos</title>
+  <title>Minhas Inscrições</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -22,8 +22,8 @@
 
     <nav class="hidden md:flex space-x-6 font-medium">
       <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
-      <a href="eventos.html" class="text-blue-600 font-bold">Eventos</a>
-      <a href="minhas-inscricoes.html" class="hover:text-blue-600">Minhas Inscrições</a>
+      <a href="eventos.html" class="hover:text-blue-600">Eventos</a>
+      <a href="minhas-inscricoes.html" class="text-blue-600 font-bold">Minhas Inscrições</a>
     </nav>
 
     <a href="login.html"
@@ -34,12 +34,15 @@
 </header>
 
 <main class="container mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6">Eventos disponÃ­veis</h1>
+  <div class="mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold">Minhas inscrições</h1>
+    <p class="text-gray-600 mt-2">Acompanhe o status das suas inscrições.</p>
+  </div>
 
-  <div id="eventosStatus" class="mb-4 text-gray-600"></div>
-  <div id="eventosList" class="grid gap-6 md:grid-cols-2"></div>
+  <div id="inscricoesStatus" class="mb-4 text-gray-600"></div>
+  <div id="inscricoesList" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
 </main>
 
-<script src="./js/eventos.js"></script>
+<script src="./js/minhas-inscricoes.js"></script>
 </body>
 </html>
