@@ -4,134 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
-    <script src="script.js"></script>
 </head>
+
 <body class="bg-gray-50 font-sans text-gray-800">
 
-    <!-- ===== HEADER / MENU ===== -->
-    <header class="bg-white sticky top-0 z-50 shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+<!-- ===== HEADER / MENU ===== -->
+<header class="bg-white sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
 
-            <!-- Logo -->
-            <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
-    <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
-        <img src="img/logosite.png" alt="Logo" 
-             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
-             onmouseover="this.style.transform='scale(1.1)'" 
-             onmouseout="this.style.transform='scale(1.0)'">
-    </a>
-</div>
-
-            <!-- Navegação -->
-            <nav class="hidden md:flex space-x-6 font-medium">
-                <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
-                <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
-                <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
-            </nav>
-
-            <!-- Botão de login -->
-            <a href="login.html"
-               class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-               Login
+        <!-- Logo -->
+        <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+            <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+                <img src="img/logosite.png" alt="Logo"
+                     style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+                     onmouseover="this.style.transform='scale(1.1)'"
+                     onmouseout="this.style.transform='scale(1.0)'">
             </a>
         </div>
-    </header>
 
-<section class="banner-login-final" 
-    style="position: relative; width: calc(100% - 20px); margin: 20px auto; border-radius: 40px; background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/fundo2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 850px; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <!-- Navegação -->
+        <nav class="hidden md:flex space-x-6 font-medium">
+            <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+            <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
+            <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
+        </nav>
 
-    <div id="loginCard" style="background-color: #ffffff !important; padding: 40px; border-radius: 30px; width: 90%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center;">
-        <h3 style="color: #333; font-size: 24px; margin-bottom: 10px;">Login para participantes</h3>
-        <p style="color: #666;">Você é um organizador? <a href="#" style="color: #0095ff; text-decoration: none; font-weight: bold;">Clique aqui.</a></p>
-        
-        <form>
-            <div style="text-align: left; margin-bottom: 15px;">
-                <label style="color: #333; font-weight: bold; font-size: 13px;">E-mail ou Documento de Identificação</label>
-                <input type="text" placeholder="O seu e-mail@dominio.com" style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-            </div>
-            <div style="text-align: left; margin-bottom: 15px;">
-                <label style="color: #333; font-weight: bold; font-size: 13px;">Palavra-passe</label>
-                <input type="password" placeholder="********" style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-            </div>
-            <button type="submit" style="width: 100%; background-color: #0095ff; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; font-family: inherit;">ENTRAR</button>
-        </form>
-        <p style="margin-top: 25px; color: #666;">Novo no Logo Sports? <a href="javascript:void(0)" onclick="abrirCadastro()" style="color: #0095ff; text-decoration: none; font-weight: bold;">Registar-me</a></p>
+        <!-- Botão de login -->
+        <a href="login.html"
+           class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+            Login
+        </a>
     </div>
+</header>
 
-   <div id="cadastroModal" style="display: none; position: absolute; background-color: #ffffff; padding: 30px; border-radius: 30px; width: 95%; max-width: 750px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 100; max-height: 90vh; overflow-y: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="color: #333; margin: 0;">Cadastro</h3>
-        <button onclick="fecharCadastro()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
-    </div>
+<!-- ===== LOGIN ===== -->
+<section class="banner-login-final"
+         style="position: relative; width: calc(100% - 20px); margin: 20px auto; border-radius: 40px;
+         background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('img/fundo2.png');
+         background-size: cover; background-position: center; min-height: 850px;
+         display: flex; justify-content: center; align-items: center;">
 
-    <form style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Nome</label>
-            <input type="text" placeholder="Seu nome" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Nascimento</label>
-            <input type="date" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
+    <div id="loginCard"
+         style="background-color: #ffffff; padding: 40px; border-radius: 30px;
+         width: 90%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center;">
 
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Sobrenome</label>
-            <input type="text" placeholder="Seu sobrenome" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">País</label>
-            <select style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-                <option>Brasil</option>
-            </select>
-        </div>
+        <h3 style="font-size: 24px; margin-bottom: 10px;">Login para participantes</h3>
+        <p style="color: #666;">
+            Você é um organizador?
+            <a href="#" style="color: #0095ff; font-weight: bold;">Clique aqui.</a>
+        </p>
 
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Documento (CPF)</label>
-            <input type="text" placeholder="000.000.000-00" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
-        <div style="display: flex; flex-direction: column; justify-content: center;">
-            <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Gênero</label>
-            <div style="display: flex; gap: 15px;">
-                <label style="font-size: 12px; color: #333;"><input type="radio" name="genero"> Feminino</label>
-                <label style="font-size: 12px; color: #333;"><input type="radio" name="genero"> Masculino</label>
+        <!-- FORM LOGIN -->
+        <form id="loginForm">
+
+
+            <div style="text-align: left; margin-bottom: 15px;">
+                <label style="font-weight: bold; font-size: 13px;">E-mail</label>
+                <input
+                        type="email"
+                        id="email"
+                        placeholder="O seu e-mail@dominio.com"
+                        style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
             </div>
-        </div>
 
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Estado</label>
-            <select id="estado" onchange="carregarCidades()" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-                <option value="">Selecione o Estado</option>
-            </select>
-        </div>
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Cidade</label>
-            <select id="cidade" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-                <option value="">Selecione a Cidade</option>
-            </select>
-        </div>
+            <div style="text-align: left; margin-bottom: 15px;">
+                <label style="font-weight: bold; font-size: 13px;">Senha</label>
+                <input
+                        type="password"
+                        id="senha"
+                        placeholder="********"
+                        style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
 
-        <div style="grid-column: span 2;">
-            <label style="font-size: 12px; font-weight: bold; color: #333;">E-mail</label>
-            <input type="email" placeholder="seuemail@exemplo.com" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
+            <button
+                    type="submit"
+                    style="width: 100%; background-color: #0095ff; color: white;
+                    border: none; padding: 15px; border-radius: 30px;
+                    font-weight: bold; cursor: pointer; font-size: 16px;">
+                ENTRAR
+            </button>
 
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Senha</label>
-            <input type="password" placeholder="********" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
-        <div>
-            <label style="font-size: 12px; font-weight: bold; color: #333;">Confirmar Senha</label>
-            <input type="password" placeholder="********" style="width: 100%; padding: 10px; border: 1.5px solid #0095ff; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
-        </div>
-
-        <button type="button" style="grid-column: span 2; background-color: #0095ff; color: white; border: none; padding: 15px; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; font-family: inherit;">FINALIZAR CADASTRO</button>
-    </form>
-</div>
         </form>
+
+        <p style="margin-top: 25px; color: #666;">
+            Novo no Logo Sports?
+            <a href="javascript:void(0)" onclick="abrirCadastro()"
+               style="color: #0095ff; font-weight: bold;">Registar-me</a>
+        </p>
     </div>
 </section>
+
+<!-- SCRIPT -->
+<script src="./js/auth.js"></script>
 
 </body>
 </html>

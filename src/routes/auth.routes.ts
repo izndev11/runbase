@@ -6,6 +6,9 @@ import jwt from "jsonwebtoken";
 const router = Router();
 
 router.post("/login", async (req, res) => {
+  console.log("🔥 LOGIN CHEGOU NO BACKEND 🔥");
+  console.log("BODY:", req.body);
+
   try {
     const { email, senha } = req.body;
 

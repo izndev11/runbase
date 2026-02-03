@@ -8,50 +8,55 @@ datasource db {
 }
 
 model Usuario {
-  id               Int         @id @default(autoincrement())
-  nome_completo             String
-  email            String      @unique
-  cpf              String      @unique
-  senha_hash            String
-  data_nascimento   DateTime
-  inscricoes       Inscricao[]
-  criadoEm         DateTime    @default(now())
+  id              Int         @id @default(autoincrement())
+  nome_completo   String
+  email           String      @unique
+  cpf             String      @unique
+  senha_hash      String
+  data_nascimento DateTime
+  inscricoes      Inscricao[]
+  criadoEm        DateTime    @default(now())
 }
 
 model Evento {
-  id          Int         @id @default(autoincrement())
-  titulo      String
-  dataEvento  DateTime
-  local       String
-  categorias  Categoria[]
-  inscricoes  Inscricao[]
+  id         Int         @id @default(autoincrement())
+  titulo     String
+  dataEvento DateTime
+  local      String
+  categorias Categoria[]
+  inscricoes Inscricao[]
 }
 
 model Categoria {
-  id               Int         @id @default(autoincrement())
-  nome             String      // Ex: 5km, 10km, Kids
-  preco            Decimal     @db.Decimal(10, 2)
-  vagasTotais      Int
-  vagasDisponiveis Int
-  eventoId         Int
-  evento           Evento      @relation(fields: [eventoId], references: [id])
-  inscricoes       Inscricao[]
+  id       Int    @id @default(autoincrement())
+  nome     String
+  eventoId Int
+
+  evento Evento @relation(fields: [eventoId], references: [id])
 }
 
 model Inscricao {
-  id              String    @id @default(uuid())
-  status          String    @default("PENDENTE") // PENDENTE, PAGO, CANCELADO
-  tamanhoCamiseta String?
-  valorPago       Decimal   @db.Decimal(10, 2)
-  
-  usuarioId       Int
-  usuario         Usuario   @relation(fields: [usuarioId], references: [id])
-  
-  eventoId        Int
-  evento          Evento    @relation(fields: [eventoId], references: [id])
-  
-  categoriaId     Int
-  categoria       Categoria @relation(fields: [categoriaId], references: [id])
-  
-  criadoEm        DateTime  @default(now())
+  id        Int    @id @default(autoincrement())
+  status    String @default("PENDENTE")
+  usuarioId Int
+  eventoId  Int
+
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  evento  Evento  @relation(fields: [eventoId], references: [id])
+  pagamento  Pagamento?
+
+  @@unique([usuarioId, eventoId])
 }
+
+model Pagamento {
+  id           Int      @id @default(autoincrement())
+  valor        Float
+  status       String   @default("PENDENTE")
+  metodo       String
+  criadoEm     DateTime @default(now())
+
+  inscricaoId Int      @unique
+  inscricao   Inscricao @relation(fields: [inscricaoId], references: [id])
+}
+

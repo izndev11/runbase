@@ -29,6 +29,9 @@ export function authMiddleware(
     const decoded = jwt.verify(token, secret);
 
     req.user = decoded;
+    if (typeof decoded === "object" && decoded && "userId" in decoded) {
+      req.userId = Number((decoded as any).userId);
+    }
 
     return next();
   } catch {

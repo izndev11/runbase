@@ -5,19 +5,16 @@ import { authMiddleware } from "../middlewares/auth";
 const router = Router();
 
 router.post("/", authMiddleware, async (req, res) => {
-  const { nome, preco, vagasTotais, eventoId } = req.body;
+  const { nome, eventoId } = req.body;
 
-  if (!nome || !preco || !vagasTotais || !eventoId) {
-    return res.status(400).json({ error: "Dados obrigatórios faltando" });
+  if (!nome || !eventoId) {
+    return res.status(400).json({ error: "Dados obrigatÃ³rios faltando" });
   }
 
   const categoria = await prisma.categoria.create({
     data: {
       nome,
-      preco,
-      vagasTotais,
-      vagasDisponiveis: vagasTotais,
-      eventoId,
+      eventoId: Number(eventoId),
     },
   });
 
