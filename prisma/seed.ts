@@ -1,15 +1,17 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const senha_hash = await bcrypt.hash("123456", 10);
   const usuario = await prisma.usuario.create({
     data: {
       nome_completo: "JoÃ£o Silva",
       email: "joao@email.com",
       cpf: "12345678900",
-      senha_hash: "hash123",
+      senha_hash,
       data_nascimento: new Date("1995-01-01"),
     },
   });

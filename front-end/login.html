@@ -97,8 +97,61 @@
     </div>
 </section>
 
+<!-- ===== CADASTRO (MODAL) ===== -->
+<div id="cadastroModal"
+     style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+     z-index: 60; justify-content: center; align-items: center;">
+    <div
+        style="background-color: #ffffff; padding: 32px; border-radius: 24px;
+        width: 90%; max-width: 520px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 22px; font-weight: bold;">Cadastro</h3>
+            <button onclick="fecharCadastro()"
+                    style="border: none; background: transparent; font-size: 20px; cursor: pointer;">X</button>
+        </div>
+
+        <form id="cadastroForm">
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Nome completo</label>
+                <input type="text" id="cadastro_nome" placeholder="Seu nome completo"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">E-mail</label>
+                <input type="email" id="cadastro_email" placeholder="email@dominio.com"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">CPF</label>
+                <input type="text" id="cadastro_cpf" placeholder="00000000000"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Data de nascimento</label>
+                <input type="date" id="cadastro_nascimento"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 16px;">
+                <label style="font-weight: bold; font-size: 13px;">Senha</label>
+                <input type="password" id="cadastro_senha" placeholder="********"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+
+            <button type="submit"
+                    style="width: 100%; background-color: #0095ff; color: white;
+                    border: none; padding: 14px; border-radius: 30px;
+                    font-weight: bold; cursor: pointer; font-size: 16px;">
+                CRIAR CONTA
+            </button>
+        </form>
+    </div>
+</div>
+
 <!-- SCRIPT -->
 <script src="./js/auth.js"></script>
+<script src="./js/cadastro.js"></script>
+<script src="./script.js"></script>
 
 </body>
 </html>

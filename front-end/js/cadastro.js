@@ -1,0 +1,53 @@
+console.log("CADASTRO.JS CARREGADO");
+
+function bindCadastroForm() {
+  const form = document.getElementById("cadastroForm");
+  if (!form) return;
+  form.addEventListener("submit", cadastrar);
+}
+
+async function cadastrar(event) {
+  event.preventDefault();
+
+  const nome_completo = document.getElementById("cadastro_nome").value;
+  const email = document.getElementById("cadastro_email").value;
+  const cpf = document.getElementById("cadastro_cpf").value;
+  const data_nascimento = document.getElementById("cadastro_nascimento").value;
+  const senha = document.getElementById("cadastro_senha").value;
+
+  if (!nome_completo || !email || !cpf || !data_nascimento || !senha) {
+    alert("Preencha todos os campos do cadastro");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/usuarios", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome_completo,
+        email,
+        cpf,
+        data_nascimento,
+        senha,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error || "Erro ao criar usuÃ¡rio");
+      return;
+    }
+
+    alert("Cadastro realizado! FaÃ§a login para continuar.");
+    fecharCadastro();
+  } catch (err) {
+    console.error(err);
+    alert("Erro de conexÃ£o com o servidor");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", bindCadastroForm);

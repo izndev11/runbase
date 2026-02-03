@@ -37,7 +37,7 @@ async function login(event) {
     localStorage.setItem("token", data.token);
 
     alert("Login realizado com sucesso!");
-    // window.location.href = "eventos.html";
+    window.location.href = "eventos.html";
   } catch (err) {
     console.error(err);
     alert("Erro de conexÃ£o com o servidor");
