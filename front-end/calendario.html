@@ -41,15 +41,39 @@
                 <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
             </nav>
 
-            <a href="login.html" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+            <a id="loginLink" href="login.html" class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
                 Login
             </a>
+
+            <div id="userMenuContainer" class="relative">
+                <button id="userMenuButton"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+                    <span id="userMenuName">Olá, usuário</span>
+                </button>
+
+                <div id="userMenuDropdown"
+                     class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+                        Painel Admin
+                    </a>
+                    <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
+                        Minhas Inscrições
+                    </a>
+                    <a href="organizacao.html" class="block px-4 py-3 hover:bg-gray-50">
+                        Meus Pedidos
+                    </a>
+                    <button id="userMenuLogout"
+                            class="w-full text-left px-4 py-3 hover:bg-gray-50">
+                        Sair
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
     <section class="relative text-white bg-cover bg-no-repeat" 
         style="margin: 20px 10px; 
-               overflow: visible; /* Mudei para visible para a barra de busca não sumir */
+               overflow: visible; 
                border-radius: 40px; 
                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
                background-position: center; 
@@ -156,5 +180,6 @@
         </div>
     </footer>
 
+    <script src="./js/user-menu.js"></script>
 </body>
 </html>

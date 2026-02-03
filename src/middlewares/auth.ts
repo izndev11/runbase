@@ -32,6 +32,9 @@ export function authMiddleware(
     if (typeof decoded === "object" && decoded && "userId" in decoded) {
       req.userId = Number((decoded as any).userId);
     }
+    if (typeof decoded === "object" && decoded && "role" in decoded) {
+      req.userRole = String((decoded as any).role);
+    }
 
     return next();
   } catch {
