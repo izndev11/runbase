@@ -13,6 +13,7 @@ model Usuario {
   email           String      @unique
   cpf             String      @unique
   senha_hash      String
+  role            Role        @default(USER)
   data_nascimento DateTime
   inscricoes      Inscricao[]
   criadoEm        DateTime    @default(now())
@@ -60,3 +61,7 @@ model Pagamento {
   inscricao   Inscricao @relation(fields: [inscricaoId], references: [id])
 }
 
+enum Role {
+  USER
+  ADMIN
+}

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minhas Inscrições</title>
+  <title>Painel Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
 <header class="bg-white sticky top-0 z-50 shadow-lg">
   <div class="container mx-auto px-4 py-3 flex justify-between items-center">
     <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
@@ -23,7 +23,7 @@
     <nav class="hidden md:flex space-x-6 font-medium">
       <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
       <a href="eventos.html" class="hover:text-blue-600">Eventos</a>
-      <a href="minhas-inscricoes.html" class="text-blue-600 font-bold">Minhas Inscrições</a>
+      <a href="admin.html" class="text-blue-600 font-bold">Painel Admin</a>
     </nav>
 
     <a id="loginLink" href="login.html"
@@ -37,16 +37,13 @@
         <span id="userMenuName">Olá, usuário</span>
       </button>
 
-        <div id="userMenuDropdown"
-             class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <div id="userMenuDropdown"
+           class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
         <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
           Painel Admin
         </a>
         <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
           Minhas Inscrições
-        </a>
-        <a href="organizacao.html" class="block px-4 py-3 hover:bg-gray-50">
-          Meus Pedidos
         </a>
         <button id="userMenuLogout"
                 class="w-full text-left px-4 py-3 hover:bg-gray-50">
@@ -57,17 +54,45 @@
   </div>
 </header>
 
-<main class="container mx-auto px-4 py-10">
+<main class="container mx-auto px-4 py-10 flex-grow">
   <div class="mb-8">
-    <h1 class="text-3xl md:text-4xl font-bold">Minhas inscrições</h1>
-    <p class="text-gray-600 mt-2">Acompanhe o status das suas inscrições.</p>
+    <h1 class="text-3xl md:text-4xl font-bold">Painel Admin</h1>
+    <p class="text-gray-600 mt-2">Crie e gerencie eventos.</p>
   </div>
 
-  <div id="inscricoesStatus" class="mb-4 text-gray-600"></div>
-  <div id="inscricoesList" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+  <div class="grid gap-8 md:grid-cols-2">
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Cadastrar evento</h2>
+      <form id="adminEventoForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Título</label>
+          <input id="adminTitulo" type="text" class="w-full border rounded-lg px-3 py-2" placeholder="Nome do evento">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Data</label>
+          <input id="adminData" type="date" class="w-full border rounded-lg px-3 py-2">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Local</label>
+          <input id="adminLocal" type="text" class="w-full border rounded-lg px-3 py-2" placeholder="Cidade/Local">
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-700">
+          Salvar evento
+        </button>
+        <div id="adminStatus" class="text-sm text-gray-600"></div>
+      </form>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Eventos cadastrados</h2>
+      <div id="adminEventosList" class="space-y-3 text-gray-700"></div>
+    </div>
+  </div>
 </main>
 
-<script src="./js/minhas-inscricoes.js"></script>
+<script src="./js/require-auth.js"></script>
+<script src="./js/require-admin.js"></script>
 <script src="./js/user-menu.js"></script>
+<script src="./js/admin.js"></script>
 </body>
 </html>

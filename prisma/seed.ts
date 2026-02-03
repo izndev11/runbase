@@ -16,6 +16,18 @@ async function main() {
     },
   });
 
+  const adminSenhaHash = await bcrypt.hash("admin123", 10);
+  await prisma.usuario.create({
+    data: {
+      nome_completo: "Admin SpeedRun",
+      email: "admin@speedrun.com",
+      cpf: "00000000000",
+      senha_hash: adminSenhaHash,
+      role: "ADMIN",
+      data_nascimento: new Date("1990-01-01"),
+    },
+  });
+
   const evento = await prisma.evento.create({
     data: {
       titulo: "Corrida da Cidade",

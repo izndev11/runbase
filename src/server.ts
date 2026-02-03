@@ -10,6 +10,7 @@ import categoriasRoutes from "./routes/categorias.routes";
 import inscricoesRoutes from "./routes/inscricoes.routes";
 import authRoutes from "./routes/auth.routes";
 import pagamentosRoutes from "./routes/pagamentos.routes";
+import adminRoutes from "./routes/admin.routes";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/categorias", categoriasRoutes);
 app.use("/api/inscricoes", inscricoesRoutes);
 app.use("/auth", authRoutes);
 app.use("/pagamentos", pagamentosRoutes);
+app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("API rodando ðŸš€");

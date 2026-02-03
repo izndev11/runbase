@@ -31,12 +31,12 @@ router.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: usuario.id },
+      { userId: usuario.id, role: usuario.role },
       process.env.JWT_SECRET || "segredo_dev",
       { expiresIn: "1d" }
     );
 
-    return res.json({ token });
+    return res.json({ token, role: usuario.role });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Erro no login" });
