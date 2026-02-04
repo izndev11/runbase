@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../middlewares/auth";
 import { adminMiddleware } from "../middlewares/admin";
+import { sendInscricaoEmail, sendPagamentoEmail } from "../utils/email";
 
 const router = Router();
 
@@ -22,7 +23,7 @@ function normalizarCategorias(input: unknown) {
 
 router.post("/eventos", async (req, res) => {
   try {
-    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, organizador, categorias } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -36,7 +37,6 @@ router.post("/eventos", async (req, res) => {
         local,
         descricao: descricao || null,
         imagem_url: imagem_url || null,
-        banner_url: banner_url || null,
         organizador: organizador || null,
         categorias: categoriasNorm.length
           ? { create: categoriasNorm.map((nome) => ({ nome })) }
@@ -67,7 +67,7 @@ router.get("/eventos", async (_req, res) => {
 router.put("/eventos/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, organizador, categorias } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -82,7 +82,6 @@ router.put("/eventos/:id", async (req, res) => {
         local,
         descricao: descricao || null,
         imagem_url: imagem_url || null,
-        banner_url: banner_url || null,
         organizador: organizador || null,
         categorias: {
           deleteMany: {},
@@ -163,6 +162,65 @@ router.get("/eventos/:id/inscricoes.csv", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao exportar CSV" });
+  }
+});
+
+router.post("/inscricoes/:id/reenviar", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { tipo } = req.body as { tipo?: "inscricao" | "pagamento" };
+
+    if (!tipo) {
+      return res.status(400).json({ error: "Tipo de e-mail é obrigatório" });
+    }
+
+    const inscricao = await prisma.inscricao.findUnique({
+      where: { id },
+      include: {
+        usuario: true,
+        evento: true,
+        pagamento: true,
+      },
+    });
+
+    if (!inscricao) {
+      return res.status(404).json({ error: "Inscrição não encontrada" });
+    }
+
+    if (!inscricao.usuario?.email) {
+      return res.status(400).json({ error: "Usuário sem e-mail" });
+    }
+
+    if (tipo === "inscricao") {
+      await sendInscricaoEmail({
+        to: inscricao.usuario.email,
+        nome: inscricao.usuario.nome_completo || "Participante",
+        eventoTitulo: inscricao.evento?.titulo || "Evento",
+        dataEvento: inscricao.evento?.dataEvento,
+        local: inscricao.evento?.local,
+        inscricaoId: inscricao.id,
+      });
+      return res.json({ message: "E-mail de inscrição reenviado" });
+    }
+
+    if (tipo === "pagamento") {
+      if (!inscricao.pagamento) {
+        return res.status(400).json({ error: "Pagamento não encontrado" });
+      }
+      await sendPagamentoEmail({
+        to: inscricao.usuario.email,
+        nome: inscricao.usuario.nome_completo || "Participante",
+        eventoTitulo: inscricao.evento?.titulo || "Evento",
+        valor: inscricao.pagamento.valor,
+        inscricaoId: inscricao.id,
+      });
+      return res.json({ message: "E-mail de pagamento reenviado" });
+    }
+
+    return res.status(400).json({ error: "Tipo de e-mail inválido" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao reenviar e-mail" });
   }
 });
 
