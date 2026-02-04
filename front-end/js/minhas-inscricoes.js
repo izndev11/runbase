@@ -28,28 +28,59 @@ function renderInscricoes(inscricoes) {
 
   ordenadas.forEach((inscricao) => {
     const card = document.createElement("div");
-    card.className = "bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100";
+    card.className = "ticket-card";
 
     const dataFmt = inscricao.evento?.dataEvento
       ? new Date(inscricao.evento.dataEvento).toLocaleDateString("pt-BR")
       : "-";
 
-    card.innerHTML = `
-      <div class="h-20 bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-400"></div>
-      <div class="p-5">
-        <div class="flex items-center gap-2 mb-2 text-sm text-gray-600">
-          <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">Status: ${inscricao.status}</span>
-          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Data: ${dataFmt}</span>
-        </div>
-        <h3 class="text-xl font-bold mb-2">${inscricao.evento?.titulo || "Evento"}</h3>
-        <p class="text-gray-600 mb-4">Local: ${inscricao.evento?.local || "-"}</p>
+    const imagem =
+      inscricao.evento?.imagem_url || inscricao.evento?.imagem || "img/fundo1.png";
+    const organizador =
+      inscricao.evento?.organizador || inscricao.evento?.organizacao || "SpeedRun";
+    const detalhesUrl = inscricao.evento?.id
+      ? `corrida.html?id=${inscricao.evento.id}`
+      : "#";
 
-        <div class="flex gap-3 items-center">
-          <button class="bg-red-600 text-white px-4 py-2 rounded-full font-bold hover:bg-red-700" data-cancelar>
+    card.innerHTML = `
+      <div class="ticket-card__media">
+        <a href="${detalhesUrl}">
+          <img src="${imagem}" alt="${inscricao.evento?.titulo || "Evento"}" class="ticket-card__image" />
+        </a>
+        <button type="button" class="ticket-card__fav" aria-label="Favoritar">
+          <i class="fa-solid fa-heart"></i>
+        </button>
+      </div>
+      <div class="ticket-card__body">
+        <div class="ticket-card__status-wrap">
+          <span class="ticket-card__status">Status: ${inscricao.status}</span>
+        </div>
+        <a href="${detalhesUrl}" class="ticket-card__title" title="${inscricao.evento?.titulo || "Evento"}">
+          ${inscricao.evento?.titulo || "Evento"}
+        </a>
+        <div class="ticket-card__meta">
+          <div class="ticket-card__row">
+            <i class="fa-solid fa-flag"></i>
+            <span>${organizador}</span>
+          </div>
+          <div class="ticket-card__row">
+            <i class="fa-regular fa-calendar"></i>
+            <span>${dataFmt}</span>
+          </div>
+          <div class="ticket-card__row">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>${inscricao.evento?.local || "-"}</span>
+          </div>
+        </div>
+        <div class="ticket-card__actions">
+          <a href="${detalhesUrl}" class="ticket-card__btn ticket-card__btn--light">
+            Ver detalhes
+          </a>
+          <button data-cancelar class="ticket-card__btn ticket-card__btn--primary">
             Cancelar
           </button>
-          <div class="text-sm text-gray-600" data-status></div>
         </div>
+        <div class="ticket-card__status-text" data-status></div>
       </div>
     `;
 
