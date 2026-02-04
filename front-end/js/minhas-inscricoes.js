@@ -20,7 +20,13 @@ function renderInscricoes(inscricoes) {
     return;
   }
 
-  inscricoes.forEach((inscricao) => {
+  const ordenadas = [...inscricoes].sort((a, b) => {
+    const da = a.evento?.dataEvento ? new Date(a.evento.dataEvento).getTime() : 0;
+    const db = b.evento?.dataEvento ? new Date(b.evento.dataEvento).getTime() : 0;
+    return da - db;
+  });
+
+  ordenadas.forEach((inscricao) => {
     const card = document.createElement("div");
     card.className = "bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100";
 
