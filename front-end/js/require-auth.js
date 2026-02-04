@@ -6,3 +6,5 @@ function requireAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", requireAuth);
+
+

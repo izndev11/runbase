@@ -38,7 +38,7 @@ function renderCategorias(categorias) {
 
 async function carregarEvento() {
   if (!eventoId) {
-    setStatus("Evento nÃ£o encontrado.");
+    setStatus("Evento não encontrado.");
     return;
   }
 
@@ -55,7 +55,7 @@ async function carregarEvento() {
     const evento = eventos.find((item) => String(item.id) === String(eventoId));
 
     if (!evento) {
-      setStatus("Evento nÃ£o encontrado.");
+      setStatus("Evento não encontrado.");
       return;
     }
 
@@ -72,14 +72,14 @@ async function carregarEvento() {
     if (descEl) {
       descEl.textContent =
         evento.descricao ||
-        "Tudo o que vocÃª precisa saber antes de se inscrever. Em breve, mais informaÃ§Ãµes sobre percursos, categorias e regulamento.";
+        "Tudo o que você precisa saber antes de se inscrever. Em breve, mais informações sobre percursos, categorias e regulamento.";
     }
 
     renderCategorias(evento.categorias);
     setStatus("");
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexÃ£o com o servidor");
+    setStatus("Erro de conexão com o servidor");
   }
 }
 
@@ -93,7 +93,7 @@ async function inscrever() {
 
   try {
     if (inscreverBtn) inscreverBtn.disabled = true;
-    setStatus("Criando inscriÃ§Ã£o...");
+    setStatus("Criando inscrição...");
 
     const response = await fetch("http://localhost:3000/api/inscricoes", {
       method: "POST",
@@ -112,7 +112,7 @@ async function inscrever() {
       return;
     }
 
-    setStatus("InscriÃ§Ã£o realizada com sucesso!");
+    setStatus("Inscrição realizada com sucesso!");
     if (inscreverBtn) {
       inscreverBtn.textContent = "INSCRITO";
       inscreverBtn.disabled = true;
@@ -120,7 +120,7 @@ async function inscrever() {
     }
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexÃ£o com o servidor");
+    setStatus("Erro de conexão com o servidor");
     if (inscreverBtn) inscreverBtn.disabled = false;
   }
 }
@@ -130,3 +130,5 @@ if (inscreverBtn) {
 }
 
 carregarEvento();
+
+

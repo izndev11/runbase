@@ -115,3 +115,5 @@ if (buscaBtnEl && buscaInputEl) {
 }
 
 carregarEventos();
+
+

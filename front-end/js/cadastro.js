@@ -18,8 +18,14 @@ async function cadastrar(event) {
   const data_nascimento = document.getElementById("cadastro_nascimento").value;
   const telefone = document.getElementById("cadastro_telefone").value;
   const sexo = document.getElementById("cadastro_sexo").value;
-  const cidade = document.getElementById("cadastro_cidade").value;
-  const estado = document.getElementById("cadastro_estado").value;
+  const cidade =
+    document.getElementById("cidade")?.value ||
+    document.getElementById("cadastro_cidade")?.value ||
+    "";
+  const estado =
+    document.getElementById("estado")?.value ||
+    document.getElementById("cadastro_estado")?.value ||
+    "";
   const senha = document.getElementById("cadastro_senha").value;
 
   if (
@@ -59,16 +65,18 @@ async function cadastrar(event) {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error || "Erro ao criar usu√°rio");
+      alert(data.error || "Erro ao criar usu·rio");
       return;
     }
 
-    alert("Cadastro realizado! Fa√ßa login para continuar.");
+    alert("Cadastro realizado! FaÁa login para continuar.");
     fecharCadastro();
   } catch (err) {
     console.error(err);
-    alert("Erro de conex√£o com o servidor");
+    alert("Erro de conex„o com o servidor");
   }
 }
 
 document.addEventListener("DOMContentLoaded", bindCadastroForm);
+
+

@@ -40,7 +40,7 @@ async function loadUserMenu() {
     if (!response.ok) return;
 
     if (userMenuName) {
-      userMenuName.textContent = `Ol√°, ${data.nome_completo || "Usu√°rio"}`;
+      userMenuName.textContent = `Ol·, ${data.nome_completo || "Usu·rio"}`;
     }
     if (userMenuAdmin) {
       if (data.role === "ADMIN") userMenuAdmin.classList.remove("hidden");
@@ -64,3 +64,5 @@ function setupUserMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", setupUserMenu);
+
+

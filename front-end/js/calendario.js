@@ -206,3 +206,5 @@ if (buscaBtnEl && buscaInputEl) {
 }
 
 carregarEventos();
+
+

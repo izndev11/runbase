@@ -124,11 +124,11 @@ function renderEventos(eventos) {
       <span class="text-sm text-gray-600">Local: ${evento.local}</span>
       <span class="text-sm text-gray-600">Organizador: ${evento.organizador || "‚Äî"}</span>
       <span class="text-sm text-gray-600">Categorias: ${categoriasTexto}</span>
-      <span class="text-sm text-gray-600">Inscri√ß√µes: ${evento._count?.inscricoes ?? 0}</span>
+      <span class="text-sm text-gray-600">InscriÁıes: ${evento._count?.inscricoes ?? 0}</span>
       <div class="flex gap-2">
         <button data-edit class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Editar</button>
         <button data-delete class="bg-red-600 text-white px-3 py-1 rounded-full font-bold hover:bg-red-700">Excluir</button>
-        <button data-inscricoes class="bg-blue-600 text-white px-3 py-1 rounded-full font-bold hover:bg-blue-700">Ver inscri√ß√µes</button>
+        <button data-inscricoes class="bg-blue-600 text-white px-3 py-1 rounded-full font-bold hover:bg-blue-700">Ver inscriÁıes</button>
       </div>
     `;
     const editBtn = item.querySelector("[data-edit]");
@@ -152,7 +152,7 @@ function renderEventos(eventos) {
         carregarEventos();
       } catch (err) {
         console.error(err);
-        setStatus("Erro de conex√£o com o servidor");
+        setStatus("Erro de conex„o com o servidor");
       }
     });
     inscBtn.addEventListener("click", async () => {
@@ -167,13 +167,13 @@ function renderInscricoes(inscricoes, titulo) {
   lastInscricoesEventoTitulo = titulo;
   if (exportCsvBtn) exportCsvBtn.classList.remove("hidden");
   if (!inscricoes.length) {
-    inscricoesEl.innerHTML = `<p>Nenhuma inscri√ß√£o para ${titulo}.</p>`;
+    inscricoesEl.innerHTML = `<p>Nenhuma inscriÁ„o para ${titulo}.</p>`;
     return;
   }
   const linhas = inscricoes.map((i) => {
     return `
       <div class="border rounded-lg px-3 py-2 mb-2">
-        <strong>${i.usuario?.nome_completo || "Usu√°rio"}</strong>
+        <strong>${i.usuario?.nome_completo || "Usu·rio"}</strong>
         <div class="text-sm text-gray-600">${i.usuario?.email || "-"}</div>
         <div class="text-sm text-gray-600">Status: ${i.status}</div>
       </div>
@@ -186,19 +186,19 @@ async function carregarInscricoes(eventoId, titulo) {
   if (!token) return;
   lastInscricoesEventoId = eventoId;
   try {
-    if (inscricoesEl) inscricoesEl.innerHTML = "Carregando inscri√ß√µes...";
+    if (inscricoesEl) inscricoesEl.innerHTML = "Carregando inscriÁıes...";
     const response = await fetch(`http://localhost:3000/admin/eventos/${eventoId}/inscricoes`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
     if (!response.ok) {
-      if (inscricoesEl) inscricoesEl.innerHTML = data.error || "Erro ao carregar inscri√ß√µes";
+      if (inscricoesEl) inscricoesEl.innerHTML = data.error || "Erro ao carregar inscriÁıes";
       return;
     }
     renderInscricoes(data, titulo);
   } catch (err) {
     console.error(err);
-    if (inscricoesEl) inscricoesEl.innerHTML = "Erro de conex√£o com o servidor";
+    if (inscricoesEl) inscricoesEl.innerHTML = "Erro de conex„o com o servidor";
   }
 }
 
@@ -218,7 +218,7 @@ async function carregarEventos() {
     renderEventos(data);
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conex√£o com o servidor");
+    setStatus("Erro de conex„o com o servidor");
   }
 }
 
@@ -274,16 +274,16 @@ async function criarEvento(event) {
     carregarEventos();
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conex√£o com o servidor");
+    setStatus("Erro de conex„o com o servidor");
   }
 }
 
 async function uploadImagem(file) {
   if (!ALLOWED_TYPES.includes(file.type)) {
-    throw new Error("Formato inv√°lido. Use PNG, JPG ou WEBP.");
+    throw new Error("Formato inv·lido. Use PNG, JPG ou WEBP.");
   }
   if (file.size > MAX_IMAGE_SIZE) {
-    throw new Error("Imagem muito grande (m√°x. 3MB).");
+    throw new Error("Imagem muito grande (m·x. 3MB).");
   }
 
   const formData = new FormData();
@@ -313,7 +313,7 @@ if (imagemFileEl) {
       if (imagemUrlEl) imagemUrlEl.value = url;
       setImagemPreview(url);
       setStatus("Imagem enviada!");
-      setImagemHint("Upload conclu√≠do.");
+      setImagemHint("Upload concluÌdo.");
     } catch (err) {
       console.error(err);
       setStatus(err?.message || "Erro ao enviar imagem");
@@ -333,7 +333,7 @@ if (imagemUrlEl) {
       return;
     }
     setImagemPreview(url);
-    setImagemHint("Pr√©-visualizando URL.");
+    setImagemHint("PrÈ-visualizando URL.");
   });
 }
 
@@ -358,7 +358,7 @@ if (bannerFileEl) {
       if (bannerUrlEl) bannerUrlEl.value = url;
       setBannerPreview(url);
       setStatus("Banner enviado!");
-      setBannerHint("Upload conclu√≠do.");
+      setBannerHint("Upload concluÌdo.");
     } catch (err) {
       console.error(err);
       setStatus(err?.message || "Erro ao enviar banner");
@@ -378,7 +378,7 @@ if (bannerUrlEl) {
       return;
     }
     setBannerPreview(url);
-    setBannerHint("Pr√©-visualizando URL.");
+    setBannerHint("PrÈ-visualizando URL.");
   });
 }
 
@@ -423,7 +423,7 @@ if (exportCsvBtn) {
       setStatus(`CSV exportado (${lastInscricoesEventoTitulo})`);
     } catch (err) {
       console.error(err);
-      setStatus("Erro de conex√£o ao exportar CSV");
+      setStatus("Erro de conex„o ao exportar CSV");
     }
   });
 }
@@ -459,8 +459,10 @@ async function carregarEventosDebug() {
     setStatus("Resposta inesperada do servidor ao listar eventos.");
   } catch (err) {
     console.error(err);
-    setStatus(`Erro de conex√£o com o servidor: ${err?.message || err}`);
+    setStatus(`Erro de conex„o com o servidor: ${err?.message || err}`);
   }
 }
 
 carregarEventosDebug();
+
+
