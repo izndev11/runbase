@@ -35,25 +35,58 @@ function renderEventos(eventos, inscritosSet) {
       ? new Date(evento.dataEvento).toLocaleDateString("pt-BR")
       : "-";
     const isInscrito = inscritosSet?.has(evento.id);
+    const imagem =
+      evento.imagem_url || evento.imagem || "img/fundo1.png";
+    const organizador = evento.organizador || evento.organizacao || "SpeedRun";
+    const detalhesUrl = `corrida.html?id=${evento.id}`;
 
     card.innerHTML = `
-      <div class="h-24 bg-gradient-to-r from-orange-600 via-orange-500 to-amber-400"></div>
-      <div class="p-5">
-        <div class="flex items-center gap-2 mb-2 text-sm text-gray-600">
-          <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full">Data: ${dataFmt}</span>
-          <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Local: ${evento.local}</span>
-        </div>
-        <h3 class="text-xl font-bold mb-3">${evento.titulo}</h3>
-        <div class="flex items-center gap-3">
-          <button class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-700">
-            ${isInscrito ? "Inscrito" : "Inscrever-se"}
+      <div class="p-4">
+        <div class="relative">
+          <a href="${detalhesUrl}">
+            <img src="${imagem}" alt="${evento.titulo}" class="w-full h-48 object-cover rounded-2xl shadow" />
+          </a>
+          <span class="absolute top-3 left-3 bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">
+            Inscrições abertas
+          </span>
+          <button type="button" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow">
+            <i class="fa-solid fa-heart text-gray-400"></i>
           </button>
         </div>
-        <div class="mt-3 text-sm text-gray-600" data-status></div>
+        <div class="pt-4">
+          <a href="${detalhesUrl}" class="block font-extrabold text-sm tracking-wide truncate">
+            ${evento.titulo}
+          </a>
+          <div class="mt-3 space-y-2 text-sm text-gray-700">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-flag text-blue-600"></i>
+              <span>${organizador}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-calendar text-blue-600"></i>
+              <span>${dataFmt}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-blue-600"></i>
+              <span>${evento.local || "-"}</span>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center gap-3">
+            <a href="${detalhesUrl}"
+               class="bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-bold hover:bg-gray-200">
+              Ver detalhes
+            </a>
+            <button data-action="inscrever"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold hover:bg-blue-700">
+              ${isInscrito ? "Inscrito" : "Inscrever-se"}
+            </button>
+          </div>
+          <div class="mt-3 text-sm text-gray-600" data-status></div>
+        </div>
       </div>
     `;
 
-    const btn = card.querySelector("button");
+    const btn = card.querySelector("[data-action=\"inscrever\"]");
     const status = card.querySelector("[data-status]");
 
     if (isInscrito) {
