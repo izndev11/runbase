@@ -1,4 +1,4 @@
-console.log("AUTH.JS CARREGADO");
+﻿console.log("AUTH.JS CARREGADO");
 
 function bindLoginForm() {
   const form = document.getElementById("loginForm");
@@ -45,3 +45,6 @@ async function login(event) {
 }
 
 document.addEventListener("DOMContentLoaded", bindLoginForm);
+
+
+

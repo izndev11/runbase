@@ -1,4 +1,4 @@
-function abrirCadastro() {
+﻿function abrirCadastro() {
   // Esconde o card de login
   document.getElementById("loginCard").style.display = "none";
   // Mostra o card de cadastro
@@ -60,3 +60,6 @@ fetch("http://localhost:3000/eventos")
   .catch((err) =>
     console.error("O Front ainda não vê o Back. Verifique se o servidor está rodando.", err)
   );
+
+
+

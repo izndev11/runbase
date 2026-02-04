@@ -1,4 +1,4 @@
-const listEl = document.getElementById("indexEventos");
+﻿const listEl = document.getElementById("indexEventos");
 const statusEl = document.getElementById("indexStatus");
 const buscaInputEl = document.getElementById("indexBuscaInput");
 const buscaBtnEl = document.getElementById("indexBuscaBtn");
@@ -40,7 +40,7 @@ function renderEventos(eventos) {
       </div>
       <div class="ticket-card__body">
         <div class="ticket-card__status-wrap">
-          <span class="ticket-card__status">InscriÃ§Ãµes abertas</span>
+          <span class="ticket-card__status">InscriÃƒÂ§ÃƒÂµes abertas</span>
         </div>
         <a href="${detalhesUrl}" class="ticket-card__title" title="${evento.titulo}">
           ${evento.titulo}
@@ -103,7 +103,7 @@ async function carregarEventos() {
     renderEventos(ordenados.slice(0, 8));
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexÃ£o com o servidor");
+    setStatus("Erro de conexÃƒÂ£o com o servidor");
   }
 }
 
@@ -115,3 +115,6 @@ if (buscaBtnEl && buscaInputEl) {
 }
 
 carregarEventos();
+
+
+

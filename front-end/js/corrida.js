@@ -1,4 +1,4 @@
-const tituloEl = document.getElementById("corridaTitulo");
+﻿const tituloEl = document.getElementById("corridaTitulo");
 const dataEl = document.getElementById("corridaData");
 const localEl = document.getElementById("corridaLocal");
 const orgEl = document.getElementById("corridaOrganizador");
@@ -130,3 +130,6 @@ if (inscreverBtn) {
 }
 
 carregarEvento();
+
+
+

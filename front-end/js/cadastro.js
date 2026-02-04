@@ -1,4 +1,4 @@
-console.log("CADASTRO.JS CARREGADO");
+﻿console.log("CADASTRO.JS CARREGADO");
 
 function bindCadastroForm() {
   const form = document.getElementById("cadastroForm");
@@ -18,8 +18,14 @@ async function cadastrar(event) {
   const data_nascimento = document.getElementById("cadastro_nascimento").value;
   const telefone = document.getElementById("cadastro_telefone").value;
   const sexo = document.getElementById("cadastro_sexo").value;
-  const cidade = document.getElementById("cadastro_cidade").value;
-  const estado = document.getElementById("cadastro_estado").value;
+  const cidade =
+    document.getElementById("cidade")?.value ||
+    document.getElementById("cadastro_cidade")?.value ||
+    "";
+  const estado =
+    document.getElementById("estado")?.value ||
+    document.getElementById("cadastro_estado")?.value ||
+    "";
   const senha = document.getElementById("cadastro_senha").value;
 
   if (
@@ -72,3 +78,6 @@ async function cadastrar(event) {
 }
 
 document.addEventListener("DOMContentLoaded", bindCadastroForm);
+
+
+

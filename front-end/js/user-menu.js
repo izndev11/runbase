@@ -1,4 +1,4 @@
-const userMenuButton = document.getElementById("userMenuButton");
+﻿const userMenuButton = document.getElementById("userMenuButton");
 const userMenuDropdown = document.getElementById("userMenuDropdown");
 const userMenuName = document.getElementById("userMenuName");
 const userMenuLogout = document.getElementById("userMenuLogout");
@@ -64,3 +64,6 @@ function setupUserMenu() {
 }
 
 document.addEventListener("DOMContentLoaded", setupUserMenu);
+
+
+

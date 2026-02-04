@@ -1,4 +1,4 @@
-const token = localStorage.getItem("token");
+﻿const token = localStorage.getItem("token");
 const form = document.getElementById("adminEventoForm");
 const statusEl = document.getElementById("adminStatus");
 const listEl = document.getElementById("adminEventosList");
@@ -91,12 +91,12 @@ function renderEventos(eventos) {
       : "-";
     const categoriasTexto = evento.categorias?.length
       ? evento.categorias.map((c) => c.nome).join(", ")
-      : "—";
+      : "â€”";
     item.innerHTML = `
       <strong>${evento.titulo}</strong>
       <span class="text-sm text-gray-600">Data: ${dataFmt}</span>
       <span class="text-sm text-gray-600">Local: ${evento.local}</span>
-      <span class="text-sm text-gray-600">Organizador: ${evento.organizador || "—"}</span>
+      <span class="text-sm text-gray-600">Organizador: ${evento.organizador || "â€”"}</span>
       <span class="text-sm text-gray-600">Categorias: ${categoriasTexto}</span>
       <span class="text-sm text-gray-600">Inscrições: ${evento._count?.inscricoes ?? 0}</span>
       <div class="flex gap-2">
@@ -435,3 +435,6 @@ async function carregarEventosDebug() {
 }
 
 carregarEventosDebug();
+
+
+

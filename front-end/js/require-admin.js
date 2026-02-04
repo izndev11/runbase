@@ -1,4 +1,4 @@
-async function requireAdmin() {
+﻿async function requireAdmin() {
   const token = localStorage.getItem("token");
   if (!token) {
     window.location.href = "login.html";
@@ -22,3 +22,6 @@ async function requireAdmin() {
 }
 
 document.addEventListener("DOMContentLoaded", requireAdmin);
+
+
+

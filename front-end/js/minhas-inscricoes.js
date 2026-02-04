@@ -1,4 +1,4 @@
-const token = localStorage.getItem("token");
+﻿const token = localStorage.getItem("token");
 const listEl = document.getElementById("inscricoesList");
 const statusEl = document.getElementById("inscricoesStatus");
 
@@ -116,3 +116,6 @@ async function carregarInscricoes() {
 }
 
 carregarInscricoes();
+
+
+
