@@ -113,7 +113,7 @@
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
-  max-width: 240px;
+  max-width: 230px;
 }
 
 .ticket-card:hover {
