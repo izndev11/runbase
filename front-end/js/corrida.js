@@ -64,8 +64,10 @@ async function carregarEvento() {
     if (localEl) localEl.textContent = evento.local || "-";
     if (orgEl) orgEl.textContent = evento.organizador || evento.organizacao || "SpeedRun";
 
-    const banner = evento.imagem_url || evento.imagem || "img/fundo1.png";
-    if (bannerEl) bannerEl.src = banner;
+    const banner = evento.banner_url || "img/fundo1.png";
+    if (bannerEl) {
+      bannerEl.src = banner;
+    }
 
     if (descEl) {
       descEl.textContent =

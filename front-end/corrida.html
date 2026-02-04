@@ -1,193 +1,198 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes da Corrida</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes da Corrida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
-
-<header class="bg-white sticky top-0 z-50 shadow-lg">
+  <header class="bg-white sticky top-0 z-50 shadow-lg">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-
-        <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
-            <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
-                <img src="img/logosite.png" alt="Logo"
-                     style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
-                     onmouseover="this.style.transform='scale(1.1)'"
-                     onmouseout="this.style.transform='scale(1.0)'">
-            </a>
-        </div>
-
-        <nav class="hidden md:flex space-x-6 font-medium">
-            <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
-            <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
-            <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
-        </nav>
-
-        <a id="loginLink" href="login.html" class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-            Login
+      <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+        <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+          <img src="img/logosite.png" alt="Logo"
+               style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1.0)'">
         </a>
+      </div>
 
-        <div id="userMenuContainer" class="relative">
-            <button id="userMenuButton"
-                    class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
-                <span id="userMenuName">Olá, usuário</span>
-            </button>
+      <nav class="hidden md:flex space-x-6 font-medium">
+        <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+        <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
+        <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
+      </nav>
 
-            <div id="userMenuDropdown"
-                 class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
-                    Painel Admin
-                </a>
-                <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
-                    Minhas Inscrições
-                </a>
-                <a href="organizacao.html" class="block px-4 py-3 hover:bg-gray-50">
-                    Meus Pedidos
-                </a>
-                <button id="userMenuLogout"
-                        class="w-full text-left px-4 py-3 hover:bg-gray-50">
-                    Sair
-                </button>
-            </div>
+      <a id="loginLink" href="login.html" class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+        Login
+      </a>
+
+      <div id="userMenuContainer" class="relative">
+        <button id="userMenuButton"
+                class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+          <span id="userMenuName">Olá, usuário</span>
+        </button>
+
+        <div id="userMenuDropdown"
+             class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+            Painel Admin
+          </a>
+          <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
+            Minhas Inscrições
+          </a>
+          <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
+            Meus Pedidos
+          </a>
+          <button id="userMenuLogout"
+                  class="w-full text-left px-4 py-3 hover:bg-gray-50">
+            Sair
+          </button>
         </div>
+      </div>
     </div>
-</header>
+  </header>
 
-<main class="flex-grow bg-gray-100">
+  <main class="flex-grow bg-gray-100">
     <div class="container mx-auto px-6 py-10">
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div class="relative">
-                <img id="corridaBanner" src="img/fundo1.png" alt="Banner da corrida" class="w-full h-64 md:h-80 object-cover">
-                <div class="absolute inset-0 bg-black/20"></div>
-                <div class="absolute bottom-4 left-6 flex items-center gap-3">
-                    <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Inscrições abertas</span>
-                </div>
-            </div>
-
-            <div class="grid gap-8 lg:grid-cols-[2fr,1fr] p-8">
-                <section>
-                    <a href="calendario.html" class="text-sm text-blue-600 font-bold">← Voltar para o calendário</a>
-                    <h1 id="corridaTitulo" class="text-2xl md:text-3xl font-black mt-3 mb-4">Corrida</h1>
-
-                    <div class="space-y-2 text-gray-700">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-flag text-blue-600"></i>
-                            <span id="corridaOrganizador">Organização</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fa-regular fa-calendar text-blue-600"></i>
-                            <span id="corridaData">Data</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-location-dot text-blue-600"></i>
-                            <span id="corridaLocal">Local</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <h2 class="text-lg font-bold mb-2">Tudo o que você precisa saber</h2>
-                        <p id="corridaDescricao" class="text-gray-600 leading-relaxed">
-                            Detalhes do evento em breve.
-                        </p>
-                    </div>
-
-                    <div class="mt-6">
-                        <h3 class="text-lg font-bold mb-2">Categorias</h3>
-                        <div id="corridaCategorias" class="flex flex-wrap gap-2 text-sm text-gray-600"></div>
-                    </div>
-                </section>
-
-                <aside class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-black text-gray-900">Inscrição</h3>
-                        <span class="text-xs text-gray-500">Vagas limitadas</span>
-                    </div>
-
-                    <button id="corridaInscrever"
-                            class="mt-4 w-full bg-blue-600 text-white px-4 py-3 rounded-full font-bold hover:bg-blue-700">
-                        INSCREVA-SE
-                    </button>
-                    <div id="corridaStatus" class="text-sm text-gray-600 mt-3"></div>
-
-                    <div class="mt-6">
-                        <h4 class="text-sm font-bold text-gray-700 mb-2">Compartilhe este evento</h4>
-                        <div class="flex gap-3 text-blue-600">
-                            <i class="fa-brands fa-facebook text-xl"></i>
-                            <i class="fa-brands fa-instagram text-xl"></i>
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            <i class="fa-brands fa-linkedin text-xl"></i>
-                        </div>
-                    </div>
-                </aside>
-            </div>
+      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden corrida-card">
+        <div class="relative">
+          <img id="corridaBanner" src="" alt="Banner da corrida" class="corrida-banner">
+          <div class="absolute inset-0 bg-black/20"></div>
+          <div class="absolute bottom-4 left-6 flex items-center gap-3">
+            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Inscrições abertas</span>
+          </div>
         </div>
-    </div>
-</main>
 
-<footer class="bg-[#1a1a1a] text-white pt-16 pb-8 mt-auto">
+        <div class="grid gap-8 lg:grid-cols-[2fr,1fr] p-8">
+          <section>
+            <a href="calendario.html" class="text-sm text-blue-600 font-bold">← Voltar para o calendário</a>
+            <h1 id="corridaTitulo" class="text-2xl md:text-3xl font-black mt-3 mb-4">Corrida</h1>
+
+            <div class="space-y-2 text-gray-700">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-flag text-blue-600"></i>
+                <span id="corridaOrganizador">Organização</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-blue-600"></i>
+                <span id="corridaData">Data</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-blue-600"></i>
+                <span id="corridaLocal">Local</span>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <h2 class="text-lg font-bold mb-2">Tudo o que você precisa saber</h2>
+              <p id="corridaDescricao" class="text-gray-600 leading-relaxed">
+                Detalhes do evento em breve.
+              </p>
+            </div>
+
+            <div class="mt-6">
+              <h3 class="text-lg font-bold mb-2">Categorias</h3>
+              <div id="corridaCategorias" class="flex flex-wrap gap-2 text-sm text-gray-600"></div>
+            </div>
+          </section>
+
+          <aside class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+            <div class="flex items-center justify-between">
+              <h3 class="font-black text-gray-900">Inscrição</h3>
+              <span class="text-xs text-gray-500">Vagas limitadas</span>
+            </div>
+
+            <button id="corridaInscrever"
+                    class="mt-4 w-full bg-blue-600 text-white px-4 py-3 rounded-full font-bold hover:bg-blue-700">
+              INSCREVA-SE
+            </button>
+            <div id="corridaStatus" class="text-sm text-gray-600 mt-3"></div>
+
+            <div class="mt-6">
+              <h4 class="text-sm font-bold text-gray-700 mb-2">Compartilhe este evento</h4>
+              <div class="flex gap-3 text-blue-600">
+                <i class="fa-brands fa-facebook text-xl"></i>
+                <i class="fa-brands fa-instagram text-xl"></i>
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <i class="fa-brands fa-linkedin text-xl"></i>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-[#1a1a1a] text-white pt-16 pb-8 mt-auto">
     <div class="container mx-auto px-10">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-                <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
-                <ul class="space-y-3 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-white transition">Login</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
-                    <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
-                    <li><a href="#" class="hover:text-white transition">Termos de Compra</a></li>
-                </ul>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+            <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Central de Ajuda</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Termos de Compra</a></li>
+          </ul>
+          <div class="mt-8">
+            <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
+            <div class="flex gap-4">
+              <a href="#" class="text-white text-xl hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
+              <a href="#" class="text-white text-xl hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="text-white text-xl hover:text-red-600 transition"><i class="fab fa-youtube"></i></a>
             </div>
-            <div>
-                <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
-                <ul class="space-y-3 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-white transition">Sobre a plataforma</a></li>
-                    <li><a href="#" class="hover:text-white transition">Solicite um orçamento</a></li>
-                    <li><a href="#" class="hover:text-white transition">Suporte</a></li>
-                    <li><a href="#" class="hover:text-white transition">HUB</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
-                <ul class="space-y-3 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-white transition">Login</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
-                    <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
-                <ul class="space-y-3 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-white transition">Quem somos</a></li>
-                    <li><a href="#" class="hover:text-white transition">Trabalhe conosco</a></li>
-                    <li><a href="#" class="hover:text-white transition">Política de privacidade</a></li>
-                </ul>
-            </div>
+          </div>
         </div>
-
-        <hr class="border-gray-800 mb-8">
-
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-            <p class="text-[10px] text-gray-500">
-                © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
-            </p>
-            <div class="flex flex-col md:flex-row items-center gap-6">
-                <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
-                <div class="flex gap-4">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
-                </div>
-            </div>
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="organizacao.html" class="hover:text-white transition">Sobre a plataforma</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Solicite um orçamento</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Suporte</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">HUB</a></li>
+          </ul>
         </div>
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+            <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Central de Ajuda</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="organizacao.html" class="hover:text-white transition">Quem somos</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Trabalhe conosco</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Política de privacidade</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="border-gray-800 mb-8">
+
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <p class="text-[10px] text-gray-500">
+          © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
+        </p>
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
+          <div class="flex gap-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
+          </div>
+        </div>
+      </div>
     </div>
-</footer>
+  </footer>
 
-<script src="./js/user-menu.js"></script>
-<script src="./js/corrida.js"></script>
-
+  <script src="./js/user-menu.js"></script>
+  <script src="./js/corrida.js"></script>
 </body>
 </html>

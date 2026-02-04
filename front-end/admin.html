@@ -85,6 +85,23 @@
           <input id="adminImagemUrl" type="url" class="w-full border rounded-lg px-3 py-2" placeholder="https://.../banner.png">
         </div>
         <div>
+          <label class="block text-sm font-semibold mb-1">URL do banner</label>
+          <input id="adminBannerUrl" type="url" class="w-full border rounded-lg px-3 py-2" placeholder="https://.../banner-grande.png">
+          <p class="text-xs text-gray-500 mt-1">Use para o banner da página de detalhes.</p>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Upload do banner</label>
+          <input id="adminBannerFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-2 bg-white">
+          <p class="text-xs text-gray-500 mt-1">PNG, JPG ou WEBP (até 3MB).</p>
+          <div class="mt-3 flex items-center gap-3">
+            <button id="adminBannerRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">
+              Remover banner
+            </button>
+            <span id="adminBannerHint" class="text-xs text-gray-500"></span>
+          </div>
+          <img id="adminBannerPreview" src="" alt="Preview do banner" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+        </div>
+        <div>
           <label class="block text-sm font-semibold mb-1">Upload da imagem</label>
           <input id="adminImagemFile" type="file" accept="image/*" class="w-full border rounded-lg px-3 py-2 bg-white">
           <p class="text-xs text-gray-500 mt-1">PNG, JPG ou WEBP (até 3MB).</p>

@@ -59,7 +59,7 @@
                     <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
                         Minhas Inscrições
                     </a>
-                    <a href="organizacao.html" class="block px-4 py-3 hover:bg-gray-50">
+                    <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
                         Meus Pedidos
                     </a>
                     <button id="userMenuLogout"
@@ -97,9 +97,9 @@
                 <div class="bg-white rounded-full shadow-2xl p-2 flex items-center border border-gray-100">
                     <div class="flex items-center flex-grow px-6">
                         <i class="fas fa-search text-gray-400 text-xl mr-4"></i>
-                        <input type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-700 py-3 text-lg">
+                        <input id="indexBuscaInput" type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-700 py-3 text-lg">
                     </div>
-                    <button class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
+                    <button id="indexBuscaBtn" class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
                         Procurar
                     </button>
                 </div>
@@ -111,7 +111,7 @@
         <div class="container mx-auto px-10">
             <h2 class="text-2xl font-bold mb-4">Próximos eventos</h2>
             <div id="indexStatus" class="text-gray-600 mb-4"></div>
-            <div id="indexEventos" class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"></div>
+            <div id="indexEventos" class="grid gap-2 md:grid-cols-2 lg:grid-cols-4 justify-items-center"></div>
         </div>
         </main>
 
@@ -121,10 +121,10 @@
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Login</a></li>
-                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
-                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
-                        <li><a href="#" class="hover:text-white transition">Termos de Compra</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Central de Ajuda</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Termos de Compra</a></li>
                     </ul>
                     <div class="mt-8">
                         <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
@@ -138,26 +138,26 @@
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Sobre a plataforma</a></li>
-                        <li><a href="#" class="hover:text-white transition">Solicite um orçamento</a></li>
-                        <li><a href="#" class="hover:text-white transition">Suporte</a></li>
-                        <li><a href="#" class="hover:text-white transition">HUB</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Sobre a plataforma</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Solicite um orçamento</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Suporte</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">HUB</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Grupos Esportivos</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Login</a></li>
-                        <li><a href="#" class="hover:text-white transition">Cadastre-se</a></li>
-                        <li><a href="#" class="hover:text-white transition">Central de Ajuda</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Central de Ajuda</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Quem somos</a></li>
-                        <li><a href="#" class="hover:text-white transition">Trabalhe conosco</a></li>
-                        <li><a href="#" class="hover:text-white transition">Política de privacidade</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Quem somos</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Trabalhe conosco</a></li>
+                        <li><a href="organizacao.html" class="hover:text-white transition">Política de privacidade</a></li>
                     </ul>
                 </div>
             </div>
@@ -183,3 +183,4 @@
     <script src="./js/user-menu.js"></script>
 </body>
 </html>
+

@@ -59,7 +59,7 @@
                     <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
                         Minhas Inscrições
                     </a>
-                    <a href="organizacao.html" class="block px-4 py-3 hover:bg-gray-50">
+                    <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
                         Meus Pedidos
                     </a>
                     <button id="userMenuLogout"
@@ -71,23 +71,10 @@
         </div>
     </header>
 
-    <section class="relative text-white bg-cover bg-no-repeat" 
-        style="margin: 20px 10px; 
-               overflow: visible; 
-               border-radius: 40px; 
-               box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
-               background-position: center; 
-               background-size: cover; 
-               background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('img/fundo1.png');
-               min-height: 600px; 
-               margin-top: 17px;
-               display: flex; 
-               flex-direction: column; 
-               justify-content: center; 
-               align-items: center; 
-               text-align: center; 
-               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-
+    <section class="calendario-hero">
+    <img src="img/fundo1.png" alt="Banner do calendário" class="calendario-hero__image">
+    <div class="calendario-hero__overlay"></div>
+    <div class="calendario-hero__content">
         <h1 style="font-size: 56px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1;">
             O SEU <span style="color: #ff4800;">PRÓXIMO EVENTO</span> ESTÁ AQUI
         </h1>
@@ -95,14 +82,15 @@
         <p style="font-size: 26px; font-weight: 400; opacity: 0.9;">
             Confira o calendário completo.
         </p>
+    </div>
 
         <div class="search-overlap">
             <div class="bg-white rounded-full shadow-2xl p-2 flex items-center border border-gray-100">
                 <div class="flex items-center flex-grow px-6">
                     <i class="fas fa-search text-gray-400 text-xl mr-4"></i>
-                    <input type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-800 py-3 text-lg bg-transparent">
+                    <input id="calendarioBuscaInput" type="text" placeholder="Procurar eventos..." class="w-full outline-none text-gray-800 py-3 text-lg bg-transparent">
                 </div>
-                <button class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
+                <button id="calendarioBuscaBtn" class="bg-blue-600 text-white font-black px-12 py-4 rounded-full hover:bg-blue-700 transition uppercase">
                     PROCURAR
                 </button>
             </div>
@@ -113,7 +101,7 @@
         <div class="container mx-auto px-6 pb-12">
             <h2 class="text-2xl font-bold mb-4">Próximos eventos</h2>
             <div id="calendarioStatus" class="text-gray-600 mb-4"></div>
-            <div id="calendarioEventos" class="grid gap-6 md:grid-cols-2 lg:grid-cols-4"></div>
+                <div id="calendarioEventos" class="grid gap-2 md:grid-cols-2 lg:grid-cols-4 justify-items-center"></div>
         </div>
         </main>
 
@@ -189,3 +177,5 @@
     <script src="./js/calendario.js"></script>
 </body>
 </html>
+
+

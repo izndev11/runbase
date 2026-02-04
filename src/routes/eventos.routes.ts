@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { titulo, dataEvento, local, descricao, imagem_url, organizador, categorias } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -25,6 +25,7 @@ router.post("/", authMiddleware, async (req, res) => {
         local,
         descricao: descricao || null,
         imagem_url: imagem_url || null,
+        banner_url: banner_url || null,
         organizador: organizador || null,
         categorias: categoriasNorm.length
           ? { create: categoriasNorm.map((nome) => ({ nome })) }

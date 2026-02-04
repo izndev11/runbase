@@ -101,3 +101,237 @@
     border: none;
     outline: none;
 }
+
+/* Cards estilo Ticket Sports */
+.ticket-card {
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e7eaee;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 240px;
+}
+
+.ticket-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(17, 24, 39, 0.16);
+}
+
+.ticket-card__media {
+  position: relative;
+  padding: 12px 12px 0 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.ticket-card__image {
+  width: 220px;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  display: block;
+  background: #ffffff;
+}
+
+.ticket-card__fav {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: #f3f4f6;
+  color: #c0c6d1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+  cursor: pointer;
+}
+
+.ticket-card__fav:hover {
+  color: #ff5a7a;
+}
+
+.ticket-card__body {
+  padding: 10px 16px 18px 16px;
+}
+
+.ticket-card__status-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2px;
+  margin-bottom: 12px;
+}
+
+.ticket-card__status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e7a4d;
+  background: #dff4e7;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.ticket-card__title {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ticket-card__meta {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.ticket-card__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticket-card__row i {
+  color: #0b6bff;
+}
+
+.ticket-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.ticket-card__btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.ticket-card__btn--light {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.ticket-card__btn--light:hover {
+  background: #e5e7eb;
+}
+
+.ticket-card__btn--primary {
+  background: #0b6bff;
+  color: #ffffff;
+}
+
+.ticket-card__btn--primary:hover {
+  background: #0759d6;
+}
+
+.ticket-card__status-text {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Banner do calendário sem corte (imagem completa) */
+.calendario-hero {
+  position: relative;
+  width: 100vw;
+  margin: 26px calc(50% - 50vw);
+  border-radius: 40px;
+  overflow: visible;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1024px) {
+  .calendario-hero {
+    width: 96vw;
+    margin: 26px auto;
+  }
+}
+
+.calendario-hero__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 600px;
+  object-fit: cover;
+  object-position: center 30%;
+  background: #0f1115;
+  border-radius: 40px;
+}
+
+.calendario-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 40px;
+}
+
+.calendario-hero__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 24px;
+  color: #ffffff;
+  z-index: 1;
+}
+
+.calendario-hero .search-overlap {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+  width: min(1040px, 92%);
+  z-index: 2;
+}
+
+/* Banner da página de detalhes (1140px de largura) */
+.corrida-card {
+  max-width: 1140px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.corrida-banner {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  background: #f3f4f6;
+}
+
+@media (max-width: 768px) {
+  .corrida-banner {
+    height: auto;
+  }
+}

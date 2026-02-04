@@ -26,6 +26,7 @@ model Evento {
   local      String
   descricao  String?
   imagem_url String?
+  banner_url String?
   organizador String?
   categorias Categoria[]
   inscricoes Inscricao[]
