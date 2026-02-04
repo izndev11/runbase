@@ -2,7 +2,7 @@ function abrirCadastro() {
   // Esconde o card de login
   document.getElementById("loginCard").style.display = "none";
   // Mostra o card de cadastro
-  document.getElementById("cadastroModal").style.display = "block";
+  document.getElementById("cadastroModal").style.display = "flex";
 }
 
 function fecharCadastro() {

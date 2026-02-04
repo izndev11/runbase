@@ -9,7 +9,10 @@ function bindCadastroForm() {
 async function cadastrar(event) {
   event.preventDefault();
 
-  const nome_completo = document.getElementById("cadastro_nome").value;
+  const nomeBase = document.getElementById("cadastro_nome").value.trim();
+  const sobrenomeEl = document.getElementById("cadastro_sobrenome");
+  const sobrenome = sobrenomeEl ? sobrenomeEl.value.trim() : "";
+  const nome_completo = sobrenome ? `${nomeBase} ${sobrenome}` : nomeBase;
   const email = document.getElementById("cadastro_email").value;
   const cpf = document.getElementById("cadastro_cpf").value;
   const data_nascimento = document.getElementById("cadastro_nascimento").value;
