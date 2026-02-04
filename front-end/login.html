@@ -90,9 +90,9 @@
         </form>
 
         <p style="margin-top: 25px; color: #666;">
-            Novo no Logo Sports?
+            Novo no SpeedRun?
             <a href="javascript:void(0)" onclick="abrirCadastro()"
-               style="color: #0095ff; font-weight: bold;">Registar-me</a>
+               style="color: #0095ff; font-weight: bold;">Registrar-me</a>
         </p>
     </div>
 </section>
@@ -130,6 +130,32 @@
             <div style="text-align: left; margin-bottom: 12px;">
                 <label style="font-weight: bold; font-size: 13px;">Data de nascimento</label>
                 <input type="date" id="cadastro_nascimento"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Telefone</label>
+                <input type="tel" id="cadastro_telefone" placeholder="(00) 00000-0000"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Sexo</label>
+                <select id="cadastro_sexo"
+                        style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px; background: #fff;">
+                    <option value="">Selecione</option>
+                    <option value="F">Feminino</option>
+                    <option value="M">Masculino</option>
+                    <option value="O">Outro</option>
+                    <option value="N">Prefiro não informar</option>
+                </select>
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Cidade</label>
+                <input type="text" id="cadastro_cidade" placeholder="Sua cidade"
+                       style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
+            </div>
+            <div style="text-align: left; margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 13px;">Estado</label>
+                <input type="text" id="cadastro_estado" placeholder="UF"
                        style="width: 100%; padding: 12px; border: 1.5px solid #0095ff; border-radius: 10px;">
             </div>
             <div style="text-align: left; margin-bottom: 16px;">

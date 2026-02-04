@@ -13,9 +13,23 @@ async function cadastrar(event) {
   const email = document.getElementById("cadastro_email").value;
   const cpf = document.getElementById("cadastro_cpf").value;
   const data_nascimento = document.getElementById("cadastro_nascimento").value;
+  const telefone = document.getElementById("cadastro_telefone").value;
+  const sexo = document.getElementById("cadastro_sexo").value;
+  const cidade = document.getElementById("cadastro_cidade").value;
+  const estado = document.getElementById("cadastro_estado").value;
   const senha = document.getElementById("cadastro_senha").value;
 
-  if (!nome_completo || !email || !cpf || !data_nascimento || !senha) {
+  if (
+    !nome_completo ||
+    !email ||
+    !cpf ||
+    !data_nascimento ||
+    !telefone ||
+    !sexo ||
+    !cidade ||
+    !estado ||
+    !senha
+  ) {
     alert("Preencha todos os campos do cadastro");
     return;
   }
@@ -31,6 +45,10 @@ async function cadastrar(event) {
         email,
         cpf,
         data_nascimento,
+        telefone,
+        sexo,
+        cidade,
+        estado,
         senha,
       }),
     });
