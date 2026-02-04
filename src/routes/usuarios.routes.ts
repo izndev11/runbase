@@ -6,6 +6,8 @@ import { apiError } from "../utils/apiError";
 
 const router = Router();
 
+router.get("/", (req, res) => res.json([]));
+
 router.post("/", async (req, res) => {
   try {
     const { nome_completo, email, cpf, senha, data_nascimento } = req.body;
