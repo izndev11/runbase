@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../middlewares/auth";
 import { apiError } from "../utils/apiError";
+import { sendInscricaoEmail } from "../utils/email";
 
 const router = Router();
 
@@ -23,7 +24,26 @@ router.post("/", authMiddleware, async (req, res) => {
         usuarioId,
         eventoId: Number(eventoId),
       },
+      include: {
+        usuario: true,
+        evento: true,
+      },
     });
+
+    try {
+      if (inscricao.usuario?.email) {
+        await sendInscricaoEmail({
+          to: inscricao.usuario.email,
+          nome: inscricao.usuario.nome_completo || "Participante",
+          eventoTitulo: inscricao.evento?.titulo || "Evento",
+          dataEvento: inscricao.evento?.dataEvento,
+          local: inscricao.evento?.local,
+          inscricaoId: inscricao.id,
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao enviar e-mail de inscrição:", error);
+    }
 
     return res.status(201).json(inscricao);
   } catch (error) {
