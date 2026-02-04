@@ -1,9 +1,9 @@
-const token = localStorage.getItem("token");
+ï»¿const token = localStorage.getItem("token");
 const listEl = document.getElementById("inscricoesList");
 const statusEl = document.getElementById("inscricoesStatus");
 
 if (!token) {
-  alert("Faça login primeiro");
+  alert("FaÃ§a login primeiro");
   window.location.href = "login.html";
 }
 
@@ -16,7 +16,7 @@ function renderInscricoes(inscricoes) {
   listEl.innerHTML = "";
 
   if (!inscricoes.length) {
-    listEl.innerHTML = "<p>Você ainda não tem inscrições.</p>";
+    listEl.innerHTML = "<p>VocÃª ainda nÃ£o tem inscriÃ§Ãµes.</p>";
     return;
   }
 
@@ -80,10 +80,10 @@ function renderInscricoes(inscricoes) {
           return;
         }
 
-        status.textContent = "Inscrição cancelada";
+        status.textContent = "InscriÃ§Ã£o cancelada";
       } catch (err) {
         console.error(err);
-        status.textContent = "Erro de conexão com o servidor";
+        status.textContent = "Erro de conexÃ£o com o servidor";
         cancelBtn.disabled = false;
       }
     });
@@ -93,7 +93,7 @@ function renderInscricoes(inscricoes) {
 }
 
 async function carregarInscricoes() {
-  setStatus("Carregando inscrições...");
+  setStatus("Carregando inscriÃ§Ãµes...");
   try {
     const response = await fetch("http://localhost:3000/api/inscricoes/minhas", {
       headers: {
@@ -103,7 +103,7 @@ async function carregarInscricoes() {
     const inscricoes = await response.json();
 
     if (!response.ok) {
-      setStatus(inscricoes.error || "Erro ao carregar inscrições");
+      setStatus(inscricoes.error || "Erro ao carregar inscriÃ§Ãµes");
       return;
     }
 
@@ -111,10 +111,11 @@ async function carregarInscricoes() {
     renderInscricoes(inscricoes);
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexão com o servidor");
+    setStatus("Erro de conexÃ£o com o servidor");
   }
 }
 
 carregarInscricoes();
+
 
 

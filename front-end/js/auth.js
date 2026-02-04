@@ -1,4 +1,4 @@
-console.log("AUTH.JS CARREGADO");
+﻿console.log("AUTH.JS CARREGADO");
 
 function bindLoginForm() {
   const form = document.getElementById("loginForm");
@@ -40,10 +40,11 @@ async function login(event) {
     window.location.href = "calendario.html";
   } catch (err) {
     console.error(err);
-    alert("Erro de conex�o com o servidor");
+    alert("Erro de conexão com o servidor");
   }
 }
 
 document.addEventListener("DOMContentLoaded", bindLoginForm);
+
 
 

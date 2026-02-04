@@ -1,4 +1,4 @@
-console.log("CADASTRO.JS CARREGADO");
+Ôªøconsole.log("CADASTRO.JS CARREGADO");
 
 function bindCadastroForm() {
   const form = document.getElementById("cadastroForm");
@@ -65,18 +65,19 @@ async function cadastrar(event) {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error || "Erro ao criar usu·rio");
+      alert(data.error || "Erro ao criar usu√°rio");
       return;
     }
 
-    alert("Cadastro realizado! FaÁa login para continuar.");
+    alert("Cadastro realizado! Fa√ßa login para continuar.");
     fecharCadastro();
   } catch (err) {
     console.error(err);
-    alert("Erro de conex„o com o servidor");
+    alert("Erro de conex√£o com o servidor");
   }
 }
 
 document.addEventListener("DOMContentLoaded", bindCadastroForm);
+
 
 
