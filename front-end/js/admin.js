@@ -6,6 +6,9 @@ const inscricoesEl = document.getElementById("adminInscricoesList");
 const editIdEl = document.getElementById("adminEventoId");
 const cancelEditBtn = document.getElementById("adminCancelEdit");
 const saveBtn = document.getElementById("adminSaveBtn");
+const exportCsvBtn = document.getElementById("adminExportCsv");
+let lastInscricoesEventoId = null;
+let lastInscricoesEventoTitulo = "";
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
@@ -89,6 +92,8 @@ function renderEventos(eventos) {
 
 function renderInscricoes(inscricoes, titulo) {
   if (!inscricoesEl) return;
+  lastInscricoesEventoTitulo = titulo;
+  if (exportCsvBtn) exportCsvBtn.classList.remove("hidden");
   if (!inscricoes.length) {
     inscricoesEl.innerHTML = `<p>Nenhuma inscrição para ${titulo}.</p>`;
     return;
@@ -107,6 +112,7 @@ function renderInscricoes(inscricoes, titulo) {
 
 async function carregarInscricoes(eventoId, titulo) {
   if (!token) return;
+  lastInscricoesEventoId = eventoId;
   try {
     if (inscricoesEl) inscricoesEl.innerHTML = "Carregando inscrições...";
     const response = await fetch(`http://localhost:3000/admin/eventos/${eventoId}/inscricoes`, {
@@ -194,30 +200,33 @@ if (form) {
   form.addEventListener("submit", criarEvento);
 }
 
-carregarEventos();
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ titulo, dataEvento, local }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      setStatus(data.error || "Erro ao salvar evento");
-      return;
+if (exportCsvBtn) {
+  exportCsvBtn.addEventListener("click", async () => {
+    if (!lastInscricoesEventoId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/admin/eventos/${lastInscricoesEventoId}/inscricoes.csv`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!response.ok) {
+        setStatus("Erro ao exportar CSV");
+        return;
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `inscricoes_${lastInscricoesEventoId}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setStatus(`CSV exportado (${lastInscricoesEventoTitulo})`);
+    } catch (err) {
+      console.error(err);
+      setStatus("Erro de conexão ao exportar CSV");
     }
-
-    setStatus("Evento cadastrado!");
-    form.reset();
-    carregarEventos();
-  } catch (err) {
-    console.error(err);
-    setStatus("Erro de conexão com o servidor");
-  }
-}
-
-if (form) {
-  form.addEventListener("submit", criarEvento);
+  });
 }
 
 carregarEventos();

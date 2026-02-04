@@ -71,7 +71,11 @@ router.delete("/eventos/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
 
-    await prisma.evento.delete({ where: { id } });
+    await prisma.$transaction([
+      prisma.inscricao.deleteMany({ where: { eventoId: id } }),
+      prisma.categoria.deleteMany({ where: { eventoId: id } }),
+      prisma.evento.delete({ where: { id } }),
+    ]);
     return res.json({ message: "Evento removido" });
   } catch (error) {
     console.error(error);
@@ -93,6 +97,41 @@ router.get("/eventos/:id/inscricoes", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao buscar inscrições" });
+  }
+});
+
+router.get("/eventos/:id/inscricoes.csv", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const inscricoes = await prisma.inscricao.findMany({
+      where: { eventoId: id },
+      include: {
+        usuario: { select: { nome_completo: true, email: true } },
+        evento: { select: { titulo: true } },
+      },
+      orderBy: { id: "asc" },
+    });
+
+    const header = ["nome_completo", "email", "status", "evento"].join(",");
+    const rows = inscricoes.map((i) => {
+      const nome = (i.usuario?.nome_completo || "").replace(/"/g, '""');
+      const email = (i.usuario?.email || "").replace(/"/g, '""');
+      const status = (i.status || "").replace(/"/g, '""');
+      const evento = (i.evento?.titulo || "").replace(/"/g, '""');
+      return `"${nome}","${email}","${status}","${evento}"`;
+    });
+
+    const csv = [header, ...rows].join("\n");
+
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="inscricoes_evento_${id}.csv"`
+    );
+    return res.send(csv);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao exportar CSV" });
   }
 });
 
