@@ -8,7 +8,7 @@ async function main() {
   const senha_hash = await bcrypt.hash("123456", 10);
   const usuario = await prisma.usuario.create({
     data: {
-      nome_completo: "JoÃ£o Silva",
+      nome_completo: "João Silva",
       email: "joao@email.com",
       cpf: "12345678900",
       senha_hash,
@@ -32,7 +32,7 @@ async function main() {
     data: {
       titulo: "Corrida da Cidade",
       dataEvento: new Date("2026-05-10"),
-      local: "SÃ£o Paulo",
+      local: "São Paulo",
     },
   });
 
@@ -50,7 +50,7 @@ async function main() {
     },
   });
 
-  console.log("Seed concluÃ­do ðŸš€");
+  console.log("Seed concluído 🚀");
 }
 
 main()

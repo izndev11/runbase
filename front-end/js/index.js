@@ -40,7 +40,7 @@ function renderEventos(eventos) {
       </div>
       <div class="ticket-card__body">
         <div class="ticket-card__status-wrap">
-          <span class="ticket-card__status">InscriÃƒÂ§ÃƒÂµes abertas</span>
+        <span class="ticket-card__status">Inscrições abertas</span>
         </div>
         <a href="${detalhesUrl}" class="ticket-card__title" title="${evento.titulo}">
           ${evento.titulo}
@@ -103,7 +103,7 @@ async function carregarEventos() {
     renderEventos(ordenados.slice(0, 8));
   } catch (err) {
     console.error(err);
-    setStatus("Erro de conexÃƒÂ£o com o servidor");
+    setStatus("Erro de conexão com o servidor");
   }
 }
 
