@@ -7,19 +7,39 @@ const router = Router();
 
 router.use(authMiddleware, adminMiddleware);
 
+function normalizarCategorias(input: unknown) {
+  if (Array.isArray(input)) {
+    return input.map((item) => String(item).trim()).filter(Boolean);
+  }
+  if (typeof input === "string") {
+    return input
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
 router.post("/eventos", async (req, res) => {
   try {
-    const { titulo, dataEvento, local } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, organizador, categorias } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
+    const categoriasNorm = normalizarCategorias(categorias);
     const evento = await prisma.evento.create({
       data: {
         titulo,
         dataEvento: new Date(dataEvento),
         local,
+        descricao: descricao || null,
+        imagem_url: imagem_url || null,
+        organizador: organizador || null,
+        categorias: categoriasNorm.length
+          ? { create: categoriasNorm.map((nome) => ({ nome })) }
+          : undefined,
       },
     });
 
@@ -34,6 +54,7 @@ router.get("/eventos", async (_req, res) => {
   const eventos = await prisma.evento.findMany({
     orderBy: { dataEvento: "asc" },
     include: {
+      categorias: true,
       _count: {
         select: { inscricoes: true },
       },
@@ -45,18 +66,26 @@ router.get("/eventos", async (_req, res) => {
 router.put("/eventos/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { titulo, dataEvento, local } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, organizador, categorias } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
+    const categoriasNorm = normalizarCategorias(categorias);
     const evento = await prisma.evento.update({
       where: { id },
       data: {
         titulo,
         dataEvento: new Date(dataEvento),
         local,
+        descricao: descricao || null,
+        imagem_url: imagem_url || null,
+        organizador: organizador || null,
+        categorias: {
+          deleteMany: {},
+          create: categoriasNorm.map((nome) => ({ nome })),
+        },
       },
     });
 
