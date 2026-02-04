@@ -12,7 +12,7 @@ function fecharCadastro() {
   document.getElementById("loginCard").style.display = "block";
 }
 
-// FunÃ§Ã£o para carregar estados do IBGE ao abrir a pÃ¡gina
+// Função para carregar estados do IBGE ao abrir a página
 window.onload = function () {
   fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
     .then((response) => response.json())
@@ -27,7 +27,7 @@ window.onload = function () {
     });
 };
 
-// FunÃ§Ã£o para carregar cidades quando o estado mudar
+// Função para carregar cidades quando o estado mudar
 function carregarCidades() {
   const estadoSigla = document.getElementById("estado").value;
   const cidadeSelect = document.getElementById("cidade");
@@ -56,7 +56,7 @@ function carregarCidades() {
 
 fetch("http://localhost:3000/eventos")
   .then((res) => res.json())
-  .then((dados) => console.log("ConexÃ£o bem sucedida! Corridas:", dados))
+  .then((dados) => console.log("Conexão bem sucedida! Corridas:", dados))
   .catch((err) =>
-    console.error("O Front ainda nÃ£o vÃª o Back. Verifique se o servidor estÃ¡ rodando.", err)
+    console.error("O Front ainda não vê o Back. Verifique se o servidor está rodando.", err)
   );

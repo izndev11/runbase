@@ -9,11 +9,11 @@ router.post("/", authMiddleware, async (req, res) => {
   const usuarioId = req.userId;
 
   if (!usuarioId) {
-    return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+    return res.status(401).json({ error: "Usuário não autenticado" });
   }
 
   if (!inscricaoId || !metodo || valor === undefined) {
-    return res.status(400).json({ error: "Dados obrigatÃ³rios" });
+    return res.status(400).json({ error: "Dados obrigatórios" });
   }
 
   const inscricao = await prisma.inscricao.findFirst({
@@ -24,7 +24,7 @@ router.post("/", authMiddleware, async (req, res) => {
   });
 
   if (!inscricao) {
-    return res.status(404).json({ error: "InscriÃ§Ã£o nÃ£o encontrada" });
+    return res.status(404).json({ error: "Inscrição não encontrada" });
   }
 
   const pagamento = await prisma.pagamento.create({

@@ -59,15 +59,15 @@ async function cadastrar(event) {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.error || "Erro ao criar usuÃ¡rio");
+      alert(data.error || "Erro ao criar usuário");
       return;
     }
 
-    alert("Cadastro realizado! FaÃ§a login para continuar.");
+    alert("Cadastro realizado! Faça login para continuar.");
     fecharCadastro();
   } catch (err) {
     console.error(err);
-    alert("Erro de conexÃ£o com o servidor");
+    alert("Erro de conexão com o servidor");
   }
 }
 

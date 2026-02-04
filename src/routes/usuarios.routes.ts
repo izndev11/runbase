@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     const { nome_completo, email, cpf, senha, data_nascimento } = req.body;
 
     if (!nome_completo || !email || !cpf || !senha || !data_nascimento) {
-      return res.status(400).json({ error: "Dados obrigatÃ³rios faltando" });
+      return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
     const usuarioExistente = await prisma.usuario.findFirst({
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
     });
 
     if (usuarioExistente) {
-      return res.status(400).json({ error: "UsuÃ¡rio jÃ¡ existe" });
+      return res.status(400).json({ error: "Usuário já existe" });
     }
 
     const senha_hash = await bcrypt.hash(senha, 10);
@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
     return res.status(201).json(usuario);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Erro ao criar usuÃ¡rio" });
+    return res.status(500).json({ error: "Erro ao criar usuário" });
   }
 });
 
@@ -65,7 +65,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+      return res.status(401).json({ error: "Usuário não autenticado" });
     }
 
     const usuario = await prisma.usuario.findUnique({
@@ -81,13 +81,13 @@ router.get("/me", authMiddleware, async (req, res) => {
     });
 
     if (!usuario) {
-      return apiError(res, 404, "UsuÃ¡rio nÃ£o encontrado");
+      return apiError(res, 404, "Usuário não encontrado");
     }
 
     return res.json(usuario);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Erro ao buscar usuÃ¡rio" });
+    return res.status(500).json({ error: "Erro ao buscar usuário" });
   }
 });
 

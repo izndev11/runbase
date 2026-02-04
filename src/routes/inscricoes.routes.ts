@@ -10,11 +10,11 @@ router.post("/", authMiddleware, async (req, res) => {
   const usuarioId = req.userId;
 
   if (!usuarioId) {
-    return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+    return res.status(401).json({ error: "Usuário não autenticado" });
   }
 
   if (!eventoId) {
-    return res.status(400).json({ error: "eventoId Ã© obrigatÃ³rio" });
+    return res.status(400).json({ error: "eventoId é obrigatório" });
   }
 
   try {
@@ -29,7 +29,7 @@ router.post("/", authMiddleware, async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ error: "UsuÃ¡rio jÃ¡ inscrito nesse evento" });
+      .json({ error: "Usuário já inscrito nesse evento" });
   }
 });
 
@@ -38,7 +38,7 @@ router.get("/minhas", authMiddleware, async (req, res) => {
     const usuarioId = req.userId;
 
     if (!usuarioId) {
-      return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+      return res.status(401).json({ error: "Usuário não autenticado" });
     }
 
     const inscricoes = await prisma.inscricao.findMany({
@@ -49,7 +49,7 @@ router.get("/minhas", authMiddleware, async (req, res) => {
     return res.json(inscricoes);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Erro ao listar inscriÃ§Ãµes" });
+    return res.status(500).json({ error: "Erro ao listar inscrições" });
   }
 });
 
@@ -58,7 +58,7 @@ router.patch("/:id/pagar", authMiddleware, async (req, res) => {
   const id = Number(req.params.id);
 
   if (!usuarioId) {
-    return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+    return res.status(401).json({ error: "Usuário não autenticado" });
   }
 
   const inscricao = await prisma.inscricao.findUnique({
@@ -66,7 +66,7 @@ router.patch("/:id/pagar", authMiddleware, async (req, res) => {
   });
 
   if (!inscricao) {
-    return apiError(res, 404, "InscriÃ§Ã£o nÃ£o encontrada");
+    return apiError(res, 404, "Inscrição não encontrada");
   }
 
   if (inscricao.usuarioId !== usuarioId) {
@@ -76,7 +76,7 @@ router.patch("/:id/pagar", authMiddleware, async (req, res) => {
   if (inscricao.status !== "PENDENTE") {
     return res
       .status(400)
-      .json({ error: "InscriÃ§Ã£o nÃ£o estÃ¡ pendente" });
+      .json({ error: "Inscrição não está pendente" });
   }
 
   const inscricaoPaga = await prisma.inscricao.update({
@@ -93,7 +93,7 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
     const id = Number(req.params.id);
 
     if (!usuarioId) {
-      return res.status(401).json({ error: "UsuÃ¡rio nÃ£o autenticado" });
+      return res.status(401).json({ error: "Usuário não autenticado" });
     }
 
     const inscricao = await prisma.inscricao.findUnique({
@@ -101,7 +101,7 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
     });
 
     if (!inscricao) {
-      return apiError(res, 404, "InscriÃ§Ã£o nÃ£o encontrada");
+      return apiError(res, 404, "Inscrição não encontrada");
     }
 
     if (inscricao.usuarioId !== usuarioId) {
@@ -110,13 +110,13 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
 
     if (inscricao.status === "PAGO") {
       return res.status(400).json({
-        error: "InscriÃ§Ã£o paga nÃ£o pode ser cancelada",
+        error: "Inscrição paga não pode ser cancelada",
       });
     }
 
     if (inscricao.status === "CANCELADO") {
       return res.status(400).json({
-        error: "InscriÃ§Ã£o jÃ¡ estÃ¡ cancelada",
+        error: "Inscrição já está cancelada",
       });
     }
 
@@ -126,12 +126,12 @@ router.patch("/:id/cancelar", authMiddleware, async (req, res) => {
     });
 
     return res.json({
-      message: "InscriÃ§Ã£o cancelada com sucesso",
+      message: "Inscrição cancelada com sucesso",
       inscricao: inscricaoCancelada,
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Erro ao cancelar inscriÃ§Ã£o" });
+    return res.status(500).json({ error: "Erro ao cancelar inscrição" });
   }
 });
 

@@ -8,7 +8,7 @@ router.post("/", authMiddleware, async (req, res) => {
   const { nome, eventoId } = req.body;
 
   if (!nome || !eventoId) {
-    return res.status(400).json({ error: "Dados obrigatÃ³rios faltando" });
+    return res.status(400).json({ error: "Dados obrigatórios faltando" });
   }
 
   const categoria = await prisma.categoria.create({
