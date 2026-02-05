@@ -10,7 +10,7 @@ router.get("/", (req, res) => res.json([]));
 
 router.post("/", async (req, res) => {
   try {
-    const { nome_completo, email, cpf, senha, data_nascimento } = req.body;
+    const { nome_completo, email, cpf, senha, data_nascimento, sexo } = req.body;
 
     if (!nome_completo || !email || !cpf || !senha || !data_nascimento) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
         cpf,
         senha_hash,
         data_nascimento: new Date(data_nascimento),
+        sexo: sexo ? String(sexo) : null,
       },
     });
 
@@ -75,6 +76,8 @@ router.get("/me", authMiddleware, async (req, res) => {
         nome_completo: true,
         email: true,
         cpf: true,
+        data_nascimento: true,
+        sexo: true,
         role: true,
         criadoEm: true,
       },

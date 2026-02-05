@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha de Inscrição</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-800 flex flex-col min-h-screen">
+  <header class="bg-white sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+        <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+          <img src="img/logosite.png" alt="Logo"
+               style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1.0)'">
+        </a>
+      </div>
+
+      <nav class="hidden md:flex space-x-6 font-medium">
+        <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+        <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
+        <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
+      </nav>
+
+      <a id="loginLink" href="login.html" class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+        Login
+      </a>
+
+      <div id="userMenuContainer" class="relative">
+        <button id="userMenuButton"
+                class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+          <span id="userMenuName">Olá, usuário</span>
+        </button>
+
+        <div id="userMenuDropdown"
+             class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+            Painel Admin
+          </a>
+          <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
+            Minhas Inscrições
+          </a>
+          <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
+            Meus Pedidos
+          </a>
+          <button id="userMenuLogout"
+                  class="w-full text-left px-4 py-3 hover:bg-gray-50">
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <section class="container mx-auto px-6 py-10">
+      <div class="ficha-header">
+        <div class="ficha-header__title">
+          <span id="inscricaoEventoNome">Evento</span>
+          <span id="inscricaoEventoData">Data</span>
+        </div>
+        <div class="ficha-header__cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Itens 0</span>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <h2 class="ficha-section__title">Participante</h2>
+        <div class="ficha-card ficha-participante">
+          <div class="ficha-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="ficha-participante__info">
+            <strong id="inscricaoParticipanteNome">Participante</strong>
+            <span id="inscricaoParticipanteMeta">--/--/---- - --</span>
+          </div>
+          <button id="inscricaoParticipanteRemover" class="ficha-trash" aria-label="Remover participante">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <h2 class="ficha-section__title">Questionário</h2>
+        <div class="ficha-grid">
+          <div class="ficha-card">
+            <label class="ficha-label">Declara estar apto fisicamente e ter lido o REGULAMENTO estando de acordo para participar do evento</label>
+            <select id="inscricaoRegulamento" class="ficha-input">
+              <option value="">Selecione a opção</option>
+              <option value="SIM">Sim</option>
+              <option value="NAO">Não</option>
+            </select>
+          </div>
+          <div class="ficha-card">
+            <label class="ficha-label">Em caso de emergência devemos ligar para o número (escrever o número de emergência e o nome do contato)</label>
+            <input id="inscricaoEmergencia" type="text" class="ficha-input" placeholder="Ex.: (11) 99999-9999 - Maria">
+          </div>
+          <div class="ficha-card">
+            <label class="ficha-label">Equipe (*Caso não possua digite: Ex.: Avulso)</label>
+            <input id="inscricaoEquipe" type="text" class="ficha-input" placeholder="Informe a equipe">
+          </div>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <div class="ficha-card ficha-cupom">
+          <label class="ficha-label">Cupom de presente/desconto</label>
+          <div class="ficha-cupom__row">
+            <input id="inscricaoCupom" type="text" class="ficha-input" placeholder="Informe o cupom">
+            <button id="inscricaoCupomBtn" class="ficha-btn ficha-btn--primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <h2 class="ficha-section__title">Produtos do kit</h2>
+        <div class="ficha-card ficha-kit">
+          <div class="ficha-kit__label">CAMISETA</div>
+          <label class="ficha-label">Escolha o tamanho</label>
+          <select id="inscricaoCamiseta" class="ficha-input">
+            <option value="">Selecione</option>
+            <option value="PP">PP</option>
+            <option value="P">P</option>
+            <option value="M">M</option>
+            <option value="G">G</option>
+            <option value="GG">GG</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ficha-footer">
+        <button id="inscricaoConfirmar" class="ficha-btn ficha-btn--ghost" disabled>
+          INCLUIR E ADICIONAR NOVO
+        </button>
+        <div id="inscricaoStatus" class="text-sm text-gray-600"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./js/user-menu.js"></script>
+  <script src="./js/inscricao.js"></script>
+</body>
+</html>

@@ -13,6 +13,7 @@ model Usuario {
   email           String      @unique
   cpf             String      @unique
   senha_hash      String
+  sexo            String?
   role            Role        @default(USER)
   data_nascimento DateTime
   inscricoes      Inscricao[]

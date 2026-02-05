@@ -25,6 +25,16 @@ function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
 }
 
+function irParaTermos() {
+  if (!opcaoSelecionadaId) {
+    setStatus("Selecione uma opcao antes de continuar.");
+    return;
+  }
+  if (!eventoId) return;
+  const destino = `termos.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoSelecionadaId)}`;
+  window.location.href = destino;
+}
+
 function formatDate(value) {
   if (!value) return "-";
   return new Date(value).toLocaleDateString("pt-BR");
@@ -224,7 +234,7 @@ async function inscrever() {
 }
 
 if (inscreverBtn) {
-  inscreverBtn.addEventListener("click", inscrever);
+  inscreverBtn.addEventListener("click", irParaTermos);
 }
 
 carregarEvento();
