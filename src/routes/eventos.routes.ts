@@ -56,6 +56,7 @@ router.get("/", async (req, res) => {
         : undefined,
       include: {
         categorias: true,
+        opcoes: true,
       },
     });
 

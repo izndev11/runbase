@@ -29,6 +29,7 @@ model Evento {
   banner_url String?
   organizador String?
   categorias Categoria[]
+  opcoes     EventoOpcao[]
   inscricoes Inscricao[]
 }
 
@@ -63,6 +64,29 @@ model Pagamento {
 
   inscricaoId Int      @unique
   inscricao   Inscricao @relation(fields: [inscricaoId], references: [id])
+  opcaoId      Int?
+  opcao        EventoOpcao? @relation(fields: [opcaoId], references: [id])
+  valor_base   Float?
+  taxa_percentual Float?
+  valor_taxa   Float?
+}
+
+model EventoOpcao {
+  id              Int      @id @default(autoincrement())
+  titulo          String
+  tipo            TipoOpcao
+  distancia_km    Float
+  preco           Float
+  taxa_percentual Float
+  eventoId        Int
+
+  evento Evento @relation(fields: [eventoId], references: [id])
+  pagamentos Pagamento[]
+}
+
+enum TipoOpcao {
+  CORRIDA
+  CAMINHADA
 }
 
 enum Role {

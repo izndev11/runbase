@@ -7,7 +7,7 @@ import { sendInscricaoEmail } from "../utils/email";
 const router = Router();
 
 router.post("/", authMiddleware, async (req, res) => {
-  const { eventoId } = req.body;
+  const { eventoId, opcaoId } = req.body;
   const usuarioId = req.userId;
 
   if (!usuarioId) {
@@ -32,6 +32,12 @@ router.post("/", authMiddleware, async (req, res) => {
 
     try {
       if (inscricao.usuario?.email) {
+        let opcao = null;
+        if (opcaoId) {
+          opcao = await prisma.eventoOpcao.findUnique({
+            where: { id: Number(opcaoId) },
+          });
+        }
         await sendInscricaoEmail({
           to: inscricao.usuario.email,
           nome: inscricao.usuario.nome_completo || "Participante",
@@ -39,6 +45,9 @@ router.post("/", authMiddleware, async (req, res) => {
           dataEvento: inscricao.evento?.dataEvento,
           local: inscricao.evento?.local,
           inscricaoId: inscricao.id,
+          opcaoTitulo: opcao?.titulo,
+          opcaoTipo: opcao?.tipo,
+          opcaoDistanciaKm: opcao?.distancia_km,
         });
       }
     } catch (error) {

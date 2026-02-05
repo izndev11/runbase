@@ -21,15 +21,31 @@ function normalizarCategorias(input: unknown) {
   return [];
 }
 
+function normalizarOpcoes(input: unknown) {
+  if (!Array.isArray(input)) return [];
+  return input
+    .map((item) => {
+      const titulo = String(item?.titulo || "").trim();
+      const tipo = String(item?.tipo || "").trim().toUpperCase();
+      const distancia_km = Number(item?.distancia_km ?? item?.distanciaKm ?? 0);
+      const preco = Number(item?.preco ?? 0);
+      const taxa_percentual = Number(item?.taxa_percentual ?? item?.taxaPercentual ?? 0);
+      if (!titulo || !tipo || !distancia_km || !preco) return null;
+      return { titulo, tipo, distancia_km, preco, taxa_percentual };
+    })
+    .filter(Boolean);
+}
+
 router.post("/eventos", async (req, res) => {
   try {
-    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias, opcoes } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
     const categoriasNorm = normalizarCategorias(categorias);
+    const opcoesNorm = normalizarOpcoes(opcoes);
     const evento = await prisma.evento.create({
       data: {
         titulo,
@@ -41,6 +57,17 @@ router.post("/eventos", async (req, res) => {
         organizador: organizador || null,
         categorias: categoriasNorm.length
           ? { create: categoriasNorm.map((nome) => ({ nome })) }
+          : undefined,
+        opcoes: opcoesNorm.length
+          ? {
+              create: opcoesNorm.map((opcao) => ({
+                titulo: opcao.titulo,
+                tipo: opcao.tipo as any,
+                distancia_km: opcao.distancia_km,
+                preco: opcao.preco,
+                taxa_percentual: opcao.taxa_percentual,
+              })),
+            }
           : undefined,
       },
     });
@@ -57,6 +84,7 @@ router.get("/eventos", async (_req, res) => {
     orderBy: { dataEvento: "asc" },
     include: {
       categorias: true,
+      opcoes: true,
       _count: {
         select: { inscricoes: true },
       },
@@ -68,13 +96,14 @@ router.get("/eventos", async (_req, res) => {
 router.put("/eventos/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias } = req.body;
+    const { titulo, dataEvento, local, descricao, imagem_url, banner_url, organizador, categorias, opcoes } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
     const categoriasNorm = normalizarCategorias(categorias);
+    const opcoesNorm = normalizarOpcoes(opcoes);
     const evento = await prisma.evento.update({
       where: { id },
       data: {
@@ -88,6 +117,16 @@ router.put("/eventos/:id", async (req, res) => {
         categorias: {
           deleteMany: {},
           create: categoriasNorm.map((nome) => ({ nome })),
+        },
+        opcoes: {
+          deleteMany: {},
+          create: opcoesNorm.map((opcao) => ({
+            titulo: opcao.titulo,
+            tipo: opcao.tipo as any,
+            distancia_km: opcao.distancia_km,
+            preco: opcao.preco,
+            taxa_percentual: opcao.taxa_percentual,
+          })),
         },
       },
     });
@@ -106,6 +145,7 @@ router.delete("/eventos/:id", async (req, res) => {
     await prisma.$transaction([
       prisma.inscricao.deleteMany({ where: { eventoId: id } }),
       prisma.categoria.deleteMany({ where: { eventoId: id } }),
+      prisma.eventoOpcao.deleteMany({ where: { eventoId: id } }),
       prisma.evento.delete({ where: { id } }),
     ]);
     return res.json({ message: "Evento removido" });

@@ -1,4 +1,4 @@
-﻿const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 const form = document.getElementById("adminEventoForm");
 const statusEl = document.getElementById("adminStatus");
 const listEl = document.getElementById("adminEventosList");
@@ -7,16 +7,21 @@ const editIdEl = document.getElementById("adminEventoId");
 const cancelEditBtn = document.getElementById("adminCancelEdit");
 const saveBtn = document.getElementById("adminSaveBtn");
 const exportCsvBtn = document.getElementById("adminExportCsv");
+
 const imagemFileEl = document.getElementById("adminImagemFile");
 const imagemPreviewEl = document.getElementById("adminImagemPreview");
 const imagemRemoveEl = document.getElementById("adminImagemRemove");
 const imagemHintEl = document.getElementById("adminImagemHint");
 const imagemUrlEl = document.getElementById("adminImagemUrl");
-const bannerUrlEl = document.getElementById("adminBannerUrl");
-const bannerFileEl = document.getElementById("adminBannerFile");
-const bannerPreviewEl = document.getElementById("adminBannerPreview");
-const bannerRemoveEl = document.getElementById("adminBannerRemove");
-const bannerHintEl = document.getElementById("adminBannerHint");
+
+const opcaoTituloEl = document.getElementById("adminOpcaoTitulo");
+const opcaoTipoEl = document.getElementById("adminOpcaoTipo");
+const opcaoDistanciaEl = document.getElementById("adminOpcaoDistancia");
+const opcaoPrecoEl = document.getElementById("adminOpcaoPreco");
+const opcaoTaxaEl = document.getElementById("adminOpcaoTaxa");
+const opcaoAddEl = document.getElementById("adminOpcaoAdd");
+const opcaoClearEl = document.getElementById("adminOpcaoClear");
+const opcoesListEl = document.getElementById("adminOpcoesList");
 
 const CLOUDINARY_CLOUD_NAME = "dfznaddhi";
 const CLOUDINARY_UPLOAD_PRESET = "rrunbasedev";
@@ -26,6 +31,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 let lastInscricoesEventoId = null;
 let lastInscricoesEventoTitulo = "";
+let opcoes = [];
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
@@ -48,21 +54,64 @@ function setImagemHint(message) {
   if (imagemHintEl) imagemHintEl.textContent = message || "";
 }
 
-function setBannerPreview(url) {
-  if (!bannerPreviewEl) return;
-  if (url) {
-    bannerPreviewEl.src = url;
-    bannerPreviewEl.classList.remove("hidden");
-    if (bannerRemoveEl) bannerRemoveEl.classList.remove("hidden");
-  } else {
-    bannerPreviewEl.src = "";
-    bannerPreviewEl.classList.add("hidden");
-    if (bannerRemoveEl) bannerRemoveEl.classList.add("hidden");
-  }
+function formatMoeda(value) {
+  const numero = Number(value || 0);
+  return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-function setBannerHint(message) {
-  if (bannerHintEl) bannerHintEl.textContent = message || "";
+function renderOpcoes() {
+  if (!opcoesListEl) return;
+  if (!opcoes.length) {
+    opcoesListEl.innerHTML = "<p class=\"text-gray-500\">Nenhuma opção cadastrada.</p>";
+    return;
+  }
+
+  opcoesListEl.innerHTML = opcoes
+    .map((opcao, index) => {
+      const taxaValor = (opcao.preco * opcao.taxa_percentual) / 100;
+      const total = opcao.preco + taxaValor;
+      return `
+        <div class="border rounded-lg px-3 py-2 flex items-center justify-between">
+          <div>
+            <strong>${opcao.titulo}</strong>
+            <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
+            <div class="text-xs text-gray-600">
+              ${formatMoeda(opcao.preco)} + ${formatMoeda(taxaValor)} taxa (${opcao.taxa_percentual}%)
+              = ${formatMoeda(total)}
+            </div>
+          </div>
+          <button data-remove="${index}" class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">
+            Remover
+          </button>
+        </div>
+      `;
+    })
+    .join("");
+
+  opcoesListEl.querySelectorAll("[data-remove]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const index = Number(btn.getAttribute("data-remove"));
+      opcoes.splice(index, 1);
+      renderOpcoes();
+    });
+  });
+}
+
+function getOpcaoFromInputs() {
+  const titulo = String(opcaoTituloEl?.value || "").trim();
+  const tipo = String(opcaoTipoEl?.value || "CORRIDA").trim();
+  const distancia_km = Number(opcaoDistanciaEl?.value || 0);
+  const preco = Number(opcaoPrecoEl?.value || 0);
+  const taxa_percentual = Number(opcaoTaxaEl?.value || 0);
+  if (!titulo || !distancia_km || !preco) return null;
+  return { titulo, tipo, distancia_km, preco, taxa_percentual };
+}
+
+function clearOpcaoInputs() {
+  if (opcaoTituloEl) opcaoTituloEl.value = "";
+  if (opcaoDistanciaEl) opcaoDistanciaEl.value = "";
+  if (opcaoPrecoEl) opcaoPrecoEl.value = "";
+  if (opcaoTaxaEl) opcaoTaxaEl.value = "";
 }
 
 function setEditMode(evento) {
@@ -74,7 +123,6 @@ function setEditMode(evento) {
   document.getElementById("adminLocal").value = evento.local || "";
   document.getElementById("adminOrganizador").value = evento.organizador || "";
   document.getElementById("adminImagemUrl").value = evento.imagem_url || "";
-  if (bannerUrlEl) bannerUrlEl.value = evento.banner_url || "";
   document.getElementById("adminDescricao").value = evento.descricao || "";
   const categoriasTexto = Array.isArray(evento.categorias)
     ? evento.categorias.map((c) => c.nome).join(", ")
@@ -83,8 +131,14 @@ function setEditMode(evento) {
   editIdEl.value = String(evento.id);
   setImagemPreview(evento.imagem_url || "");
   setImagemHint(evento.imagem_url ? "Imagem atual carregada." : "");
-  setBannerPreview(evento.banner_url || "");
-  setBannerHint(evento.banner_url ? "Banner atual carregado." : "");
+  opcoes = Array.isArray(evento.opcoes) ? evento.opcoes.map((o) => ({
+    titulo: o.titulo,
+    tipo: o.tipo,
+    distancia_km: Number(o.distancia_km),
+    preco: Number(o.preco),
+    taxa_percentual: Number(o.taxa_percentual ?? 0),
+  })) : [];
+  renderOpcoes();
   if (cancelEditBtn) cancelEditBtn.classList.remove("hidden");
   if (saveBtn) saveBtn.textContent = "Atualizar evento";
 }
@@ -97,8 +151,8 @@ function clearEditMode() {
   form.reset();
   setImagemPreview("");
   setImagemHint("");
-  setBannerPreview("");
-  setBannerHint("");
+  opcoes = [];
+  renderOpcoes();
 }
 
 function renderEventos(eventos) {
@@ -117,12 +171,12 @@ function renderEventos(eventos) {
       : "-";
     const categoriasTexto = evento.categorias?.length
       ? evento.categorias.map((c) => c.nome).join(", ")
-      : "â€”";
+      : "—";
     item.innerHTML = `
       <strong>${evento.titulo}</strong>
       <span class="text-sm text-gray-600">Data: ${dataFmt}</span>
       <span class="text-sm text-gray-600">Local: ${evento.local}</span>
-      <span class="text-sm text-gray-600">Organizador: ${evento.organizador || "â€”"}</span>
+      <span class="text-sm text-gray-600">Organizador: ${evento.organizador || "—"}</span>
       <span class="text-sm text-gray-600">Categorias: ${categoriasTexto}</span>
       <span class="text-sm text-gray-600">Inscrições: ${evento._count?.inscricoes ?? 0}</span>
       <div class="flex gap-2">
@@ -274,7 +328,6 @@ async function criarEvento(event) {
   const local = document.getElementById("adminLocal").value;
   const organizador = document.getElementById("adminOrganizador").value;
   const imagem_url = document.getElementById("adminImagemUrl").value;
-  const banner_url = bannerUrlEl ? bannerUrlEl.value : "";
   const descricao = document.getElementById("adminDescricao").value;
   const categorias = document.getElementById("adminCategorias").value;
   const eventoId = editIdEl ? editIdEl.value : "";
@@ -300,9 +353,9 @@ async function criarEvento(event) {
           local,
           organizador,
           imagem_url,
-          banner_url,
           descricao,
           categorias,
+          opcoes,
         }),
       }
     );
@@ -389,51 +442,25 @@ if (imagemRemoveEl) {
   });
 }
 
-if (bannerFileEl) {
-  bannerFileEl.addEventListener("change", async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    try {
-      setStatus("Enviando banner...");
-      setBannerHint("Enviando...");
-      if (saveBtn) saveBtn.disabled = true;
-      const url = await uploadImagem(file);
-      if (bannerUrlEl) bannerUrlEl.value = url;
-      setBannerPreview(url);
-      setStatus("Banner enviado!");
-      setBannerHint("Upload concluído.");
-    } catch (err) {
-      console.error(err);
-      setStatus(err?.message || "Erro ao enviar banner");
-      setBannerHint("Falha no upload.");
-    } finally {
-      if (saveBtn) saveBtn.disabled = false;
-    }
-  });
-}
-
-if (bannerUrlEl) {
-  bannerUrlEl.addEventListener("input", () => {
-    const url = bannerUrlEl.value.trim();
-    if (!url) {
-      setBannerPreview("");
-      setBannerHint("");
+if (opcaoAddEl) {
+  opcaoAddEl.addEventListener("click", () => {
+    const opcao = getOpcaoFromInputs();
+    if (!opcao) {
+      setStatus("Preencha título, distância e preço da opção");
       return;
     }
-    setBannerPreview(url);
-    setBannerHint("Pré-visualizando URL.");
+    opcoes.push(opcao);
+    renderOpcoes();
+    clearOpcaoInputs();
   });
 }
 
-if (bannerRemoveEl) {
-  bannerRemoveEl.addEventListener("click", () => {
-    if (bannerUrlEl) bannerUrlEl.value = "";
-    if (bannerFileEl) bannerFileEl.value = "";
-    setBannerPreview("");
-    setBannerHint("Banner removido.");
+if (opcaoClearEl) {
+  opcaoClearEl.addEventListener("click", () => {
+    opcoes = [];
+    renderOpcoes();
   });
 }
-
 
 if (cancelEditBtn) {
   cancelEditBtn.addEventListener("click", clearEditMode);
@@ -472,42 +499,5 @@ if (exportCsvBtn) {
   });
 }
 
-async function carregarEventosDebug() {
-  if (!token) return;
-  try {
-    const response = await fetch("http://localhost:3000/admin/eventos", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    let data = null;
-    try {
-      data = await response.json();
-    } catch {
-      data = null;
-    }
-
-    if (!response.ok) {
-      setStatus(
-        `Erro ao carregar eventos (${response.status}): ${data?.error || "sem mensagem"}`
-      );
-      return;
-    }
-
-    if (Array.isArray(data)) {
-      setStatus(`Eventos carregados: ${data.length}`);
-      renderEventos(data);
-      return;
-    }
-
-    setStatus("Resposta inesperada do servidor ao listar eventos.");
-  } catch (err) {
-    console.error(err);
-    setStatus(`Erro de conexão com o servidor: ${err?.message || err}`);
-  }
-}
-
-carregarEventosDebug();
-
-
-
+renderOpcoes();
+carregarEventos();

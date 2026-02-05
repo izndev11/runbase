@@ -17,6 +17,9 @@ export async function sendInscricaoEmail(params: {
   dataEvento?: Date | null;
   local?: string | null;
   inscricaoId: number;
+  opcaoTitulo?: string | null;
+  opcaoTipo?: string | null;
+  opcaoDistanciaKm?: number | null;
 }) {
   if (!canSendEmail()) return;
 
@@ -30,6 +33,13 @@ export async function sendInscricaoEmail(params: {
       <p>Olá, ${params.nome}.</p>
       <p>Sua inscrição foi registrada com sucesso.</p>
       <p><strong>Evento:</strong> ${params.eventoTitulo}</p>
+      ${
+        params.opcaoTitulo
+          ? `<p><strong>Opção:</strong> ${params.opcaoTitulo}${
+              params.opcaoTipo ? ` (${params.opcaoTipo})` : ""
+            }${params.opcaoDistanciaKm ? ` • ${params.opcaoDistanciaKm} km` : ""}</p>`
+          : ""
+      }
       <p><strong>Data:</strong> ${dataFmt}</p>
       <p><strong>Local:</strong> ${params.local || "-"}</p>
       <p><strong>Inscrição:</strong> #${params.inscricaoId}</p>
@@ -51,6 +61,9 @@ export async function sendPagamentoEmail(params: {
   eventoTitulo: string;
   valor?: number | null;
   inscricaoId: number;
+  opcaoTitulo?: string | null;
+  opcaoTipo?: string | null;
+  opcaoDistanciaKm?: number | null;
 }) {
   if (!canSendEmail()) return;
 
@@ -68,6 +81,13 @@ export async function sendPagamentoEmail(params: {
       <p>Olá, ${params.nome}.</p>
       <p>Recebemos o pagamento da sua inscrição.</p>
       <p><strong>Evento:</strong> ${params.eventoTitulo}</p>
+      ${
+        params.opcaoTitulo
+          ? `<p><strong>Opção:</strong> ${params.opcaoTitulo}${
+              params.opcaoTipo ? ` (${params.opcaoTipo})` : ""
+            }${params.opcaoDistanciaKm ? ` • ${params.opcaoDistanciaKm} km` : ""}</p>`
+          : ""
+      }
       <p><strong>Valor:</strong> ${valorFmt}</p>
       <p><strong>Inscrição:</strong> #${params.inscricaoId}</p>
       <p>Obrigado por participar.</p>
