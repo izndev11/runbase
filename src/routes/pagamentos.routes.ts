@@ -6,6 +6,8 @@ import { sendPagamentoEmail } from "../utils/email";
 const router = Router();
 
 const mpAccessTokenTest = process.env.MP_ACCESS_TOKEN_TEST || "";
+const mpTestPayerEmail = process.env.MP_TEST_PAYER_EMAIL || "";
+const mpTestPayerName = process.env.MP_TEST_PAYER_NAME || "";
 
 async function criarPagamentoPixMercadoPago(params: {
   amount: number;
@@ -14,13 +16,15 @@ async function criarPagamentoPixMercadoPago(params: {
   nome: string;
 }) {
   if (!mpAccessTokenTest) return null;
+  const payerEmail = mpTestPayerEmail || params.email;
+  const payerName = mpTestPayerName || params.nome;
   const payload = {
     transaction_amount: Number(params.amount),
     description: params.descricao,
     payment_method_id: "pix",
     payer: {
-      email: params.email,
-      first_name: params.nome,
+      email: payerEmail,
+      first_name: payerName,
     },
   };
 
@@ -99,17 +103,23 @@ router.post("/", authMiddleware, async (req, res) => {
     return res.status(400).json({ error: "Valor inválido" });
   }
 
-  const pagamento = await prisma.pagamento.create({
-    data: {
-      valor: valorFinal,
-      metodo,
-      inscricaoId: Number(inscricaoId),
-      opcaoId: opcaoIdFinal,
-      valor_base: valorBase,
-      taxa_percentual: taxaPercentual,
-      valor_taxa: valorTaxa,
-    },
+  const pagamentoExistente = await prisma.pagamento.findUnique({
+    where: { inscricaoId: Number(inscricaoId) },
   });
+
+  const pagamento = pagamentoExistente
+    ? pagamentoExistente
+    : await prisma.pagamento.create({
+        data: {
+          valor: valorFinal,
+          metodo,
+          inscricaoId: Number(inscricaoId),
+          opcaoId: opcaoIdFinal,
+          valor_base: valorBase,
+          taxa_percentual: taxaPercentual,
+          valor_taxa: valorTaxa,
+        },
+      });
 
   let pixData = null;
   try {
