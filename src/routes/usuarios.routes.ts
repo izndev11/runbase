@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middlewares/auth";
 import { apiError } from "../utils/apiError";
+import { sendBoasVindasEmail } from "../utils/email";
 
 const router = Router();
 
@@ -41,6 +42,14 @@ router.post("/", async (req, res) => {
         data_nascimento: new Date(data_nascimento),
         sexo: sexo ? String(sexo) : null,
       },
+    });
+
+    // Envia e-mail de boas-vindas (não bloqueia o cadastro)
+    sendBoasVindasEmail({
+      to: usuario.email,
+      nome: usuario.nome_completo,
+    }).catch((err) => {
+      console.error("Erro ao enviar e-mail de boas-vindas:", err);
     });
 
     return res.status(201).json(usuario);
