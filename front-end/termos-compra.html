@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termos de Compra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .termos-card {
+      background: #ffffff;
+      border-radius: 26px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .termos-banner {
+      position: relative;
+      overflow: hidden;
+      background: #f3f4f6;
+    }
+
+    .termos-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      filter: saturate(0.9);
+    }
+
+    .termos-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+    }
+
+    .termos-banner-content {
+      position: absolute;
+      left: 36px;
+      bottom: 28px;
+      z-index: 1;
+    }
+
+    .termos-banner-title {
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 1px;
+    }
+
+    .termos-banner-subtitle {
+      font-size: 14px;
+      color: #1f2937;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .termos-body {
+      padding: 32px 36px 40px;
+    }
+
+    .termos-section-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .termos-list {
+      list-style: disc;
+      padding-left: 18px;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .termos-list li + li {
+      margin-top: 8px;
+    }
+
+    .termos-text {
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .termos-clauses {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .termos-clauses li {
+      list-style: decimal;
+      margin-left: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .termos-body {
+        padding: 24px;
+      }
+
+      .termos-banner-content {
+        left: 20px;
+        bottom: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-800 flex flex-col min-h-screen">
+  <header class="bg-white sticky top-0 z-50 shadow-lg">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+        <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+          <img src="img/logosite.png" alt="Logo"
+               style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1.0)'">
+        </a>
+      </div>
+
+      <nav class="hidden md:flex space-x-6 font-medium">
+        <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+        <a href="calendario.html" class="hover:text-blue-600">Calendário</a>
+        <a href="organizacao.html" class="hover:text-blue-600">Organização</a>
+      </nav>
+
+      <a id="loginLink" href="login.html" class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+        Login
+      </a>
+
+      <div id="userMenuContainer" class="relative">
+        <button id="userMenuButton"
+                class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+          <span id="userMenuName">Olá, usuário</span>
+        </button>
+
+        <div id="userMenuDropdown"
+             class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+            Painel Admin
+          </a>
+          <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
+            Minhas Inscrições
+          </a>
+          <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
+            Meus Pedidos
+          </a>
+          <button id="userMenuLogout"
+                  class="w-full text-left px-4 py-3 hover:bg-gray-50">
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <section class="container mx-auto px-6 pb-16 pt-24">
+      <div class="termos-card">
+        <div class="termos-banner">
+          <img src="img/org1.png" alt="Termos de compra">
+          <div class="termos-banner-content">
+            <h1 class="termos-banner-title">TERMOS DE COMPRA</h1>
+            <p class="termos-banner-subtitle">Proteção jurídica para todos.</p>
+          </div>
+        </div>
+
+        <div class="termos-body">
+          <h2 class="text-lg font-bold text-gray-900 mb-6">Termos de compra</h2>
+
+          <div class="mb-6">
+            <div class="termos-section-title">Considerando que:</div>
+            <ul class="termos-list">
+              <li>A Speed Run é uma empresa brasileira que atua como intermediadora na venda de inscrições para eventos no Brasil e no exterior.</li>
+              <li>O usuário tem interesse em adquirir uma inscrição para evento comercializado pela Speed Run.</li>
+            </ul>
+          </div>
+
+          <div class="mb-6">
+            <div class="termos-section-title">Termo de uso para o usuário que deseja se inscrever no evento</div>
+            <p class="termos-text">Como usuário da plataforma Speed Run você declara ter conhecimento e aceitar as seguintes cláusulas e condições:</p>
+            <ol class="termos-clauses">
+              <li>Estar ciente de que todo o conteúdo como textos, fotos e vídeos dos eventos publicados no sistema Speed Run são de responsabilidade integral do organizador do evento.</li>
+              <li>Isentar organizadores e empresas envolvidas no evento de qualquer responsabilidade sobre objetos deixados em guarda-volumes, chapelaria ou locais indicados pela organização do evento.</li>
+              <li>Estar ciente de que o valor pago não será devolvido em caso de cancelamento ou não participação no evento, bem como que não são aceitas substituições ou troca de participantes.</li>
+              <li>Concordar com cobrança de valor adicional da taxa de serviço para cada nova inscrição adquirida no sistema, caso haja a respectiva taxa.</li>
+              <li>Estar ciente de que inscrições podem encerrar-se a qualquer momento, sob definição da empresa organizadora.</li>
+              <li>Confirmar que, para garantir a inscrição, é necessário efetuar o pagamento do valor total, e que, caso não seja pago ou pago em valor divergente, a inscrição será cancelada automaticamente no sistema e a vaga liberada.</li>
+              <li>Reconhecer que é de sua responsabilidade obter todas as informações sobre o evento, tais como data, local e horário.</li>
+              <li>Declarar que está física e mentalmente apto a participar do evento, nas condições propostas pela organização.</li>
+              <li>Autorizar o uso por parte do organizador, patrocinadores e Speed Run de qualquer dado, fotografia, filme ou outra gravação contendo imagens de sua participação no evento, em qualquer mídia, inclusive na internet, para qualquer fim e por tempo indeterminado.</li>
+              <li>Autorizar o recebimento de e-mails, SMS e WhatsApp, bem como qualquer meio digital de comunicação, do organizador, Speed Run e seus parceiros divulgando informações, notícias e serviços.</li>
+              <li>Na realização do cadastro e compra de inscrições para terceiros, declarar que possui autorização do participante, responsabilizando-se pela legitimidade dos dados fornecidos e garantindo que o participante tem total ciência desta declaração e do regulamento do evento.</li>
+              <li>Estar ciente de que, caso seja autorizado qualquer tipo de estorno, poderá ser cobrada a taxa e/ou custos do processo de reembolso.</li>
+              <li>Declarar total ciência e concordância com o regulamento ou regras gerais do evento, bem como com o termo de uso e a política de privacidade da plataforma Speed Run.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#1a1a1a] text-white pt-16 pb-8">
+    <div class="container mx-auto px-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Participantes</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="login.html" class="hover:text-white transition">Login</a></li>
+            <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
+            <li><a href="termos-compra.html" class="hover:text-white transition">Termos de Compra</a></li>
+          </ul>
+          <div class="mt-8">
+            <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
+            <div class="flex gap-4">
+              <a href="#" class="text-white text-xl hover:text-blue-500 transition"><i class="fab fa-facebook"></i></a>
+              <a href="#" class="text-white text-xl hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="text-white text-xl hover:text-red-600 transition"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="organizacao.html" class="hover:text-white transition">Sobre a plataforma</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Solicite um orçamento</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
+          <ul class="space-y-3 text-gray-400 text-sm">
+            <li><a href="organizacao.html" class="hover:text-white transition">Quem somos</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Trabalhe conosco</a></li>
+            <li><a href="organizacao.html" class="hover:text-white transition">Política de privacidade</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <hr class="border-gray-800 mb-8">
+
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <p class="text-[10px] text-gray-500">
+          © 2026 - SPEEDRUN SERVICOS DE RESERVAS, INTERMEDIAÇÃO E AGENCIAMENTO LTDA.
+        </p>
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <span class="text-xs font-bold uppercase text-gray-400">Compre pelo aplicativo</span>
+          <div class="flex gap-4">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-9 cursor-pointer">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-9 cursor-pointer">
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./js/user-menu.js"></script>
+</body>
+</html>

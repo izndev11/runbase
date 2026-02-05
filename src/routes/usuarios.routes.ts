@@ -1,4 +1,4 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middlewares/auth";
@@ -11,14 +11,18 @@ router.get("/", (req, res) => res.json([]));
 router.post("/", async (req, res) => {
   try {
     const { nome_completo, email, cpf, senha, data_nascimento, sexo } = req.body;
+    const emailNormalizado = String(email || "").trim().toLowerCase();
+    const senhaNormalizada = String(senha || "").trim();
+    const cpfNormalizado = String(cpf || "").trim();
+    const nomeNormalizado = String(nome_completo || "").trim();
 
-    if (!nome_completo || !email || !cpf || !senha || !data_nascimento) {
+    if (!nomeNormalizado || !emailNormalizado || !cpfNormalizado || !senhaNormalizada || !data_nascimento) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
     const usuarioExistente = await prisma.usuario.findFirst({
       where: {
-        OR: [{ email }, { cpf }],
+        OR: [{ email: emailNormalizado }, { cpf: cpfNormalizado }],
       },
     });
 
@@ -26,13 +30,13 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Usuário já existe" });
     }
 
-    const senha_hash = await bcrypt.hash(senha, 10);
+    const senha_hash = await bcrypt.hash(senhaNormalizada, 10);
 
     const usuario = await prisma.usuario.create({
       data: {
-        nome_completo,
-        email,
-        cpf,
+        nome_completo: nomeNormalizado,
+        email: emailNormalizado,
+        cpf: cpfNormalizado,
         senha_hash,
         data_nascimento: new Date(data_nascimento),
         sexo: sexo ? String(sexo) : null,

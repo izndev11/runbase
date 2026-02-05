@@ -10,8 +10,8 @@ async function login(event) {
   event.preventDefault();
   console.log("LOGIN DISPARADO");
 
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const senha = document.getElementById("senha").value.trim();
 
   if (!email || !senha) {
     alert("Preencha email e senha");
@@ -45,6 +45,3 @@ async function login(event) {
 }
 
 document.addEventListener("DOMContentLoaded", bindLoginForm);
-
-
-

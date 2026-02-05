@@ -13,10 +13,10 @@ async function cadastrar(event) {
   const sobrenomeEl = document.getElementById("cadastro_sobrenome");
   const sobrenome = sobrenomeEl ? sobrenomeEl.value.trim() : "";
   const nome_completo = sobrenome ? `${nomeBase} ${sobrenome}` : nomeBase;
-  const email = document.getElementById("cadastro_email").value;
-  const cpf = document.getElementById("cadastro_cpf").value;
+  const email = document.getElementById("cadastro_email").value.trim().toLowerCase();
+  const cpf = document.getElementById("cadastro_cpf").value.trim();
   const data_nascimento = document.getElementById("cadastro_nascimento").value;
-  const telefone = document.getElementById("cadastro_telefone").value;
+  const telefone = document.getElementById("cadastro_telefone").value.trim();
   const sexo = document.getElementById("cadastro_sexo").value;
   const cidade =
     document.getElementById("cidade")?.value ||
@@ -26,7 +26,8 @@ async function cadastrar(event) {
     document.getElementById("estado")?.value ||
     document.getElementById("cadastro_estado")?.value ||
     "";
-  const senha = document.getElementById("cadastro_senha").value;
+  const senha = document.getElementById("cadastro_senha").value.trim();
+  const senhaConfirm = document.getElementById("cadastro_senha_confirm")?.value.trim();
 
   if (
     !nome_completo ||
@@ -40,6 +41,11 @@ async function cadastrar(event) {
     !senha
   ) {
     alert("Preencha todos os campos do cadastro");
+    return;
+  }
+
+  if (senhaConfirm && senha !== senhaConfirm) {
+    alert("As senhas não conferem");
     return;
   }
 
@@ -78,6 +84,3 @@ async function cadastrar(event) {
 }
 
 document.addEventListener("DOMContentLoaded", bindCadastroForm);
-
-
-

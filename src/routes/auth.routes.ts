@@ -1,4 +1,4 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -11,20 +11,22 @@ router.post("/login", async (req, res) => {
 
   try {
     const { email, senha } = req.body;
+    const emailNormalizado = String(email || "").trim().toLowerCase();
+    const senhaNormalizada = String(senha || "").trim();
 
-    if (!email || !senha) {
+    if (!emailNormalizado || !senhaNormalizada) {
       return res.status(400).json({ error: "Email e senha obrigatórios" });
     }
 
-    const usuario = await prisma.usuario.findUnique({
-      where: { email }
+    const usuario = await prisma.usuario.findFirst({
+      where: { email: { equals: emailNormalizado, mode: "insensitive" } },
     });
 
     if (!usuario) {
       return res.status(401).json({ error: "Credenciais inválidas" });
     }
 
-    const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
+    const senhaValida = await bcrypt.compare(senhaNormalizada, usuario.senha_hash);
 
     if (!senhaValida) {
       return res.status(401).json({ error: "Credenciais inválidas" });
