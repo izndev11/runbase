@@ -14,6 +14,12 @@ const imagemRemoveEl = document.getElementById("adminImagemRemove");
 const imagemHintEl = document.getElementById("adminImagemHint");
 const imagemUrlEl = document.getElementById("adminImagemUrl");
 
+const bannerFileEl = document.getElementById("adminBannerFile");
+const bannerPreviewEl = document.getElementById("adminBannerPreview");
+const bannerRemoveEl = document.getElementById("adminBannerRemove");
+const bannerHintEl = document.getElementById("adminBannerHint");
+const bannerUrlEl = document.getElementById("adminBannerUrl");
+
 const opcaoTituloEl = document.getElementById("adminOpcaoTitulo");
 const opcaoTipoEl = document.getElementById("adminOpcaoTipo");
 const opcaoDistanciaEl = document.getElementById("adminOpcaoDistancia");
@@ -52,6 +58,23 @@ function setImagemPreview(url) {
 
 function setImagemHint(message) {
   if (imagemHintEl) imagemHintEl.textContent = message || "";
+}
+
+function setBannerPreview(url) {
+  if (!bannerPreviewEl) return;
+  if (url) {
+    bannerPreviewEl.src = url;
+    bannerPreviewEl.classList.remove("hidden");
+    if (bannerRemoveEl) bannerRemoveEl.classList.remove("hidden");
+  } else {
+    bannerPreviewEl.src = "";
+    bannerPreviewEl.classList.add("hidden");
+    if (bannerRemoveEl) bannerRemoveEl.classList.add("hidden");
+  }
+}
+
+function setBannerHint(message) {
+  if (bannerHintEl) bannerHintEl.textContent = message || "";
 }
 
 function formatMoeda(value) {
@@ -123,6 +146,7 @@ function setEditMode(evento) {
   document.getElementById("adminLocal").value = evento.local || "";
   document.getElementById("adminOrganizador").value = evento.organizador || "";
   document.getElementById("adminImagemUrl").value = evento.imagem_url || "";
+  document.getElementById("adminBannerUrl").value = evento.banner_url || "";
   document.getElementById("adminDescricao").value = evento.descricao || "";
   const categoriasTexto = Array.isArray(evento.categorias)
     ? evento.categorias.map((c) => c.nome).join(", ")
@@ -131,6 +155,8 @@ function setEditMode(evento) {
   editIdEl.value = String(evento.id);
   setImagemPreview(evento.imagem_url || "");
   setImagemHint(evento.imagem_url ? "Imagem atual carregada." : "");
+  setBannerPreview(evento.banner_url || "");
+  setBannerHint(evento.banner_url ? "Banner atual carregado." : "");
   opcoes = Array.isArray(evento.opcoes) ? evento.opcoes.map((o) => ({
     titulo: o.titulo,
     tipo: o.tipo,
@@ -151,6 +177,8 @@ function clearEditMode() {
   form.reset();
   setImagemPreview("");
   setImagemHint("");
+  setBannerPreview("");
+  setBannerHint("");
   opcoes = [];
   renderOpcoes();
 }
@@ -328,6 +356,7 @@ async function criarEvento(event) {
   const local = document.getElementById("adminLocal").value;
   const organizador = document.getElementById("adminOrganizador").value;
   const imagem_url = document.getElementById("adminImagemUrl").value;
+  const banner_url = document.getElementById("adminBannerUrl").value;
   const descricao = document.getElementById("adminDescricao").value;
   const categorias = document.getElementById("adminCategorias").value;
   const eventoId = editIdEl ? editIdEl.value : "";
@@ -353,6 +382,7 @@ async function criarEvento(event) {
           local,
           organizador,
           imagem_url,
+          banner_url,
           descricao,
           categorias,
           opcoes,
@@ -439,6 +469,51 @@ if (imagemRemoveEl) {
     if (imagemFileEl) imagemFileEl.value = "";
     setImagemPreview("");
     setImagemHint("Imagem removida.");
+  });
+}
+
+if (bannerFileEl) {
+  bannerFileEl.addEventListener("change", async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      setStatus("Enviando banner...");
+      setBannerHint("Enviando...");
+      if (saveBtn) saveBtn.disabled = true;
+      const url = await uploadImagem(file);
+      if (bannerUrlEl) bannerUrlEl.value = url;
+      setBannerPreview(url);
+      setStatus("Banner enviado!");
+      setBannerHint("Upload concluído.");
+    } catch (err) {
+      console.error(err);
+      setStatus(err?.message || "Erro ao enviar banner");
+      setBannerHint("Falha no upload.");
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+    }
+  });
+}
+
+if (bannerUrlEl) {
+  bannerUrlEl.addEventListener("input", () => {
+    const url = bannerUrlEl.value.trim();
+    if (!url) {
+      setBannerPreview("");
+      setBannerHint("");
+      return;
+    }
+    setBannerPreview(url);
+    setBannerHint("Pré-visualizando URL.");
+  });
+}
+
+if (bannerRemoveEl) {
+  bannerRemoveEl.addEventListener("click", () => {
+    if (bannerUrlEl) bannerUrlEl.value = "";
+    if (bannerFileEl) bannerFileEl.value = "";
+    setBannerPreview("");
+    setBannerHint("Banner removido.");
   });
 }
 
