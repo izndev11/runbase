@@ -393,7 +393,7 @@ async function carregarEvento() {
               : "";
             return `
               <div class="border rounded-xl p-3">
-                <div class="font-semibold mb-2">${titulo}</div>
+                <div class="font-semibold mb-2 uppercase">${titulo}</div>
                 ${imagem}
                 <div class="text-xs text-gray-600 whitespace-pre-line break-words">${descricao}</div>
               </div>
@@ -441,7 +441,7 @@ async function carregarEvento() {
             const descricao = item?.descricao || "Não informado.";
             return `
               <div class="border rounded-xl px-3 py-2">
-                <div class="font-semibold">${titulo}</div>
+                <div class="font-semibold uppercase">${titulo}</div>
                 <div class="text-xs text-gray-600 whitespace-pre-line break-words">${descricao}</div>
               </div>
             `;
