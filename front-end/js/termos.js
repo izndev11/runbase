@@ -18,7 +18,7 @@ if (checkEl) {
 if (continuarEl) {
   continuarEl.addEventListener("click", () => {
     if (!eventoId || !opcaoId) {
-      window.location.href = "corrida.html";
+      window.location.href = "calendario.html";
       return;
     }
     const destino = `inscricao.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoId)}`;
@@ -29,7 +29,7 @@ if (continuarEl) {
 if (voltarEl) {
   voltarEl.addEventListener("click", () => {
     if (!eventoId) {
-      window.location.href = "corrida.html";
+      window.location.href = "calendario.html";
       return;
     }
     window.location.href = `corrida-completa.html?id=${encodeURIComponent(eventoId)}`;

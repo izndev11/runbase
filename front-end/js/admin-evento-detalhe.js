@@ -1,6 +1,9 @@
-﻿const META_MARKER = "\n\n[[META]]\n";
+﻿const token = localStorage.getItem("token");
+
+const META_MARKER = "\n\n[[META]]\n";
 const gpxStore = [];
 const leafletMaps = new WeakMap();
+
 const tituloEl = document.getElementById("eventoTitulo");
 const subtituloEl = document.getElementById("eventoSubtitulo");
 const dataEl = document.getElementById("eventoData");
@@ -243,8 +246,15 @@ async function carregarEvento() {
     return;
   }
 
+  if (!token) {
+    if (subtituloEl) subtituloEl.textContent = "Você precisa estar logado.";
+    return;
+  }
+
   try {
-    const response = await fetch(`http://localhost:3000/eventos/${eventoId}`);
+    const response = await fetch(`http://localhost:3000/admin/eventos/${eventoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const evento = await response.json();
 
     if (!response.ok) {
@@ -459,21 +469,13 @@ async function carregarEvento() {
           .map((opcao) => {
             const taxaValor = (Number(opcao.preco || 0) * Number(opcao.taxa_percentual || 0)) / 100;
             const total = Number(opcao.preco || 0) + taxaValor;
-            const opcaoId = opcao.id ? String(opcao.id) : "";
-            const link = opcaoId ? `termos.html?id=${encodeURIComponent(evento.id)}&opcao=${encodeURIComponent(opcaoId)}` : "#";
-            const disabled = !opcaoId ? "opacity-50 pointer-events-none" : "";
             return `
-              <div class="border rounded-xl px-3 py-3 space-y-2">
-                <div>
-                  <div class="font-semibold">${opcao.titulo}</div>
-                  <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
-                </div>
+              <div class="border rounded-xl px-3 py-2">
+                <div class="font-semibold">${opcao.titulo}</div>
+                <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
                 <div class="text-xs text-gray-600">
                   ${formatMoeda(opcao.preco)} + ${formatMoeda(taxaValor)} taxa = ${formatMoeda(total)}
                 </div>
-                <a href="${link}" class="inline-flex items-center justify-center bg-blue-600 text-white px-4 py-2 rounded-full font-bold text-xs ${disabled}">
-                  Inscrever-se
-                </a>
               </div>
             `;
           })
@@ -515,6 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
   wireMapModal();
   carregarEvento();
 });
+
 
 
 

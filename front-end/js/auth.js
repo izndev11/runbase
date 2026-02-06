@@ -37,7 +37,7 @@ async function login(event) {
     localStorage.setItem("token", data.token);
 
     alert("Login realizado com sucesso!");
-    window.location.href = "calendario.html";
+    window.location.href = "index.html";
   } catch (err) {
     console.error(err);
     alert("Erro de conexão com o servidor");
