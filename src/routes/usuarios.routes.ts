@@ -11,7 +11,7 @@ router.get("/", (req, res) => res.json([]));
 
 router.post("/", async (req, res) => {
   try {
-    const { nome_completo, email, cpf, senha, data_nascimento, sexo } = req.body;
+    const { nome_completo, email, cpf, senha, data_nascimento } = req.body;
     const emailNormalizado = String(email || "").trim().toLowerCase();
     const senhaNormalizada = String(senha || "").trim();
     const cpfNormalizado = String(cpf || "").trim();
@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
         cpf: cpfNormalizado,
         senha_hash,
         data_nascimento: new Date(data_nascimento),
-        sexo: sexo ? String(sexo) : null,
+        sexo: "M",
       },
     });
 
