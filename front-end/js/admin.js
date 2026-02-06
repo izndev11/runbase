@@ -138,20 +138,37 @@ function clearOpcaoInputs() {
 }
 
 function setEditMode(evento) {
-  if (!editIdEl || !form) return;
-  document.getElementById("adminTitulo").value = evento.titulo || "";
-  document.getElementById("adminData").value = evento.dataEvento
+  if (!editIdEl || !form) {
+    setStatus("Use a pagina de criacao de evento para editar.");
+    return;
+  }
+  const tituloEl = document.getElementById("adminTitulo");
+  const dataEl = document.getElementById("adminData");
+  const localEl = document.getElementById("adminLocal");
+  const organizadorEl = document.getElementById("adminOrganizador");
+  const imagemUrlElLocal = document.getElementById("adminImagemUrl");
+  const bannerUrlElLocal = document.getElementById("adminBannerUrl");
+  const descricaoEl = document.getElementById("adminDescricao");
+  const categoriasEl = document.getElementById("adminCategorias");
+
+  if (!tituloEl || !dataEl || !localEl || !organizadorEl || !imagemUrlElLocal || !bannerUrlElLocal || !descricaoEl || !categoriasEl) {
+    setStatus("Use a pagina de criacao de evento para editar.");
+    return;
+  }
+
+  tituloEl.value = evento.titulo || "";
+  dataEl.value = evento.dataEvento
     ? new Date(evento.dataEvento).toISOString().slice(0, 10)
     : "";
-  document.getElementById("adminLocal").value = evento.local || "";
-  document.getElementById("adminOrganizador").value = evento.organizador || "";
-  document.getElementById("adminImagemUrl").value = evento.imagem_url || "";
-  document.getElementById("adminBannerUrl").value = evento.banner_url || "";
-  document.getElementById("adminDescricao").value = evento.descricao || "";
+  localEl.value = evento.local || "";
+  organizadorEl.value = evento.organizador || "";
+  imagemUrlElLocal.value = evento.imagem_url || "";
+  bannerUrlElLocal.value = evento.banner_url || "";
+  descricaoEl.value = evento.descricao || "";
   const categoriasTexto = Array.isArray(evento.categorias)
     ? evento.categorias.map((c) => c.nome).join(", ")
     : "";
-  document.getElementById("adminCategorias").value = categoriasTexto;
+  categoriasEl.value = categoriasTexto;
   editIdEl.value = String(evento.id);
   setImagemPreview(evento.imagem_url || "");
   setImagemHint(evento.imagem_url ? "Imagem atual carregada." : "");
@@ -217,7 +234,9 @@ function renderEventos(eventos) {
     const delBtn = item.querySelector("[data-delete]");
     const inscBtn = item.querySelector("[data-inscricoes]");
 
-    editBtn.addEventListener("click", () => setEditMode(evento));
+    editBtn.addEventListener("click", () => {
+      window.location.href = `admin-criar-evento.html?id=${encodeURIComponent(evento.id)}`;
+    });
     delBtn.addEventListener("click", async () => {
       if (!confirm("Deseja realmente excluir este evento?")) return;
       try {
@@ -576,3 +595,13 @@ if (exportCsvBtn) {
 
 renderOpcoes();
 carregarEventos();
+
+window.adminSetEditMode = setEditMode;
+window.adminClearEditMode = clearEditMode;
+window.adminSetStatus = setStatus;
+window.adminSetOpcoes = (novas) => {
+  opcoes = Array.isArray(novas) ? novas : [];
+  renderOpcoes();
+};
+window.adminGetOpcoes = () => opcoes;
+window.uploadImagem = uploadImagem;

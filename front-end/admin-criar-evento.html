@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Evento | Admin SpeedRun</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --bg: #f4f2ee;
+      --ink: #1c1b1f;
+      --ink-soft: #4d4b53;
+      --brand: #0c6bff;
+      --brand-dark: #003a9e;
+      --accent: #ffb300;
+      --card: #ffffff;
+      --stroke: rgba(28, 27, 31, 0.1);
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #ffffff, #f4f2ee 45%, #ece9e3 100%);
+      color: var(--ink);
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #050b16, #0b1d3b 45%, #132c53);
+      color: #f7f7fb;
+    }
+
+    .glass {
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      color: var(--ink);
+    }
+
+    .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid rgba(28, 27, 31, 0.15);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fff;
+      font-size: 0.95rem;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(12, 107, 255, 0.15);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: rgba(12, 107, 255, 0.1);
+      color: var(--brand-dark);
+    }
+
+    .cta {
+      background: linear-gradient(120deg, var(--brand), #2e86ff);
+      color: white;
+      border-radius: 999px;
+      font-weight: 800;
+      padding: 12px 22px;
+      box-shadow: 0 14px 30px rgba(12, 107, 255, 0.35);
+      transition: transform 0.2s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .ghost {
+      border-radius: 999px;
+      border: 1px dashed rgba(28, 27, 31, 0.2);
+      padding: 12px 22px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .grid-2 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .grid-3 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .preview-card {
+      background: #0b1322;
+      color: #f6f7fb;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(6, 16, 35, 0.45);
+    }
+
+    .preview-chip {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: #dbe2ff;
+    }
+
+    .fade-in {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
+  <header class="bg-white/90 shadow-lg sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+        <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+          <img src="img/logosite.png" alt="Logo"
+               style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+               onmouseover="this.style.transform='scale(1.1)'"
+               onmouseout="this.style.transform='scale(1.0)'">
+        </a>
+      </div>
+      <nav class="hidden md:flex space-x-6 font-medium">
+        <a href="admin.html" class="hover:text-blue-600">Voltar ao Admin</a>
+        <a href="calendario.html" class="hover:text-blue-600">Calendario</a>
+        <a href="organizacao.html" class="hover:text-blue-600">Organizacao</a>
+      </nav>
+      <div class="pill">Criação de Evento</div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container mx-auto px-6 py-12 md:py-16">
+      <div class="grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+        <div class="fade-in">
+          <h1 class="hero-title text-4xl md:text-6xl mt-4">Crie eventos com todas as informações</h1>
+          <p class="text-slate-200 mt-4 text-lg">
+            Monte a pagina completa do evento com percursos, kits, entregas e premios. Tudo separado e pronto para ser exibido.
+          </p>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <button class="cta">Salvar rascunho</button>
+            <button class="ghost">Publicar evento</button>
+          </div>
+        </div>
+        <div class="preview-card fade-in">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-slate-300">Informacoes rapidas</p>
+              <h3 id="previewTitulo" class="text-2xl font-bold mt-1">Nome do evento</h3>
+            </div>
+            <span id="previewCidade" class="preview-chip">Nome da cidade</span>
+          </div>
+          <div class="mt-5 grid-2">
+            <div>
+              <p class="text-xs text-slate-300">Organizador</p>
+              <p id="previewOrganizador" class="font-semibold">Nome organizador</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-300">Local</p>
+              <p id="previewLocal" class="font-semibold">Nome do local</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-300">Percursos</p>
+              <p id="previewPercursos" class="font-semibold">Defina os percursos</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-300">Kits</p>
+              <p id="previewKits" class="font-semibold">Completo, Economico, Basico</p>
+            </div>
+          </div>
+          <p class="text-slate-300 text-sm mt-6">
+            Preencha os campos abaixo para montar o evento completo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <main class="container mx-auto px-4 pb-16 -mt-12 flex-grow">
+    <form id="adminEventoForm" class="grid gap-10">
+      <input id="adminEventoId" type="hidden">
+      <input id="adminCategorias" type="hidden">
+      <textarea id="adminDescricao" class="hidden" rows="1"></textarea>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="section-title">Informacoes principais</h2>
+          <span class="pill">Basico</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Nome do evento</label>
+            <input id="adminTitulo" class="input" type="text" placeholder="Nome do evento">
+          </div>
+          <div>
+            <label class="label">Organizador</label>
+            <input id="adminOrganizador" class="input" type="text" placeholder="Nome organizador">
+          </div>
+          <div>
+            <label class="label">Data principal</label>
+            <input id="adminData" class="input" type="date">
+          </div>
+          <div>
+            <label class="label">Data limite de vendas</label>
+            <input id="adminDataVendas" class="input" type="date">
+          </div>
+          <div>
+            <label class="label">Horario</label>
+            <input id="adminHorario" class="input" type="text" placeholder="Largada 06h30">
+          </div>
+          <div>
+            <label class="label">Cidade / UF</label>
+            <input id="adminCidade" class="input" type="text" placeholder="Cidade - UF">
+          </div>
+          <div>
+            <label class="label">Nome do local</label>
+            <input id="adminLocal" class="input" type="text" placeholder="Nome do local">
+          </div>
+          <div>
+            <label class="label">Endereco do local</label>
+            <input id="adminEnderecoLocal" class="input" type="text" placeholder="Endereco do local">
+          </div>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Banner principal (URL)</label>
+            <input id="adminBannerUrl" class="input" type="url" placeholder="https://.../banner.jpg">
+            <div class="mt-3 flex items-center gap-3">
+              <button id="adminBannerRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover banner</button>
+              <span id="adminBannerHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminBannerPreview" src="" alt="Preview do banner" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+          </div>
+          <div>
+            <label class="label">Imagem destaque (URL)</label>
+            <input id="adminImagemUrl" class="input" type="url" placeholder="https://.../imagem.jpg">
+            <div class="mt-3 flex items-center gap-3">
+              <button id="adminImagemRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+              <span id="adminImagemHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminImagemPreview" src="" alt="Preview" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+          </div>
+          <div>
+            <label class="label">Upload banner</label>
+            <input id="adminBannerFile" class="input" type="file" accept="image/*">
+          </div>
+          <div>
+            <label class="label">Upload imagem destaque</label>
+            <input id="adminImagemFile" class="input" type="file" accept="image/*">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Sobre o evento</h2>
+          <span class="pill">Texto</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Resumo</label>
+            <textarea id="adminResumo" class="textarea" rows="4" placeholder="Experiencia inesquecivel, aniversario da cidade..."></textarea>
+          </div>
+          <div>
+            <label class="label">Regras e informacoes PCD</label>
+            <textarea id="adminPcd" class="textarea" rows="4" placeholder="Inscricao necessita de cupom, envio de laudo..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Locais e largadas</h2>
+          <span class="pill">Enderecos</span>
+        </div>
+        <div class="grid-3 mt-6">
+          <div>
+            <label class="label">Ponto de largada 1</label>
+            <input id="adminLargada1Nome" class="input" type="text" placeholder="Nome do local">
+          </div>
+          <div>
+            <label class="label">Endereco do local</label>
+            <input id="adminLargada1Endereco" class="input" type="text" placeholder="Endereco do local">
+          </div>
+          <div>
+            <label class="label">Horario</label>
+            <input id="adminLargada1Horario" class="input" type="text" placeholder="06h30 - 21k">
+          </div>
+          <div>
+            <label class="label">Ponto de largada 2</label>
+            <input id="adminLargada2Nome" class="input" type="text" placeholder="Nome do local">
+          </div>
+          <div>
+            <label class="label">Endereco do local</label>
+            <input id="adminLargada2Endereco" class="input" type="text" placeholder="Endereco do local">
+          </div>
+          <div>
+            <label class="label">Horario</label>
+            <input id="adminLargada2Horario" class="input" type="text" placeholder="07h00 - 10k e 5k">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Percursos</h2>
+          <span class="pill">Mapas</span>
+        </div>
+        <div class="grid-3 mt-6">
+          <div>
+            <label class="label">Nome do percurso</label>
+            <input id="percursoNome" class="input" type="text" placeholder="Percurso 21k">
+          </div>
+          <div>
+            <label class="label">Distancia (km)</label>
+            <input id="percursoKm" class="input" type="number" step="0.1" placeholder="21">
+          </div>
+          <div>
+            <label class="label">URL do mapa</label>
+            <input id="percursoMapaUrl" class="input" type="url" placeholder="https://...">
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button id="percursoAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar percurso</button>
+          <button id="percursoClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar percursos</button>
+        </div>
+        <div id="percursoList" class="mt-4 space-y-2 text-sm text-gray-700"></div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Kits e beneficios</h2>
+          <span class="pill">Itens</span>
+        </div>
+        <div class="grid-3 mt-6">
+          <div>
+            <label class="label">Kit completo</label>
+            <textarea id="adminKitCompleto" class="textarea" rows="5" placeholder="Numero de peito, medalha, camiseta, oculos, sacola..."></textarea>
+          </div>
+          <div>
+            <label class="label">Kit economico</label>
+            <textarea id="adminKitEconomico" class="textarea" rows="5" placeholder="Numero de peito, medalha..."></textarea>
+          </div>
+          <div>
+            <label class="label">Kit basico</label>
+            <textarea id="adminKitBasico" class="textarea" rows="5" placeholder="Numero de peito, medalha, camiseta..."></textarea>
+          </div>
+        </div>
+        <div class="grid-3 mt-6">
+          <div>
+            <label class="label">Imagem kit completo (URL)</label>
+            <input id="adminKitCompletoUrl" class="input" type="url" placeholder="https://.../kit-completo.jpg">
+            <div class="mt-3 flex items-center gap-3">
+              <button id="adminKitCompletoRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+              <span id="adminKitCompletoHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminKitCompletoPreview" src="" alt="Preview kit completo" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+            <input id="adminKitCompletoFile" class="input mt-3" type="file" accept="image/*">
+          </div>
+          <div>
+            <label class="label">Imagem kit economico (URL)</label>
+            <input id="adminKitEconomicoUrl" class="input" type="url" placeholder="https://.../kit-economico.jpg">
+            <div class="mt-3 flex items-center gap-3">
+              <button id="adminKitEconomicoRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+              <span id="adminKitEconomicoHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminKitEconomicoPreview" src="" alt="Preview kit economico" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+            <input id="adminKitEconomicoFile" class="input mt-3" type="file" accept="image/*">
+          </div>
+          <div>
+            <label class="label">Imagem kit basico (URL)</label>
+            <input id="adminKitBasicoUrl" class="input" type="url" placeholder="https://.../kit-basico.jpg">
+            <div class="mt-3 flex items-center gap-3">
+              <button id="adminKitBasicoRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+              <span id="adminKitBasicoHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminKitBasicoPreview" src="" alt="Preview kit basico" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+            <input id="adminKitBasicoFile" class="input mt-3" type="file" accept="image/*">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Entrega de kits</h2>
+          <span class="pill">Datas</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Data e horario</label>
+            <input id="adminEntrega1Data" class="input" type="text" placeholder="20/02/2026 - 11h00 as 19h00">
+          </div>
+          <div>
+            <label class="label">Local</label>
+            <input id="adminEntrega1Local" class="input" type="text" placeholder="Nome do local">
+          </div>
+          <div>
+            <label class="label">Data e horario</label>
+            <input id="adminEntrega2Data" class="input" type="text" placeholder="21/02/2026 - 13h00 as 19h00">
+          </div>
+          <div>
+            <label class="label">Local</label>
+            <input id="adminEntrega2Local" class="input" type="text" placeholder="Nome do local">
+          </div>
+        </div>
+        <div class="mt-4">
+          <label class="label">Observacoes</label>
+          <textarea id="adminEntregaObs" class="textarea" rows="3" placeholder="Retirada por terceiros, documentos, parceiros..."></textarea>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Programacao</h2>
+          <span class="pill">Horario do evento</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Item 1</label>
+            <input id="adminProg1" class="input" type="text" placeholder="06h30 - Largada Corrida 21k">
+          </div>
+          <div>
+            <label class="label">Item 2</label>
+            <input id="adminProg2" class="input" type="text" placeholder="07h00 - Largada Corrida 10k e 5k">
+          </div>
+          <div>
+            <label class="label">Item 3</label>
+            <input id="adminProg3" class="input" type="text" placeholder="08h30 - Premiacao Corrida 5k">
+          </div>
+          <div>
+            <label class="label">Item 4</label>
+            <input id="adminProg4" class="input" type="text" placeholder="09h15 - Premiacao Corrida 10k">
+          </div>
+          <div>
+            <label class="label">Item 5</label>
+            <input id="adminProg5" class="input" type="text" placeholder="10h00 - Premiacao Corrida 21k">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Premiacao</h2>
+          <span class="pill">Trofeus e medalhas</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Premiacao de participacao</label>
+            <textarea id="adminPremiacaoParticipacao" class="textarea" rows="3" placeholder="Medalha para todos que completarem..."></textarea>
+          </div>
+          <div>
+            <label class="label">Top 3 geral</label>
+            <textarea id="adminPremiacaoTop3Geral" class="textarea" rows="3" placeholder="Trofeu para os 3 melhores de cada distancia..."></textarea>
+          </div>
+          <div>
+            <label class="label">Top 3 categorias</label>
+            <textarea id="adminPremiacaoCategorias" class="textarea" rows="3" placeholder="Trofeu para os 3 melhores por categoria..."></textarea>
+          </div>
+          <div>
+            <label class="label">Equipes / assessorias</label>
+            <textarea id="adminPremiacaoEquipes" class="textarea" rows="3" placeholder="Trofeu para as equipes com mais participantes..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Ingressos e valores</h2>
+          <span class="pill">Inscricoes</span>
+        </div>
+        <div class="grid-3 mt-6">
+          <div>
+            <label class="label">Categoria</label>
+            <input id="adminOpcaoTitulo" class="input" type="text" placeholder="Corrida 21k">
+          </div>
+          <div>
+            <label class="label">Tipo</label>
+            <select id="adminOpcaoTipo" class="select">
+              <option value="CORRIDA">Corrida</option>
+              <option value="CAMINHADA">Caminhada</option>
+            </select>
+          </div>
+          <div>
+            <label class="label">Distancia (km)</label>
+            <input id="adminOpcaoDistancia" class="input" type="number" step="0.1" placeholder="21">
+          </div>
+          <div>
+            <label class="label">Preco (R$)</label>
+            <input id="adminOpcaoPreco" class="input" type="number" step="0.01" placeholder="159.90">
+          </div>
+          <div>
+            <label class="label">Taxa (%)</label>
+            <input id="adminOpcaoTaxa" class="input" type="number" step="0.01" placeholder="10">
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button id="adminOpcaoAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar opcao</button>
+          <button id="adminOpcaoClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar opcoes</button>
+        </div>
+        <div id="adminOpcoesList" class="mt-4 space-y-2 text-sm text-gray-700"></div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Contato e redes</h2>
+          <span class="pill">Organizador</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Email do organizador</label>
+            <input id="adminContatoEmail" class="input" type="email" placeholder="contato@organizador.com">
+          </div>
+          <div>
+            <label class="label">WhatsApp</label>
+            <input id="adminContatoWhatsapp" class="input" type="text" placeholder="(11) 99999-9999">
+          </div>
+          <div>
+            <label class="label">Instagram</label>
+            <input id="adminContatoInstagram" class="input" type="text" placeholder="@organizador">
+          </div>
+          <div>
+            <label class="label">Site oficial</label>
+            <input id="adminContatoSite" class="input" type="url" placeholder="https://organizador.com.br">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex items-center justify-between">
+          <h2 class="section-title">Acoes extras</h2>
+          <span class="pill">Links</span>
+        </div>
+        <div class="grid-2 mt-6">
+          <div>
+            <label class="label">Link area do participante</label>
+            <input id="adminLinkArea" class="input" type="url" placeholder="https://...">
+          </div>
+          <div>
+            <label class="label">Link protocolo de inscricao</label>
+            <input id="adminLinkProtocolo" class="input" type="url" placeholder="https://...">
+          </div>
+          <div>
+            <label class="label">Link 2a via boleto</label>
+            <input id="adminLinkBoleto" class="input" type="url" placeholder="https://...">
+          </div>
+          <div>
+            <label class="label">Link falar com organizador</label>
+            <input id="adminLinkOrganizador" class="input" type="url" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card p-6 md:p-8 fade-in">
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="adminSaveBtn" type="submit" class="cta">Salvar evento</button>
+          <button id="adminCancelEdit" type="button" class="ghost hidden">Cancelar edicao</button>
+          <span id="adminStatus" class="text-sm text-gray-600"></span>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <footer class="py-10 text-center text-sm text-slate-500">
+    SpeedRun Admin • Criacao completa de eventos
+  </footer>
+
+  <script src="./js/require-auth.js"></script>
+  <script src="./js/require-admin.js"></script>
+  <script src="./js/user-menu.js"></script>
+  <script src="./js/admin.js"></script>
+  <script src="./js/admin-criar-evento.js"></script>
+</body>
+</html>
+
+

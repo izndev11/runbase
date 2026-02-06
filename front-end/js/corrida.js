@@ -99,6 +99,14 @@ function renderOpcoes(opcoes) {
   });
 }
 
+function extrairDescricaoVisivel(descricao) {
+  if (!descricao) return "";
+  const marker = "\n\n[[META]]\n";
+  const index = descricao.indexOf(marker);
+  if (index === -1) return descricao;
+  return descricao.slice(0, index).trim();
+}
+
 async function carregarEvento() {
   if (!eventoId) {
     setStatus("Evento não encontrado.");
@@ -135,8 +143,9 @@ async function carregarEvento() {
     }
 
     if (descEl) {
+      const descricaoVisivel = extrairDescricaoVisivel(evento.descricao || "");
       descEl.textContent =
-        evento.descricao ||
+        descricaoVisivel ||
         "Tudo o que você precisa saber antes de se inscrever. Em breve, mais informações sobre percursos, categorias e regulamento.";
     }
 
@@ -238,3 +247,6 @@ if (inscreverBtn) {
 }
 
 carregarEvento();
+
+
+
