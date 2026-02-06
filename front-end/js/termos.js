@@ -32,7 +32,7 @@ if (voltarEl) {
       window.location.href = "corrida.html";
       return;
     }
-    window.location.href = `corrida.html?id=${encodeURIComponent(eventoId)}`;
+    window.location.href = `corrida-completa.html?id=${encodeURIComponent(eventoId)}`;
   });
 }
 

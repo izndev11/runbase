@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Novo Evento | Admin SpeedRun</title>
+  <title>Editar Evento | Admin SpeedRun</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css">
   <style>
@@ -166,7 +166,7 @@
         <a href="calendario.html" class="hover:text-blue-600">Calendario</a>
         <a href="organizacao.html" class="hover:text-blue-600">Organizacao</a>
       </nav>
-      <div class="pill">Criação de Evento</div>
+      <div class="pill">Edicao de Evento</div>
     </div>
   </header>
 
@@ -174,13 +174,13 @@
     <div class="container mx-auto px-6 py-12 md:py-16">
       <div class="grid md:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
         <div class="fade-in">
-          <h1 class="hero-title text-4xl md:text-6xl mt-4">Crie eventos com todas as informações</h1>
+          <h1 class="hero-title text-4xl md:text-6xl mt-4">Edite o evento com todas as informacoes</h1>
           <p class="text-slate-200 mt-4 text-lg">
-            Monte a pagina completa do evento com percursos, kits, entregas e premios. Tudo separado e pronto para ser exibido.
+            Altere percursos, kits, entregas, horarios e links. Tudo refletido na pagina do evento.
           </p>
           <div class="flex flex-wrap gap-3 mt-6">
-            <button class="cta">Salvar rascunho</button>
-            <button class="ghost">Publicar evento</button>
+            <button class="cta" type="button">Salvar rascunho</button>
+            <button class="ghost" type="button">Publicar evento</button>
           </div>
         </div>
         <div class="preview-card fade-in">
@@ -210,14 +210,14 @@
             </div>
           </div>
           <p class="text-slate-300 text-sm mt-6">
-            Preencha os campos abaixo para montar o evento completo.
+            Confira os dados carregados e ajuste o que for necessario.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-    <main class="container mx-auto px-4 pb-16 -mt-12 flex-grow">
+  <main class="container mx-auto px-4 pb-16 -mt-12 flex-grow">
     <form id="adminEventoForm" class="grid gap-10">
       <input id="adminEventoId" type="hidden">
       <input id="adminCategorias" type="hidden">
@@ -366,7 +366,6 @@
           <button id="percursoClear" type="button" onclick="window.adminLimparPercursos && window.adminLimparPercursos()" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar percursos</button>
         </div>
         <div id="percursoList" class="mt-4 space-y-2 text-sm text-gray-700"></div>
-        <div id="percursoStatus" class="mt-2 text-xs text-red-500"></div>
       </div>
 
       <div class="section-card p-6 md:p-8 fade-in">
@@ -594,30 +593,24 @@
 
       <div class="section-card p-6 md:p-8 fade-in">
         <div class="flex flex-wrap items-center gap-3">
-          <button id="adminSaveBtn" type="submit" class="cta">Salvar evento</button>
+          <button id="adminSaveBtn" type="submit" class="cta">Salvar alteracoes</button>
           <button id="adminCancelEdit" type="button" class="ghost hidden">Cancelar edicao</button>
           <span id="adminStatus" class="text-sm text-gray-600"></span>
+          <span id="adminDebug" class="text-xs text-red-500"></span>
         </div>
       </div>
     </form>
   </main>
 
   <footer class="py-10 text-center text-sm text-slate-500">
-    SpeedRun Admin • Criacao completa de eventos
+    SpeedRun Admin • Edicao completa de eventos
   </footer>
 
   <script src="./js/require-auth.js?v=20260206"></script>
   <script src="./js/require-admin.js?v=20260206"></script>
   <script src="./js/user-menu.js?v=20260206"></script>
   <script src="./js/admin.js?v=20260206"></script>
-  <script src="./js/admin-criar-evento.js?v=20260206"></script>
-  <script>
-    if (typeof window.adminAdicionarPercurso !== "function") {
-      const script = document.createElement("script");
-      script.src = "./js/admin-criar-evento.js?v=20260206&force=1";
-      document.body.appendChild(script);
-    }
-  </script>
+  <script src="./js/admin-editar-evento.js?v=20260206"></script>
   <script>
     if (typeof window.adminAdicionarPercurso !== "function") {
       window.__percursosFallback = Array.isArray(window.__percursosFallback)
@@ -627,19 +620,16 @@
         const nomeEl = document.getElementById("percursoNome");
         const kmEl = document.getElementById("percursoKm");
         const mapaEl = document.getElementById("percursoMapaUrl");
-        const statusEl = document.getElementById("percursoStatus");
         const nome = String(nomeEl?.value || "").trim();
         const km = String(kmEl?.value || "").trim();
         const mapa = String(mapaEl?.value || "").trim();
         if (!nome && !km) {
-          if (statusEl) statusEl.textContent = "Informe o nome ou a distancia do percurso.";
           return;
         }
         window.__percursosFallback.push({ nome, km, mapa });
         if (nomeEl) nomeEl.value = "";
         if (kmEl) kmEl.value = "";
         if (mapaEl) mapaEl.value = "";
-        if (statusEl) statusEl.textContent = "Percurso adicionado.";
         const listEl = document.getElementById("percursoList");
         if (listEl) {
           listEl.innerHTML = window.__percursosFallback.map((p) => {
@@ -662,5 +652,3 @@
   </script>
 </body>
 </html>
-
-

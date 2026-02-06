@@ -41,11 +41,11 @@ const percursoMapaUrlEl = document.getElementById("percursoMapaUrl");
 const percursoAddEl = document.getElementById("percursoAdd");
 const percursoClearEl = document.getElementById("percursoClear");
 const percursoListEl = document.getElementById("percursoList");
-const percursoStatusEl = document.getElementById("percursoStatus");
 
 const descricaoEl = document.getElementById("adminDescricao");
 const categoriasEl = document.getElementById("adminCategorias");
 const statusEl = document.getElementById("adminStatus");
+const debugEl = document.getElementById("adminDebug");
 const formEl = document.getElementById("adminEventoForm");
 
 const token = localStorage.getItem("token");
@@ -64,8 +64,8 @@ function setStatus(message) {
   if (statusEl) statusEl.textContent = message || "";
 }
 
-function setPercursoStatus(message) {
-  if (percursoStatusEl) percursoStatusEl.textContent = message || "";
+function setDebug(message) {
+  if (debugEl) debugEl.textContent = message || "";
 }
 
 function setImagePreview(previewEl, removeEl, url) {
@@ -287,7 +287,6 @@ function adicionarPercurso() {
 
   if (!nome && !km) {
     setStatus("Informe o nome ou a distancia do percurso");
-    setPercursoStatus("Informe o nome ou a distancia do percurso.");
     return;
   }
 
@@ -297,7 +296,6 @@ function adicionarPercurso() {
   if (percursoNomeEl) percursoNomeEl.value = "";
   if (percursoKmEl) percursoKmEl.value = "";
   if (percursoMapaUrlEl) percursoMapaUrlEl.value = "";
-  setPercursoStatus("Percurso adicionado.");
   setStatus("");
   renderPercursos();
 }
@@ -584,77 +582,24 @@ async function carregarEventoParaEdicao() {
   if (!eventoIdParam) return;
   try {
     setStatus("Carregando evento...");
+    setDebug(`Iniciando com id=${eventoIdParam}`);
 
-    let eventoSalvo = null;
-    if (window.location.hash) {
-      try {
-        const hashRaw = window.location.hash.replace(/^#/, "");
-        const dataParam = hashRaw.startsWith("data=") ? hashRaw.slice(5) : null;
-        if (dataParam) {
-          const base64url = dataParam.replace(/ /g, "+");
-          let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
-          const pad = base64.length % 4;
-          if (pad) base64 += "=".repeat(4 - pad);
-          const binary = atob(base64);
-          let json = "";
-          if (typeof TextDecoder !== "undefined") {
-            const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-            json = new TextDecoder("utf-8").decode(bytes);
-          } else {
-            json = decodeURIComponent(escape(binary));
-          }
-          const parsed = JSON.parse(json);
-          if (String(parsed?.id) === String(eventoIdParam)) {
-            eventoSalvo = parsed;
-          }
-        }
-      } catch (err) {
-        console.warn("Nao foi possivel ler hash de edicao:", err);
-      }
-    }
     try {
-      const raw = sessionStorage.getItem("adminEditEvento");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (String(parsed?.id) === String(eventoIdParam)) {
-          eventoSalvo = parsed;
+      const rawCache = localStorage.getItem("eventosMetaCache");
+      if (rawCache) {
+        const cache = JSON.parse(rawCache);
+        const item = cache?.[String(eventoIdParam)];
+        if (item?.descricao || item?.meta) {
+          const dataBasica = {
+            id: Number(eventoIdParam),
+            descricao: item.descricao || null,
+          };
+          preencherBasico(dataBasica);
+          if (item.meta) aplicarMeta(item.meta);
         }
       }
     } catch (err) {
-      console.warn("Nao foi possivel ler evento do sessionStorage:", err);
-    }
-
-    if (!eventoSalvo) {
-      try {
-        const rawCache = localStorage.getItem("adminEventosCache");
-        if (rawCache) {
-          const parsedCache = JSON.parse(rawCache);
-          if (Array.isArray(parsedCache)) {
-            const encontrado = parsedCache.find(
-              (item) => String(item?.id) === String(eventoIdParam)
-            );
-            if (encontrado) eventoSalvo = encontrado;
-          }
-        }
-      } catch (err) {
-        console.warn("Nao foi possivel ler cache de eventos:", err);
-      }
-    }
-
-    if (eventoSalvo) {
-      preencherBasico(eventoSalvo);
-      if (typeof window.adminSetEditMode === "function") {
-        window.adminSetEditMode(eventoSalvo);
-      }
-      const { meta, descricaoVisivel } = extrairMeta(eventoSalvo.descricao || "");
-      if (meta) {
-        aplicarMeta(meta);
-      } else if (descricaoVisivel) {
-        const resumoEl = document.getElementById("adminResumo");
-        if (resumoEl) resumoEl.value = descricaoVisivel;
-      }
-      setStatus("");
-      return;
+      console.warn("Falha ao ler cache local:", err);
     }
 
     const tentarFetch = async (url, headers) => {
@@ -668,67 +613,81 @@ async function carregarEventoParaEdicao() {
       return { response, data };
     };
 
-    let data = null;
+    const aplicarEvento = (data) => {
+      if (!data) return false;
+      preencherBasico(data);
+      if (typeof window.adminSetEditMode === "function") {
+        window.adminSetEditMode(data);
+      }
+      const { meta, descricaoVisivel } = extrairMeta(data.descricao || "");
+      if (meta || data?.meta) {
+        aplicarMeta(data?.meta || meta);
+      } else if (descricaoVisivel) {
+        const resumoEl = document.getElementById("adminResumo");
+        if (resumoEl) resumoEl.value = descricaoVisivel;
+      }
+      setStatus("");
+      return true;
+    };
+
     if (token) {
-      const { response, data: payload } = await tentarFetch(
+      setDebug(`Buscando /admin/eventos/${eventoIdParam}`);
+      const { response, data } = await tentarFetch(
+        `http://localhost:3000/admin/eventos/${encodeURIComponent(eventoIdParam)}`,
+        { Authorization: `Bearer ${token}` }
+      );
+      if (response.ok && aplicarEvento(data)) {
+        setDebug("OK /admin/eventos/:id");
+        return;
+      }
+      setDebug(`Falhou /admin/eventos/:id (${response.status})`);
+    }
+
+    {
+      setDebug(`Buscando /eventos/${eventoIdParam}`);
+      const { response, data } = await tentarFetch(
+        `http://localhost:3000/eventos/${encodeURIComponent(eventoIdParam)}`
+      );
+      if (response.ok && aplicarEvento(data)) {
+        setDebug("OK /eventos/:id");
+        return;
+      }
+      setDebug(`Falhou /eventos/:id (${response.status})`);
+    }
+
+    if (token) {
+      setDebug("Buscando lista /admin/eventos");
+      const { response, data } = await tentarFetch(
         "http://localhost:3000/admin/eventos",
         { Authorization: `Bearer ${token}` }
       );
-      if (response.ok && Array.isArray(payload)) {
-        data = payload;
-      } else if (!response.ok && payload?.error) {
-        setStatus(payload.error);
-      }
-    }
-
-    if (!data) {
-      const { response, data: payload } = await tentarFetch("http://localhost:3000/eventos");
-      if (!response.ok || !Array.isArray(payload)) {
-        setStatus(payload?.error || "Erro ao carregar evento");
-        return;
-      }
-      data = payload;
-    }
-
-    let evento = data.find((item) => String(item.id) === String(eventoIdParam));
-    if (!evento) {
-      if (token) {
-        const { response, data: payload } = await tentarFetch(
-          `http://localhost:3000/admin/eventos/${encodeURIComponent(eventoIdParam)}`,
-          { Authorization: `Bearer ${token}` }
-        );
-        if (response.ok && payload) {
-          evento = payload;
+      if (response.ok && Array.isArray(data)) {
+        const encontrado = data.find((item) => String(item?.id) === String(eventoIdParam));
+        if (aplicarEvento(encontrado)) {
+          setDebug("OK /admin/eventos (lista)");
+          return;
         }
       }
     }
-    if (!evento) {
-      const { response, data: payload } = await tentarFetch(
-        `http://localhost:3000/eventos/${encodeURIComponent(eventoIdParam)}`
-      );
-      if (response.ok && payload) {
-        evento = payload;
+
+    {
+      setDebug("Buscando lista /eventos");
+      const { response, data } = await tentarFetch("http://localhost:3000/eventos");
+      if (response.ok && Array.isArray(data)) {
+        const encontrado = data.find((item) => String(item?.id) === String(eventoIdParam));
+        if (aplicarEvento(encontrado)) {
+          setDebug("OK /eventos (lista)");
+          return;
+        }
       }
     }
-    if (!evento) {
-      setStatus("Evento nao encontrado.");
-      return;
-    }
-    preencherBasico(evento);
-    if (typeof window.adminSetEditMode === "function") {
-      window.adminSetEditMode(evento);
-    }
-    const { meta, descricaoVisivel } = extrairMeta(evento.descricao || "");
-    if (meta) {
-      aplicarMeta(meta);
-    } else if (descricaoVisivel) {
-      const resumoEl = document.getElementById("adminResumo");
-      if (resumoEl) resumoEl.value = descricaoVisivel;
-    }
-    setStatus("");
+
+    setStatus("Evento nao encontrado.");
+    setDebug("Nenhuma rota retornou evento.");
   } catch (err) {
     console.error(err);
     setStatus("Erro de conexao com o servidor");
+    setDebug("Erro no JS/servidor.");
   }
 }
 

@@ -26,6 +26,7 @@ model Evento {
   dataEvento DateTime
   local      String
   descricao  String?
+  meta       Json?
   imagem_url String?
   banner_url String?
   organizador String?

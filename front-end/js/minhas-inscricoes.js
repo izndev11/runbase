@@ -39,7 +39,7 @@ function renderInscricoes(inscricoes) {
     const organizador =
       inscricao.evento?.organizador || inscricao.evento?.organizacao || "SpeedRun";
     const detalhesUrl = inscricao.evento?.id
-      ? `corrida.html?id=${inscricao.evento.id}`
+      ? `corrida-completa.html?id=${inscricao.evento.id}`
       : "#";
 
     card.innerHTML = `

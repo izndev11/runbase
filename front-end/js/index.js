@@ -27,7 +27,7 @@ function renderEventos(eventos) {
       : "-";
     const imagem = evento.imagem_url || evento.imagem || "img/fundo1.png";
     const organizador = evento.organizador || evento.organizacao || "SpeedRun";
-    const detalhesUrl = `corrida.html?id=${evento.id}`;
+    const detalhesUrl = `corrida-completa.html?id=${evento.id}`;
 
     card.innerHTML = `
       <div class="ticket-card__media">

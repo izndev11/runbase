@@ -6,6 +6,67 @@ const buscaBtnEl = document.getElementById("calendarioBuscaBtn");
 
 let cachedEventos = [];
 let cachedInscritos = new Set();
+const META_MARKER = "\n\n[[META]]\n";
+
+function extrairMeta(descricao) {
+  if (!descricao) return null;
+  const index = descricao.indexOf(META_MARKER);
+  if (index === -1) return null;
+  const metaRaw = descricao.slice(index + META_MARKER.length).trim();
+  try {
+    return JSON.parse(metaRaw);
+  } catch (err) {
+    console.error("Erro ao ler meta:", err);
+    return null;
+  }
+}
+
+function truncarTexto(texto, limite) {
+  const value = String(texto || "").trim();
+  if (!value) return "";
+  if (value.length <= limite) return value;
+  return `${value.slice(0, limite - 1)}…`;
+}
+
+function montarExtras(evento) {
+  const meta = extrairMeta(evento?.descricao || "");
+  if (!meta) return "";
+
+  const resumo = truncarTexto(meta.resumo, 120);
+  const info = [];
+  if (meta.cidade) info.push(meta.cidade);
+  if (meta.horario) info.push(meta.horario);
+  const infoTexto = info.join(" • ");
+  const vendas = meta.dataVendas ? `Vendas ate: ${meta.dataVendas}` : "";
+
+  const chips = [];
+  if (Array.isArray(meta.percursos)) {
+    meta.percursos.slice(0, 3).forEach((p) => {
+      const label = p?.km ? `${p.km} km` : p?.nome;
+      if (label) chips.push(label);
+    });
+  }
+  if (meta.kits?.completo?.descricao) chips.push("Kit completo");
+  if (meta.kits?.economico?.descricao) chips.push("Kit economico");
+  if (meta.kits?.basico?.descricao) chips.push("Kit basico");
+  const chipsHtml = chips.length
+    ? `<div class="ticket-card__chips">${chips
+        .slice(0, 4)
+        .map((chip) => `<span class="ticket-card__chip">${chip}</span>`)
+        .join("")}</div>`
+    : "";
+
+  if (!resumo && !infoTexto && !vendas && !chipsHtml) return "";
+
+  return `
+    <div class="ticket-card__extras">
+      ${resumo ? `<p class="ticket-card__summary">${resumo}</p>` : ""}
+      ${infoTexto ? `<div class="ticket-card__detail">${infoTexto}</div>` : ""}
+      ${vendas ? `<div class="ticket-card__detail">${vendas}</div>` : ""}
+      ${chipsHtml}
+    </div>
+  `;
+}
 
 function setInscritoUI({ btn, status }) {
   if (btn) {
@@ -41,7 +102,8 @@ function renderEventos(eventos, inscritosSet) {
     const isInscrito = inscritosSet?.has(evento.id);
     const imagem = evento.imagem_url || evento.imagem || "img/fundo1.png";
     const organizador = evento.organizador || evento.organizacao || "SpeedRun";
-    const detalhesUrl = `corrida.html?id=${evento.id}`;
+    const detalhesUrl = `corrida-completa.html?id=${evento.id}`;
+    const extrasHtml = montarExtras(evento);
 
     card.innerHTML = `
       <div class="ticket-card__media">
@@ -73,6 +135,7 @@ function renderEventos(eventos, inscritosSet) {
             <span>${evento.local || "-"}</span>
           </div>
         </div>
+        ${extrasHtml}
         <div class="ticket-card__actions">
           <a href="${detalhesUrl}" class="ticket-card__btn ticket-card__btn--light">
             Ver detalhes

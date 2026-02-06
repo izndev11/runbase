@@ -235,7 +235,21 @@ function renderEventos(eventos) {
     const inscBtn = item.querySelector("[data-inscricoes]");
 
     editBtn.addEventListener("click", () => {
-      window.location.href = `admin-criar-evento.html?id=${encodeURIComponent(evento.id)}`;
+      try {
+        sessionStorage.setItem("adminEditEvento", JSON.stringify(evento));
+      } catch (err) {
+        console.warn("Falha ao salvar evento para edicao:", err);
+      }
+      let hash = "";
+      try {
+        const json = JSON.stringify(evento);
+        const base64 = btoa(unescape(encodeURIComponent(json)));
+        const base64url = base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+        hash = `#data=${base64url}`;
+      } catch (err) {
+        console.warn("Falha ao montar hash de edicao:", err);
+      }
+      window.location.href = `admin-editar-evento.html?id=${encodeURIComponent(evento.id)}${hash}`;
     });
     delBtn.addEventListener("click", async () => {
       if (!confirm("Deseja realmente excluir este evento?")) return;
@@ -359,6 +373,11 @@ async function carregarEventos() {
       setStatus(data.error || "Erro ao carregar eventos");
       return;
     }
+    try {
+      localStorage.setItem("adminEventosCache", JSON.stringify(data));
+    } catch (err) {
+      console.warn("Nao foi possivel salvar cache de eventos:", err);
+    }
     renderEventos(data);
   } catch (err) {
     console.error(err);
@@ -370,6 +389,10 @@ async function criarEvento(event) {
   event.preventDefault();
   if (!token) return;
 
+  if (typeof window.adminSyncDescricao === "function") {
+    window.adminSyncDescricao();
+  }
+
   const titulo = document.getElementById("adminTitulo").value;
   const dataEvento = document.getElementById("adminData").value;
   const local = document.getElementById("adminLocal").value;
@@ -379,6 +402,7 @@ async function criarEvento(event) {
   const descricao = document.getElementById("adminDescricao").value;
   const categorias = document.getElementById("adminCategorias").value;
   const eventoId = editIdEl ? editIdEl.value : "";
+  const meta = typeof window.adminBuildMeta === "function" ? window.adminBuildMeta() : null;
 
   if (!titulo || !dataEvento || !local) {
     setStatus("Preencha todos os campos");
@@ -405,6 +429,7 @@ async function criarEvento(event) {
           descricao,
           categorias,
           opcoes,
+          meta,
         }),
       }
     );
@@ -412,6 +437,23 @@ async function criarEvento(event) {
     if (!response.ok) {
       setStatus(data.error || "Erro ao salvar evento");
       return;
+    }
+
+    try {
+      const metaCache = typeof meta === "object" && meta ? meta : null;
+      const cacheKey = "eventosMetaCache";
+      const raw = localStorage.getItem(cacheKey);
+      const cache = raw ? JSON.parse(raw) : {};
+      if (data?.id) {
+        cache[String(data.id)] = {
+          meta: metaCache,
+          descricao: descricao || null,
+          atualizadoEm: new Date().toISOString(),
+        };
+        localStorage.setItem(cacheKey, JSON.stringify(cache));
+      }
+    } catch (err) {
+      console.warn("Falha ao salvar cache local do evento:", err);
     }
 
     setStatus(eventoId ? "Evento atualizado!" : "Evento cadastrado!");

@@ -6,7 +6,6 @@ const descEl = document.getElementById("corridaDescricao");
 const categoriasEl = document.getElementById("corridaCategorias");
 const bannerEl = document.getElementById("corridaBanner");
 const statusEl = document.getElementById("corridaStatus");
-const metaEl = document.getElementById("corridaMetaGrid");
 const inscreverBtn = document.getElementById("corridaInscrever");
 const opcoesEl = document.getElementById("corridaOpcoes");
 const totalEl = document.getElementById("corridaTotal");
@@ -14,6 +13,7 @@ const pixBoxEl = document.getElementById("corridaPixBox");
 const pixQrEl = document.getElementById("corridaPixQr");
 const pixCodeEl = document.getElementById("corridaPixCode");
 const pixLinkEl = document.getElementById("corridaPixLink");
+const detalhesEl = document.getElementById("corridaDetalhesAll");
 
 const params = new URLSearchParams(window.location.search);
 const eventoId = params.get("id");
@@ -24,16 +24,6 @@ let totalSelecionado = null;
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
-}
-
-function irParaTermos() {
-  if (!opcaoSelecionadaId) {
-    setStatus("Selecione uma opcao antes de continuar.");
-    return;
-  }
-  if (!eventoId) return;
-  const destino = `termos.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoSelecionadaId)}`;
-  window.location.href = destino;
 }
 
 function formatDate(value) {
@@ -55,8 +45,7 @@ function renderCategorias(categorias) {
   }
   categorias.forEach((cat) => {
     const pill = document.createElement("span");
-    pill.className =
-      "bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold";
+    pill.className = "bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold";
     pill.textContent = cat.nome || String(cat);
     categoriasEl.appendChild(pill);
   });
@@ -148,20 +137,23 @@ function carregarDescricaoCache(eventoId) {
   }
 }
 
-function renderMeta(meta) {
-  if (!metaEl) return;
-  if (!meta) {
-    metaEl.innerHTML = "";
-    return;
-  }
-
-  const sections = [];
-  const card = (title, body) => `
+function card(title, body) {
+  return `
     <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
       <h4 class="text-sm font-bold text-gray-800 mb-2">${title}</h4>
       ${body}
     </div>
   `;
+}
+
+function renderMeta(meta) {
+  if (!detalhesEl) return;
+  if (!meta) {
+    detalhesEl.innerHTML = "";
+    return;
+  }
+
+  const sections = [];
 
   if (meta.resumo) {
     sections.push(card("Resumo", `<p class="text-sm text-gray-600 leading-relaxed">${meta.resumo}</p>`));
@@ -171,19 +163,12 @@ function renderMeta(meta) {
   }
 
   const infoGeral = [];
-  if (meta.dataVendas) infoGeral.push(`Vendas ate: ${meta.dataVendas}`);
-  if (meta.horario) infoGeral.push(`Horario: ${meta.horario}`);
+  if (meta.dataVendas) infoGeral.push(`Vendas até: ${meta.dataVendas}`);
+  if (meta.horario) infoGeral.push(`Horário: ${meta.horario}`);
   if (meta.cidade) infoGeral.push(`Cidade/UF: ${meta.cidade}`);
-  if (meta.enderecoLocal) infoGeral.push(`Endereco principal: ${meta.enderecoLocal}`);
+  if (meta.enderecoLocal) infoGeral.push(`Endereço principal: ${meta.enderecoLocal}`);
   if (infoGeral.length) {
-    sections.push(
-      card(
-        "Info geral",
-        `<ul class="text-sm text-gray-600 list-disc pl-4">${infoGeral
-          .map((item) => `<li>${item}</li>`)
-          .join("")}</ul>`
-      )
-    );
+    sections.push(card("Info geral", `<ul class="text-sm text-gray-600 list-disc pl-4">${infoGeral.map((item) => `<li>${item}</li>`).join("")}</ul>`));
   }
 
   if (Array.isArray(meta.largadas) && meta.largadas.length) {
@@ -193,8 +178,8 @@ function renderMeta(meta) {
         const numero = index + 1;
         const partes = [];
         if (largada.nome) partes.push(`Ponto ${numero}: ${largada.nome}`);
-        if (largada.endereco) partes.push(`Endereco: ${largada.endereco}`);
-        if (largada.horario) partes.push(`Horario: ${largada.horario}`);
+        if (largada.endereco) partes.push(`Endereço: ${largada.endereco}`);
+        if (largada.horario) partes.push(`Horário: ${largada.horario}`);
         return `<li>${partes.join(" | ")}</li>`;
       })
       .filter(Boolean);
@@ -220,21 +205,9 @@ function renderMeta(meta) {
 
   if (meta.kits) {
     const kits = [
-      {
-        label: "Kit completo",
-        descricao: meta.kits.completo?.descricao,
-        imagem: meta.kits.completo?.imagemUrl,
-      },
-      {
-        label: "Kit economico",
-        descricao: meta.kits.economico?.descricao,
-        imagem: meta.kits.economico?.imagemUrl,
-      },
-      {
-        label: "Kit basico",
-        descricao: meta.kits.basico?.descricao,
-        imagem: meta.kits.basico?.imagemUrl,
-      },
+      { label: "Kit completo", descricao: meta.kits.completo?.descricao, imagem: meta.kits.completo?.imagemUrl },
+      { label: "Kit economico", descricao: meta.kits.economico?.descricao, imagem: meta.kits.economico?.imagemUrl },
+      { label: "Kit basico", descricao: meta.kits.basico?.descricao, imagem: meta.kits.basico?.imagemUrl },
     ].filter((k) => k.descricao || k.imagem);
     if (kits.length) {
       sections.push(
@@ -266,43 +239,22 @@ function renderMeta(meta) {
     }
     if (meta.entrega.observacoes) linhas.push(`Obs: ${meta.entrega.observacoes}`);
     if (linhas.length) {
-      sections.push(
-        card(
-          "Entrega de kits",
-          `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas
-            .map((item) => `<li>${item}</li>`)
-            .join("")}</ul>`
-        )
-      );
+      sections.push(card("Entrega de kits", `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas.map((item) => `<li>${item}</li>`).join("")}</ul>`));
     }
   }
 
   if (Array.isArray(meta.programacao) && meta.programacao.length) {
-    sections.push(
-      card(
-        "Programacao",
-        `<ul class="text-sm text-gray-600 list-disc pl-4">${meta.programacao
-          .map((item) => `<li>${item}</li>`)
-          .join("")}</ul>`
-      )
-    );
+    sections.push(card("Programação", `<ul class="text-sm text-gray-600 list-disc pl-4">${meta.programacao.map((item) => `<li>${item}</li>`).join("")}</ul>`));
   }
 
   if (meta.premiacao) {
     const linhas = [];
-    if (meta.premiacao.participacao) linhas.push(`Participacao: ${meta.premiacao.participacao}`);
+    if (meta.premiacao.participacao) linhas.push(`Participação: ${meta.premiacao.participacao}`);
     if (meta.premiacao.top3Geral) linhas.push(`Top 3 geral: ${meta.premiacao.top3Geral}`);
     if (meta.premiacao.top3Categorias) linhas.push(`Top 3 categorias: ${meta.premiacao.top3Categorias}`);
     if (meta.premiacao.equipes) linhas.push(`Equipes: ${meta.premiacao.equipes}`);
     if (linhas.length) {
-      sections.push(
-        card(
-          "Premiacao",
-          `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas
-            .map((item) => `<li>${item}</li>`)
-            .join("")}</ul>`
-        )
-      );
+      sections.push(card("Premiação", `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas.map((item) => `<li>${item}</li>`).join("")}</ul>`));
     }
   }
 
@@ -313,41 +265,22 @@ function renderMeta(meta) {
     if (meta.contato.instagram) linhas.push(`Instagram: ${meta.contato.instagram}`);
     if (meta.contato.site) linhas.push(`Site: ${meta.contato.site}`);
     if (linhas.length) {
-      sections.push(
-        card(
-          "Contato",
-          `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas
-            .map((item) => `<li>${item}</li>`)
-            .join("")}</ul>`
-        )
-      );
+      sections.push(card("Contato", `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas.map((item) => `<li>${item}</li>`).join("")}</ul>`));
     }
   }
 
   if (meta.links) {
     const linhas = [];
-    if (meta.links.area) linhas.push(`Area do participante: ${meta.links.area}`);
+    if (meta.links.area) linhas.push(`Área do participante: ${meta.links.area}`);
     if (meta.links.protocolo) linhas.push(`Protocolo: ${meta.links.protocolo}`);
     if (meta.links.boleto) linhas.push(`2a via boleto: ${meta.links.boleto}`);
     if (meta.links.organizador) linhas.push(`Falar com organizador: ${meta.links.organizador}`);
     if (linhas.length) {
-      sections.push(
-        card(
-          "Links",
-          `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas
-            .map((item) => `<li>${item}</li>`)
-            .join("")}</ul>`
-        )
-      );
+      sections.push(card("Links", `<ul class="text-sm text-gray-600 list-disc pl-4">${linhas.map((item) => `<li>${item}</li>`).join("")}</ul>`));
     }
   }
 
-  if (!sections.length) {
-    metaEl.innerHTML = "";
-    return;
-  }
-
-  metaEl.innerHTML = sections.join("");
+  detalhesEl.innerHTML = sections.join("");
 }
 
 async function carregarEvento() {
@@ -380,15 +313,13 @@ async function carregarEvento() {
 
     eventoAtual = evento;
 
-    if (tituloEl) tituloEl.textContent = evento.titulo || "Corrida";
+    if (tituloEl) tituloEl.textContent = evento.titulo || "Evento";
     if (dataEl) dataEl.textContent = formatDate(evento.dataEvento);
     if (localEl) localEl.textContent = evento.local || "-";
     if (orgEl) orgEl.textContent = evento.organizador || evento.organizacao || "SpeedRun";
 
     const banner = evento.banner_url || "img/fundo1.png";
-    if (bannerEl) {
-      bannerEl.src = banner;
-    }
+    if (bannerEl) bannerEl.src = banner;
 
     if (descEl) {
       const descricaoVisivel = extrairDescricaoVisivel(evento.descricao || "");
@@ -399,11 +330,11 @@ async function carregarEvento() {
         fallbackDescricao ||
         "Tudo o que você precisa saber antes de se inscrever. Em breve, mais informações sobre percursos, categorias e regulamento.";
     }
-    const meta = evento.meta || extrairMeta(evento.descricao || "") || carregarMetaCache(eventoId);
-    renderMeta(meta);
 
     renderCategorias(evento.categorias);
     renderOpcoes(evento.opcoes);
+    const meta = evento.meta || extrairMeta(evento.descricao || "") || carregarMetaCache(eventoId);
+    renderMeta(meta);
     setStatus("");
   } catch (err) {
     console.error(err);
@@ -496,10 +427,7 @@ async function inscrever() {
 }
 
 if (inscreverBtn) {
-  inscreverBtn.addEventListener("click", irParaTermos);
+  inscreverBtn.addEventListener("click", inscrever);
 }
 
 carregarEvento();
-
-
-
