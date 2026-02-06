@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
+<header class="bg-white sticky top-0 z-50 shadow-lg">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+      <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+        <img src="img/logosite.png" alt="Logo"
+             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+             onmouseover="this.style.transform='scale(1.1)'"
+             onmouseout="this.style.transform='scale(1.0)'"></a>
+    </div>
+
+    <nav class="hidden md:flex space-x-6 font-medium">
+      <a href="index.html" class="hover:text-blue-600">Pagina Inicial</a>
+      <a href="calendario.html" class="hover:text-blue-600">Calendario</a>
+      <a href="organizacao.html" class="hover:text-blue-600">Organizacao</a>
+    </nav>
+
+    <a id="loginLink" href="login.html"
+       class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+      Login
+    </a>
+
+    <div id="userMenuContainer" class="relative">
+      <button id="userMenuButton"
+              class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+        <span id="userMenuName">Ola, usuario</span>
+      </button>
+
+      <div id="userMenuDropdown"
+           class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+          Painel Admin
+        </a>
+        <a id="userMenuProfile" href="meu-perfil.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+          Meu Perfil
+        </a>
+        <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
+          Minhas Inscricoes
+        </a>
+        <a href="pedidos.html" class="block px-4 py-3 hover:bg-gray-50">
+          Meus Pedidos
+        </a>
+        <button id="userMenuLogout"
+                class="w-full text-left px-4 py-3 hover:bg-gray-50">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container mx-auto px-4 py-10 flex-grow">
+  <div class="mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold">Meu perfil</h1>
+    <p class="text-gray-600 mt-2">Gerencie sua conta, equipe e acompanhe seus eventos.</p>
+  </div>
+
+  <div id="perfilStatus" class="mb-4 text-sm text-gray-600"></div>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <section class="lg:col-span-2 space-y-6">
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-lg font-bold mb-4 uppercase">Informacoes da conta</h2>
+        <div class="grid gap-4 md:grid-cols-2 text-sm">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Nome completo</div>
+            <div id="perfilNome" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Email</div>
+            <div id="perfilEmail" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">CPF</div>
+            <div id="perfilCpf" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Nascimento</div>
+            <div id="perfilNascimento" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Telefone</div>
+            <div id="perfilTelefone" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Sexo</div>
+            <div id="perfilSexo" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Cidade</div>
+            <div id="perfilCidade" class="text-gray-800 font-semibold">-</div>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Estado</div>
+            <div id="perfilEstado" class="text-gray-800 font-semibold">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <h2 class="text-lg font-bold uppercase">Eventos participados</h2>
+          <a href="minhas-inscricoes.html" class="text-xs font-bold text-blue-600 hover:text-blue-700">Ver todas as inscricoes</a>
+        </div>
+        <div id="perfilEventosStatus" class="mt-3 text-sm text-gray-600"></div>
+        <div id="perfilEventosList" class="grid gap-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center mt-3"></div>
+      </div>
+    </section>
+
+    <aside class="space-y-6">
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-lg font-bold mb-4 uppercase">Foto de perfil</h2>
+        <div class="flex flex-col items-center gap-4">
+          <div class="relative w-32 h-32 rounded-full bg-gray-100 border overflow-hidden flex items-center justify-center">
+            <img id="perfilAvatar" class="hidden w-full h-full object-cover" alt="Foto de perfil">
+            <div id="perfilAvatarPlaceholder" class="text-gray-400 text-4xl">
+              <i class="fa-solid fa-user"></i>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold text-xs cursor-pointer hover:bg-gray-200">
+              <input id="perfilAvatarInput" type="file" accept="image/*" class="hidden">
+              Importar foto
+            </label>
+            <button id="perfilAvatarRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold text-xs hover:bg-gray-300">
+              Remover
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 text-center">Imagem salva apenas neste navegador.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-lg font-bold mb-4 uppercase">Equipe</h2>
+        <div class="grid gap-3 text-sm">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Nome da equipe</label>
+            <input id="perfilEquipeNome" class="w-full border rounded-full px-3 py-2" type="text" placeholder="Ex: SpeedRun Team">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Funcao / categoria</label>
+            <input id="perfilEquipeFuncao" class="w-full border rounded-full px-3 py-2" type="text" placeholder="Ex: Atleta / Capitao">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-1">Observacoes</label>
+            <textarea id="perfilEquipeObs" class="w-full border rounded-xl px-3 py-2" rows="3" placeholder="Nome da assessoria, recordes, etc."></textarea>
+          </div>
+          <button id="perfilSalvar" type="button" class="bg-blue-600 text-white px-4 py-2 rounded-full font-bold text-xs hover:bg-blue-700">
+            Salvar perfil
+          </button>
+          <span id="perfilSalvarStatus" class="text-xs text-gray-500"></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script src="./js/require-auth.js?v=20260206"></script>
+<script src="./js/user-menu.js?v=20260206"></script>
+<script src="./js/meu-perfil.js?v=20260206"></script>
+</body>
+</html>

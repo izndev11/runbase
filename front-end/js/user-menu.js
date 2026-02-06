@@ -5,6 +5,7 @@ const userMenuLogout = document.getElementById("userMenuLogout");
 const userMenuContainer = document.getElementById("userMenuContainer");
 const loginLink = document.getElementById("loginLink");
 const userMenuAdmin = document.getElementById("userMenuAdmin");
+const userMenuProfile = document.getElementById("userMenuProfile");
 
 function toggleMenu() {
   if (!userMenuDropdown) return;
@@ -45,6 +46,10 @@ async function loadUserMenu() {
     if (userMenuAdmin) {
       if (data.role === "ADMIN") userMenuAdmin.classList.remove("hidden");
       else userMenuAdmin.classList.add("hidden");
+    }
+    if (userMenuProfile) {
+      if (data.role === "ADMIN") userMenuProfile.classList.add("hidden");
+      else userMenuProfile.classList.remove("hidden");
     }
   } catch (err) {
     console.error(err);

@@ -178,7 +178,7 @@ async function openMapModal({ url, type, gpxText }) {
     }
   } else {
     mapaModalContentEl.innerHTML = `
-      <img src="${url}" class="w-full max-h-[85vh] object-contain bg-white" alt="Mapa do percurso">
+      <img src="${url}" class="w-full max-h-[85vh] object-contain bg-transparent" alt="Mapa do percurso">
     `;
   }
   mapaModalEl.classList.remove("hidden");
@@ -329,14 +329,14 @@ async function carregarEvento() {
           const mapa = mapaImagemUrl
             ? `
               <div class="mt-2">
-                <img src="${mapaImagemUrl}" data-map-image="${mapaImagemUrl}" class="w-full max-h-64 object-contain rounded-xl border bg-gray-100 cursor-zoom-in" alt="Mapa do percurso">
+                <img src="${mapaImagemUrl}" data-map-image="${mapaImagemUrl}" class="w-full max-h-64 object-contain rounded-xl border bg-transparent cursor-zoom-in" alt="Mapa do percurso">
                 <div class="text-[11px] text-gray-500 mt-1">Clique para ampliar</div>
               </div>
             `
             : gpxText || gpxUrl
             ? `
               <div class="mt-2">
-                <div class="relative w-full h-64 rounded-xl border bg-gray-100 overflow-hidden">
+                <div class="relative w-full h-64 rounded-xl border bg-transparent overflow-hidden">
                   <div class="absolute inset-0 map-embed" ${gpxIdxAttr} ${gpxUrlAttr}></div>
                 </div>
                 <button ${gpxBtnIdxAttr} ${gpxBtnUrlAttr} class="mt-2 text-xs font-semibold text-blue-700 underline">Ampliar mapa</button>
@@ -345,7 +345,7 @@ async function carregarEvento() {
             : mapaUrl
             ? `
               <div class="mt-2">
-                <div class="relative w-full aspect-[16/9] rounded-xl border bg-gray-100 overflow-hidden">
+                <div class="relative w-full aspect-[16/9] rounded-xl border bg-transparent overflow-hidden">
                   <iframe src="${mapaUrl}" class="absolute inset-0 w-full h-full" frameborder="0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <button data-map-iframe="${mapaUrl}" class="mt-2 text-xs font-semibold text-blue-700 underline">Ampliar mapa</button>
