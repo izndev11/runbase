@@ -107,7 +107,7 @@ function renderGpxMap(container, gpxText) {
     return;
   }
   container.innerHTML = "";
-  const map = L.map(container, { scrollWheelZoom: true });
+  const map = L.map(container, { scrollWheelZoom: true, attributionControl: false });
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap",
   }).addTo(map);
@@ -471,7 +471,7 @@ async function carregarEvento() {
             const total = Number(opcao.preco || 0) + taxaValor;
             return `
               <div class="border rounded-xl px-3 py-2">
-                <div class="font-semibold">${opcao.titulo}</div>
+                <div class="font-semibold uppercase">${opcao.titulo}</div>
                 <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
                 <div class="text-xs text-gray-600">
                   ${formatMoeda(opcao.preco)} + ${formatMoeda(taxaValor)} taxa = ${formatMoeda(total)}

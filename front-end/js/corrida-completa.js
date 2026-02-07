@@ -104,7 +104,7 @@ function renderGpxMap(container, gpxText) {
     return;
   }
   container.innerHTML = "";
-  const map = L.map(container, { scrollWheelZoom: true });
+  const map = L.map(container, { scrollWheelZoom: true, attributionControl: false });
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap",
   }).addTo(map);
@@ -465,7 +465,7 @@ async function carregarEvento() {
             return `
               <div class="border rounded-xl px-3 py-3 space-y-2">
                 <div>
-                  <div class="font-semibold">${opcao.titulo}</div>
+                  <div class="font-semibold uppercase">${opcao.titulo}</div>
                   <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
                 </div>
                 <div class="text-xs text-gray-600">

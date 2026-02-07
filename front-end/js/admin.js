@@ -531,7 +531,7 @@ function extrairMeta(descricao) {
 }
 
 function setEditMode(evento) {
-  if (!evento) return;
+  if (!evento || !form) return;
   setFormMode("Editando");
   if (saveBtn) saveBtn.textContent = "Atualizar evento";
   if (cancelEditBtn) cancelEditBtn.classList.remove("hidden");
@@ -729,7 +729,10 @@ function renderEventos(eventos) {
         <button data-inscricoes class="bg-blue-600 text-white px-3 py-1 rounded-full font-bold hover:bg-blue-700">Ver inscrições</button>
       </div>
     `;
-    item.querySelector("[data-edit]").addEventListener("click", () => setEditMode(evento));
+    item.querySelector("[data-edit]").addEventListener("click", () => {
+      const editUrl = `admin-evento.html?id=${encodeURIComponent(evento.id)}`;
+      window.location.href = editUrl;
+    });
     item.querySelector("[data-detalhes]").addEventListener("click", () => {
       window.location.href = `evento-detalhe-admin.html?id=${evento.id}`;
     });
@@ -759,7 +762,7 @@ function renderEventos(eventos) {
 }
 
 async function carregarEventos() {
-  if (!token) return;
+  if (!token || !listEl) return;
   try {
     const response = await fetch("http://localhost:3000/admin/eventos", {
       headers: { Authorization: `Bearer ${token}` },
@@ -779,6 +782,28 @@ async function carregarEventos() {
     }
     setStatus("Usando lista publica de eventos.");
     renderEventos(fallbackData);
+  } catch (err) {
+    setStatus("Erro de conexao com o servidor");
+  }
+}
+
+async function carregarEventoParaEdicao() {
+  if (!form || !token) return;
+  const params = new URLSearchParams(window.location.search);
+  const eventoId = params.get("id");
+  if (!eventoId) return;
+  setStatus("Carregando evento...");
+  try {
+    const response = await fetch(`http://localhost:3000/admin/eventos/${eventoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const evento = await response.json();
+    if (!response.ok) {
+      setStatus(evento?.error || "Erro ao carregar evento");
+      return;
+    }
+    setEditMode(evento);
+    setStatus("");
   } catch (err) {
     setStatus("Erro de conexao com o servidor");
   }
@@ -1154,6 +1179,7 @@ renderPercursos();
 renderKits();
 renderPremiacoes();
 carregarEventos();
+carregarEventoParaEdicao();
 
 
 
