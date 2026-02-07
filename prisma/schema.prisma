@@ -9,84 +9,79 @@ datasource db {
 
 model Usuario {
   id              Int         @id @default(autoincrement())
-  nome_completo   String
   email           String      @unique
   cpf             String      @unique
+  criadoEm        DateTime    @default(now())
+  data_nascimento DateTime
+  nome_completo   String
   senha_hash      String
-  telefone        String?
+  role            Role        @default(USER)
   sexo            String?
   cidade          String?
   estado          String?
-  role            Role        @default(USER)
-  data_nascimento DateTime
+  telefone        String?
   inscricoes      Inscricao[]
-  criadoEm        DateTime    @default(now())
 }
 
 model Evento {
-  id         Int         @id @default(autoincrement())
-  titulo     String
-  dataEvento DateTime
-  local      String
-  descricao  String?
-  meta       Json?
-  imagem_url String?
-  banner_url String?
+  id          Int           @id @default(autoincrement())
+  titulo      String
+  dataEvento  DateTime
+  local       String
+  descricao   String?
+  imagem_url  String?
   organizador String?
-  categorias Categoria[]
-  opcoes     EventoOpcao[]
-  inscricoes Inscricao[]
+  banner_url  String?
+  meta        Json?
+  categorias  Categoria[]
+  opcoes      EventoOpcao[]
+  inscricoes  Inscricao[]
 }
 
 model Categoria {
   id       Int    @id @default(autoincrement())
   nome     String
   eventoId Int
-
-  evento Evento @relation(fields: [eventoId], references: [id])
+  evento   Evento @relation(fields: [eventoId], references: [id])
 }
 
 model Inscricao {
-  id        Int    @id @default(autoincrement())
-  status    String @default("PENDENTE")
+  status    String     @default("PENDENTE")
   usuarioId Int
   eventoId  Int
-
-
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
-  evento  Evento  @relation(fields: [eventoId], references: [id])
-  pagamento  Pagamento?
+  id        Int        @id @default(autoincrement())
+  evento    Evento     @relation(fields: [eventoId], references: [id])
+  usuario   Usuario    @relation(fields: [usuarioId], references: [id])
+  pagamento Pagamento?
 
   @@unique([usuarioId, eventoId])
 }
 
 model Pagamento {
-  id           Int      @id @default(autoincrement())
-  valor        Float
-  status       String   @default("PENDENTE")
-  metodo       String
-  criadoEm     DateTime @default(now())
-
-  inscricaoId Int      @unique
-  inscricao   Inscricao @relation(fields: [inscricaoId], references: [id])
-  opcaoId      Int?
-  opcao        EventoOpcao? @relation(fields: [opcaoId], references: [id])
-  valor_base   Float?
+  id              Int          @id @default(autoincrement())
+  valor           Float
+  status          String       @default("PENDENTE")
+  metodo          String
+  criadoEm        DateTime     @default(now())
+  inscricaoId     Int          @unique
+  opcaoId         Int?
   taxa_percentual Float?
-  valor_taxa   Float?
+  valor_base      Float?
+  valor_taxa      Float?
+  inscricao       Inscricao    @relation(fields: [inscricaoId], references: [id])
+  opcao           EventoOpcao? @relation(fields: [opcaoId], references: [id])
 }
 
 model EventoOpcao {
-  id              Int      @id @default(autoincrement())
+  id              Int         @id @default(autoincrement())
   titulo          String
   tipo            TipoOpcao
   distancia_km    Float
   preco           Float
   taxa_percentual Float
   eventoId        Int
-
-  evento Evento @relation(fields: [eventoId], references: [id])
-  pagamentos Pagamento[]
+  evento          Evento      @relation(fields: [eventoId], references: [id])
+  pagamentos      Pagamento[]
 }
 
 enum TipoOpcao {
