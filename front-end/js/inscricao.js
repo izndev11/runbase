@@ -56,9 +56,33 @@ function setStatus(message) {
   if (statusEl) statusEl.textContent = message || "";
 }
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
 function formatDate(value) {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString("pt-BR");
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
 }
 
 function formatMoeda(value) {

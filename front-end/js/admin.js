@@ -91,6 +91,43 @@ function formatMoeda(value) {
   return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
+}
+
+function formatInputDate(value) {
+  const date = parseDateValue(value);
+  if (!date) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 function setImagemPreview(url) {
   if (!imagemPreviewEl) return;
   if (url) {
@@ -538,9 +575,7 @@ function setEditMode(evento) {
   if (editIdEl) editIdEl.value = String(evento.id || "");
 
   document.getElementById("adminTitulo").value = evento.titulo || "";
-  document.getElementById("adminData").value = evento.dataEvento
-    ? new Date(evento.dataEvento).toISOString().slice(0, 10)
-    : "";
+  document.getElementById("adminData").value = formatInputDate(evento.dataEvento);
   document.getElementById("adminLocal").value = evento.local || "";
   document.getElementById("adminOrganizador").value = evento.organizador || "";
   document.getElementById("adminImagemUrl").value = evento.imagem_url || "";
@@ -551,7 +586,7 @@ function setEditMode(evento) {
   const meta = evento.meta || extrairMeta(evento.descricao || "") || {};
   document.getElementById("adminResumo").value = meta.resumo || "";
   document.getElementById("adminPcd").value = meta.pcd || "";
-  document.getElementById("adminDataVendas").value = meta.dataVendas || "";
+  document.getElementById("adminDataVendas").value = formatInputDate(meta.dataVendas || "");
   document.getElementById("adminHorario").value = meta.horario || "";
   document.getElementById("adminCidade").value = meta.cidade || "";
   document.getElementById("adminEnderecoLocal").value = meta.enderecoLocal || "";
@@ -713,9 +748,7 @@ function renderEventos(eventos) {
   eventos.forEach((evento) => {
     const item = document.createElement("div");
     item.className = "border rounded-lg px-3 py-2 flex flex-col gap-2";
-    const dataFmt = evento.dataEvento
-      ? new Date(evento.dataEvento).toLocaleDateString("pt-BR")
-      : "-";
+    const dataFmt = formatDate(evento.dataEvento);
     item.innerHTML = `
       <strong>${evento.titulo}</strong>
       <span class="text-sm text-gray-600">Data: ${dataFmt}</span>

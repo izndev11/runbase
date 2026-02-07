@@ -8,6 +8,12 @@ const avatarEl = document.getElementById("perfilAvatar");
 const avatarPlaceholderEl = document.getElementById("perfilAvatarPlaceholder");
 const avatarInputEl = document.getElementById("perfilAvatarInput");
 const avatarRemoveEl = document.getElementById("perfilAvatarRemove");
+const avatarCropModalEl = document.getElementById("avatarCropModal");
+const avatarCropCloseEl = document.getElementById("avatarCropClose");
+const avatarCropCancelEl = document.getElementById("avatarCropCancel");
+const avatarCropSaveEl = document.getElementById("avatarCropSave");
+const avatarCropCanvasEl = document.getElementById("avatarCropCanvas");
+const avatarCropZoomEl = document.getElementById("avatarCropZoom");
 
 const equipeNomeEl = document.getElementById("perfilEquipeNome");
 const equipeFuncaoEl = document.getElementById("perfilEquipeFuncao");
@@ -19,6 +25,16 @@ const AVATAR_KEY = "perfilAvatar";
 const EQUIPE_NOME_KEY = "perfilEquipeNome";
 const EQUIPE_FUNCAO_KEY = "perfilEquipeFuncao";
 const EQUIPE_OBS_KEY = "perfilEquipeObs";
+
+const cropState = {
+  image: null,
+  dragging: false,
+  dragStartX: 0,
+  dragStartY: 0,
+  offsetX: 0,
+  offsetY: 0,
+  baseScale: 1,
+};
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message || "";
@@ -35,13 +51,33 @@ function setField(id, value, fallback = "-") {
   el.textContent = text || fallback;
 }
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
 function formatDate(value) {
   if (!value) return "-";
-  try {
-    return new Date(value).toLocaleDateString("pt-BR");
-  } catch (err) {
-    return value;
-  }
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
 }
 
 function maskCpf(value) {
@@ -100,12 +136,131 @@ function handleAvatarChange() {
   reader.onload = () => {
     const result = reader.result;
     if (typeof result === "string") {
-      localStorage.setItem(AVATAR_KEY, result);
-      updateAvatar(result);
-      setStatus("Foto atualizada.");
+      openCropModal(result);
     }
   };
   reader.readAsDataURL(file);
+}
+
+function openCropModal(dataUrl) {
+  if (!avatarCropModalEl || !avatarCropCanvasEl) return;
+  const img = new Image();
+  img.onload = () => {
+    cropState.image = img;
+    cropState.dragging = false;
+    cropState.offsetX = 0;
+    cropState.offsetY = 0;
+    if (avatarCropZoomEl) avatarCropZoomEl.value = "1";
+    recalcularBaseScale();
+    desenharCrop();
+    avatarCropModalEl.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  };
+  img.src = dataUrl;
+}
+
+function closeCropModal() {
+  if (!avatarCropModalEl) return;
+  avatarCropModalEl.classList.add("hidden");
+  document.body.style.overflow = "";
+  cropState.image = null;
+}
+
+function recalcularBaseScale() {
+  if (!avatarCropCanvasEl || !cropState.image) return;
+  const canvasSize = avatarCropCanvasEl.width;
+  const scale = Math.max(
+    canvasSize / cropState.image.width,
+    canvasSize / cropState.image.height
+  );
+  cropState.baseScale = scale;
+}
+
+function getZoom() {
+  const raw = avatarCropZoomEl ? Number(avatarCropZoomEl.value) : 1;
+  if (!raw || Number.isNaN(raw)) return 1;
+  return raw;
+}
+
+function clampOffsets() {
+  if (!avatarCropCanvasEl || !cropState.image) return;
+  const canvasSize = avatarCropCanvasEl.width;
+  const scale = cropState.baseScale * getZoom();
+  const drawW = cropState.image.width * scale;
+  const drawH = cropState.image.height * scale;
+  const minX = Math.min(0, canvasSize - drawW);
+  const minY = Math.min(0, canvasSize - drawH);
+  cropState.offsetX = Math.min(0, Math.max(cropState.offsetX, minX));
+  cropState.offsetY = Math.min(0, Math.max(cropState.offsetY, minY));
+}
+
+function desenharCrop() {
+  if (!avatarCropCanvasEl || !cropState.image) return;
+  const ctx = avatarCropCanvasEl.getContext("2d");
+  if (!ctx) return;
+  const canvasSize = avatarCropCanvasEl.width;
+  ctx.clearRect(0, 0, canvasSize, canvasSize);
+  const scale = cropState.baseScale * getZoom();
+  const drawW = cropState.image.width * scale;
+  const drawH = cropState.image.height * scale;
+  clampOffsets();
+  ctx.drawImage(cropState.image, cropState.offsetX, cropState.offsetY, drawW, drawH);
+}
+
+function startDrag(event) {
+  if (!cropState.image) return;
+  cropState.dragging = true;
+  cropState.dragStartX = event.clientX;
+  cropState.dragStartY = event.clientY;
+}
+
+function moveDrag(event) {
+  if (!cropState.dragging) return;
+  const dx = event.clientX - cropState.dragStartX;
+  const dy = event.clientY - cropState.dragStartY;
+  cropState.dragStartX = event.clientX;
+  cropState.dragStartY = event.clientY;
+  cropState.offsetX += dx;
+  cropState.offsetY += dy;
+  desenharCrop();
+}
+
+function endDrag() {
+  cropState.dragging = false;
+}
+
+function bindCropEvents() {
+  if (!avatarCropCanvasEl) return;
+  avatarCropCanvasEl.addEventListener("pointerdown", startDrag);
+  avatarCropCanvasEl.addEventListener("pointermove", moveDrag);
+  avatarCropCanvasEl.addEventListener("pointerup", endDrag);
+  avatarCropCanvasEl.addEventListener("pointerleave", endDrag);
+
+  if (avatarCropZoomEl) {
+    avatarCropZoomEl.addEventListener("input", desenharCrop);
+  }
+
+  if (avatarCropCloseEl) avatarCropCloseEl.addEventListener("click", closeCropModal);
+  if (avatarCropCancelEl) avatarCropCancelEl.addEventListener("click", closeCropModal);
+  if (avatarCropModalEl) {
+    avatarCropModalEl.addEventListener("click", (event) => {
+      if (event.target === avatarCropModalEl) closeCropModal();
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeCropModal();
+  });
+
+  if (avatarCropSaveEl) {
+    avatarCropSaveEl.addEventListener("click", () => {
+      if (!avatarCropCanvasEl) return;
+      const dataUrl = avatarCropCanvasEl.toDataURL("image/jpeg", 0.92);
+      localStorage.setItem(AVATAR_KEY, dataUrl);
+      updateAvatar(dataUrl);
+      setStatus("Foto atualizada.");
+      closeCropModal();
+    });
+  }
 }
 
 async function carregarUsuario() {
@@ -157,8 +312,8 @@ function renderEventos(inscricoes) {
   }
 
   const ordenadas = [...inscricoes].sort((a, b) => {
-    const da = a.evento?.dataEvento ? new Date(a.evento.dataEvento).getTime() : 0;
-    const db = b.evento?.dataEvento ? new Date(b.evento.dataEvento).getTime() : 0;
+    const da = parseDateValue(a.evento?.dataEvento)?.getTime() ?? 0;
+    const db = parseDateValue(b.evento?.dataEvento)?.getTime() ?? 0;
     return db - da;
   });
 
@@ -166,9 +321,7 @@ function renderEventos(inscricoes) {
     const card = document.createElement("div");
     card.className = "ticket-card";
 
-    const dataFmt = inscricao.evento?.dataEvento
-      ? new Date(inscricao.evento.dataEvento).toLocaleDateString("pt-BR")
-      : "-";
+    const dataFmt = formatDate(inscricao.evento?.dataEvento);
 
     const imagem =
       inscricao.evento?.imagem_url || inscricao.evento?.imagem || "img/fundo1.png";
@@ -257,6 +410,7 @@ function setupProfile() {
   if (avatarInputEl) avatarInputEl.addEventListener("change", handleAvatarChange);
   if (avatarRemoveEl) avatarRemoveEl.addEventListener("click", clearAvatar);
   if (salvarBtn) salvarBtn.addEventListener("click", saveLocalProfile);
+  bindCropEvents();
 }
 
 document.addEventListener("DOMContentLoaded", setupProfile);

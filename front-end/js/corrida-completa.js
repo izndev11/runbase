@@ -28,13 +28,33 @@ const mapaModalEl = document.getElementById("mapaModal");
 const mapaModalContentEl = document.getElementById("mapaModalContent");
 const mapaModalCloseEl = document.getElementById("mapaModalClose");
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const datePart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    const [year, month, day] = datePart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
 function formatDate(value) {
   if (!value) return "-";
-  try {
-    return new Date(value).toLocaleDateString("pt-BR");
-  } catch (err) {
-    return value;
-  }
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
 }
 
 function formatMoeda(value) {
@@ -275,7 +295,8 @@ async function carregarEvento() {
     }
 
     const infoGeral = [];
-    if (meta.dataVendas) infoGeral.push(`Vendas até: ${meta.dataVendas}`);
+    const dataVendas = meta.dataVendas || meta.data_vendas || evento.dataVendas || evento.data_vendas;
+    if (dataVendas) infoGeral.push(`Vendas até: ${formatDate(dataVendas)}`);
     if (meta.horario) infoGeral.push(`Horário: ${meta.horario}`);
     if (meta.cidade) infoGeral.push(`Cidade/UF: ${meta.cidade}`);
     if (meta.enderecoLocal) infoGeral.push(`Endereço principal: ${meta.enderecoLocal}`);
