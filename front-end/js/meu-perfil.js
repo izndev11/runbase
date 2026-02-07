@@ -25,6 +25,7 @@ const AVATAR_KEY = "perfilAvatar";
 const EQUIPE_NOME_KEY = "perfilEquipeNome";
 const EQUIPE_FUNCAO_KEY = "perfilEquipeFuncao";
 const EQUIPE_OBS_KEY = "perfilEquipeObs";
+let perfilStoragePrefix = null;
 
 const cropState = {
   image: null,
@@ -95,8 +96,13 @@ function updateAvatar(src) {
   if (avatarRemoveEl) avatarRemoveEl.classList.remove("hidden");
 }
 
+function getStorageKey(suffix) {
+  if (!perfilStoragePrefix) return suffix;
+  return `${perfilStoragePrefix}:${suffix}`;
+}
+
 function clearAvatar() {
-  localStorage.removeItem(AVATAR_KEY);
+  localStorage.removeItem(getStorageKey(AVATAR_KEY));
   if (avatarEl) {
     avatarEl.src = "";
     avatarEl.classList.add("hidden");
@@ -107,17 +113,17 @@ function clearAvatar() {
 }
 
 function loadLocalProfile() {
-  const avatar = localStorage.getItem(AVATAR_KEY);
+  const avatar = localStorage.getItem(getStorageKey(AVATAR_KEY));
   if (avatar) updateAvatar(avatar);
-  if (equipeNomeEl) equipeNomeEl.value = localStorage.getItem(EQUIPE_NOME_KEY) || "";
-  if (equipeFuncaoEl) equipeFuncaoEl.value = localStorage.getItem(EQUIPE_FUNCAO_KEY) || "";
-  if (equipeObsEl) equipeObsEl.value = localStorage.getItem(EQUIPE_OBS_KEY) || "";
+  if (equipeNomeEl) equipeNomeEl.value = localStorage.getItem(getStorageKey(EQUIPE_NOME_KEY)) || "";
+  if (equipeFuncaoEl) equipeFuncaoEl.value = localStorage.getItem(getStorageKey(EQUIPE_FUNCAO_KEY)) || "";
+  if (equipeObsEl) equipeObsEl.value = localStorage.getItem(getStorageKey(EQUIPE_OBS_KEY)) || "";
 }
 
 function saveLocalProfile() {
-  if (equipeNomeEl) localStorage.setItem(EQUIPE_NOME_KEY, equipeNomeEl.value.trim());
-  if (equipeFuncaoEl) localStorage.setItem(EQUIPE_FUNCAO_KEY, equipeFuncaoEl.value.trim());
-  if (equipeObsEl) localStorage.setItem(EQUIPE_OBS_KEY, equipeObsEl.value.trim());
+  if (equipeNomeEl) localStorage.setItem(getStorageKey(EQUIPE_NOME_KEY), equipeNomeEl.value.trim());
+  if (equipeFuncaoEl) localStorage.setItem(getStorageKey(EQUIPE_FUNCAO_KEY), equipeFuncaoEl.value.trim());
+  if (equipeObsEl) localStorage.setItem(getStorageKey(EQUIPE_OBS_KEY), equipeObsEl.value.trim());
   setSalvarStatus("Dados salvos neste navegador.");
 }
 
@@ -255,7 +261,7 @@ function bindCropEvents() {
     avatarCropSaveEl.addEventListener("click", () => {
       if (!avatarCropCanvasEl) return;
       const dataUrl = avatarCropCanvasEl.toDataURL("image/jpeg", 0.92);
-      localStorage.setItem(AVATAR_KEY, dataUrl);
+      localStorage.setItem(getStorageKey(AVATAR_KEY), dataUrl);
       updateAvatar(dataUrl);
       setStatus("Foto atualizada.");
       closeCropModal();
@@ -286,6 +292,9 @@ async function carregarUsuario() {
       window.location.href = "admin.html";
       return;
     }
+
+    perfilStoragePrefix = data?.id ? `perfil:${data.id}` : `perfil:${data.email || "anon"}`;
+    loadLocalProfile();
 
     setField("perfilNome", data.nome_completo);
     setField("perfilEmail", data.email);
@@ -403,7 +412,6 @@ function setupProfile() {
     return;
   }
 
-  loadLocalProfile();
   carregarUsuario();
   carregarEventos();
 
