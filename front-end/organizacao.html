@@ -44,6 +44,9 @@
                     <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
                         Painel Admin
                     </a>
+                    <a id="userMenuProfile" href="meu-perfil.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+                        Meu Perfil
+                    </a>
                     <a href="minhas-inscricoes.html" class="block px-4 py-3 hover:bg-gray-50">
                         Minhas Inscrições
                     </a>
@@ -95,14 +98,67 @@
                 <p style="font-size: clamp(14px, 1.5vw, 18px); color: #666; margin-bottom: 32px; max-width: 480px; line-height: 1.6;">
                     O SpeedRun entrega experiências criadas para você que é apaixonado por corridas.
                 </p>
-                <a href="#" style="background-color: #0082ff; color: white; padding: 14px 32px; border-radius: 50px; font-weight: bold; text-decoration: none; box-shadow: 0 10px 25px rgba(0, 130, 255, 0.3); display: inline-block; transition: 0.3s; font-size: clamp(12px, 1.2vw, 16px);">
+                <a href="#orcamento" style="background-color: #0082ff; color: white; padding: 14px 32px; border-radius: 50px; font-weight: bold; text-decoration: none; box-shadow: 0 10px 25px rgba(0, 130, 255, 0.3); display: inline-block; transition: 0.3s; font-size: clamp(12px, 1.2vw, 16px);">
                     SOLICITE SUA PROPOSTA AGORA
                 </a>
             </div>
         </div>
     </section>
 
-    <div class="flex-grow"></div>
+    <main class="flex-grow">
+        <section id="sobre" class="container mx-auto px-6 py-16">
+            <div class="max-w-3xl">
+                <h2 class="text-2xl md:text-3xl font-black mb-4">Sobre a plataforma</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    A SpeedRun conecta organizadores e participantes em uma plataforma simples para divulgar eventos,
+                    receber inscricoes e acompanhar pedidos em um unico lugar.
+                </p>
+            </div>
+        </section>
+
+        <section id="orcamento" class="bg-white border-y border-gray-100">
+            <div class="container mx-auto px-6 py-16">
+                <div class="max-w-3xl">
+                    <h2 class="text-2xl md:text-3xl font-black mb-4">Solicite um orcamento</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Em breve teremos um formulario aqui. Enquanto isso, prepare as informacoes do seu evento
+                        (data, local, publico estimado e necessidades) para agilizar o contato.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quem-somos" class="container mx-auto px-6 py-16">
+            <div class="max-w-3xl">
+                <h2 class="text-2xl md:text-3xl font-black mb-4">Quem somos</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Somos um time apaixonado por esporte e tecnologia, focado em entregar uma experiencia fluida
+                    para organizadores e corredores.
+                </p>
+            </div>
+        </section>
+
+        <section id="trabalhe" class="bg-white border-y border-gray-100">
+            <div class="container mx-auto px-6 py-16">
+                <div class="max-w-3xl">
+                    <h2 class="text-2xl md:text-3xl font-black mb-4">Trabalhe conosco</h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        Curte produtos digitais e eventos esportivos? Assim que abrirmos vagas, vamos publicar aqui.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="privacidade" class="container mx-auto px-6 py-16">
+            <div class="max-w-3xl">
+                <h2 class="text-2xl md:text-3xl font-black mb-4">Politica de privacidade</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Tratamos dados pessoais com responsabilidade e apenas para fins de acesso e participacao em eventos.
+                    Detalhes completos serao publicados aqui.
+                </p>
+            </div>
+        </section>
+    </main>
 
     <footer class="bg-[#1a1a1a] text-white pt-16 pb-8">
         <div class="container mx-auto px-10">
@@ -114,7 +170,7 @@
                         <li><a href="login.html" class="hover:text-white transition">Login</a></li>
                         <li><a href="login.html" class="hover:text-white transition">Cadastre-se</a></li>
                         
-                        <li><a href="organizacao.html" class="hover:text-white transition">Termos de Compra</a></li>
+                        <li><a href="termos-compra.html" class="hover:text-white transition">Termos de Compra</a></li>
                     </ul>
                     <div class="mt-8">
                         <h4 class="font-black uppercase text-xs tracking-widest mb-4">Conecte-se</h4>
@@ -129,8 +185,8 @@
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Organizadores</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="organizacao.html" class="hover:text-white transition">Sobre a plataforma</a></li>
-                        <li><a href="organizacao.html" class="hover:text-white transition">Solicite um orçamento</a></li>
+                        <li><a href="organizacao.html#sobre" class="hover:text-white transition">Sobre a plataforma</a></li>
+                        <li><a href="organizacao.html#orcamento" class="hover:text-white transition">Solicite um orçamento</a></li>
                         
                         
                     </ul>
@@ -141,9 +197,9 @@
                 <div>
                     <h4 class="font-black uppercase text-xs tracking-widest mb-6">Empresa</h4>
                     <ul class="space-y-3 text-gray-400 text-sm">
-                        <li><a href="organizacao.html" class="hover:text-white transition">Quem somos</a></li>
-                        <li><a href="organizacao.html" class="hover:text-white transition">Trabalhe conosco</a></li>
-                        <li><a href="organizacao.html" class="hover:text-white transition">Política de privacidade</a></li>
+                        <li><a href="organizacao.html#quem-somos" class="hover:text-white transition">Quem somos</a></li>
+                        <li><a href="organizacao.html#trabalhe" class="hover:text-white transition">Trabalhe conosco</a></li>
+                        <li><a href="organizacao.html#privacidade" class="hover:text-white transition">Política de privacidade</a></li>
                     </ul>
                 </div>
             </div>

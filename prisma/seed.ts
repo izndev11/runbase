@@ -12,7 +12,7 @@ async function main() {
       email: "joao@email.com",
       cpf: "12345678900",
       senha_hash,
-      sexo: "masculino",
+      sexo: "M",
       data_nascimento: new Date("1995-01-01"),
     },
   });
@@ -24,7 +24,7 @@ async function main() {
       email: "admin@speedrun.com",
       cpf: "00000000000",
       senha_hash: adminSenhaHash,
-      sexo: "masculino",
+      sexo: "M",
       role: "ADMIN",
       data_nascimento: new Date("1990-01-01"),
     },

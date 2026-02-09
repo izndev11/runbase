@@ -11,6 +11,35 @@ function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
 }
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
+}
+
 function renderInscricoes(inscricoes) {
   if (!listEl) return;
   listEl.innerHTML = "";
@@ -21,8 +50,8 @@ function renderInscricoes(inscricoes) {
   }
 
   const ordenadas = [...inscricoes].sort((a, b) => {
-    const da = a.evento?.dataEvento ? new Date(a.evento.dataEvento).getTime() : 0;
-    const db = b.evento?.dataEvento ? new Date(b.evento.dataEvento).getTime() : 0;
+    const da = parseDateValue(a.evento?.dataEvento)?.getTime() ?? 0;
+    const db = parseDateValue(b.evento?.dataEvento)?.getTime() ?? 0;
     return da - db;
   });
 
@@ -30,16 +59,14 @@ function renderInscricoes(inscricoes) {
     const card = document.createElement("div");
     card.className = "ticket-card";
 
-    const dataFmt = inscricao.evento?.dataEvento
-      ? new Date(inscricao.evento.dataEvento).toLocaleDateString("pt-BR")
-      : "-";
+    const dataFmt = formatDate(inscricao.evento?.dataEvento);
 
     const imagem =
       inscricao.evento?.imagem_url || inscricao.evento?.imagem || "img/fundo1.png";
     const organizador =
       inscricao.evento?.organizador || inscricao.evento?.organizacao || "SpeedRun";
     const detalhesUrl = inscricao.evento?.id
-      ? `corrida.html?id=${inscricao.evento.id}`
+      ? `corrida-completa.html?id=${inscricao.evento.id}`
       : "#";
 
     card.innerHTML = `

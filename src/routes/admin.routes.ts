@@ -36,6 +36,20 @@ function normalizarOpcoes(input: unknown) {
     .filter(Boolean);
 }
 
+function montarDescricaoComMeta(descricao: unknown, meta: unknown) {
+  const texto = typeof descricao === "string" ? descricao : "";
+  const marker = "\n\n[[META]]\n";
+  if (texto.includes(marker)) return texto;
+  if (!meta) return texto || null;
+  try {
+    const metaJson = JSON.stringify(meta);
+    const visivel = texto ? texto.trim() : "";
+    return `${visivel}${marker}${metaJson}`;
+  } catch (err) {
+    return texto || null;
+  }
+}
+
 router.post("/eventos", async (req, res) => {
   try {
     const {
@@ -52,6 +66,7 @@ router.post("/eventos", async (req, res) => {
       pix_tipo,
       pix_beneficiario,
     } = req.body;
+    const { meta } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -64,7 +79,8 @@ router.post("/eventos", async (req, res) => {
         titulo,
         dataEvento: new Date(dataEvento),
         local,
-        descricao: descricao || null,
+        descricao: montarDescricaoComMeta(descricao, meta),
+        meta: meta || null,
         imagem_url: imagem_url || null,
         banner_url: banner_url || null,
         organizador: organizador || null,
@@ -109,6 +125,32 @@ router.get("/eventos", async (_req, res) => {
   return res.json(eventos);
 });
 
+router.get("/eventos/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!id) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
+    const evento = await prisma.evento.findUnique({
+      where: { id },
+      include: {
+        categorias: true,
+        opcoes: true,
+        _count: {
+          select: { inscricoes: true },
+        },
+      },
+    });
+    if (!evento) {
+      return res.status(404).json({ error: "Evento não encontrado" });
+    }
+    return res.json(evento);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao buscar evento" });
+  }
+});
+
 router.put("/eventos/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -126,6 +168,7 @@ router.put("/eventos/:id", async (req, res) => {
       pix_tipo,
       pix_beneficiario,
     } = req.body;
+    const { meta } = req.body;
 
     if (!titulo || !dataEvento || !local) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
@@ -139,7 +182,8 @@ router.put("/eventos/:id", async (req, res) => {
         titulo,
         dataEvento: new Date(dataEvento),
         local,
-        descricao: descricao || null,
+        descricao: montarDescricaoComMeta(descricao, meta),
+        meta: meta || null,
         imagem_url: imagem_url || null,
         banner_url: banner_url || null,
         organizador: organizador || null,
@@ -175,6 +219,11 @@ router.delete("/eventos/:id", async (req, res) => {
     const id = Number(req.params.id);
 
     await prisma.$transaction([
+      prisma.pagamento.deleteMany({
+        where: {
+          inscricao: { eventoId: id },
+        },
+      }),
       prisma.inscricao.deleteMany({ where: { eventoId: id } }),
       prisma.categoria.deleteMany({ where: { eventoId: id } }),
       prisma.eventoOpcao.deleteMany({ where: { eventoId: id } }),

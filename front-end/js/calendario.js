@@ -1,28 +1,65 @@
 ﻿const listEl = document.getElementById("calendarioEventos");
 const statusEl = document.getElementById("calendarioStatus");
-const token = localStorage.getItem("token");
 const buscaInputEl = document.getElementById("calendarioBuscaInput");
 const buscaBtnEl = document.getElementById("calendarioBuscaBtn");
 
 let cachedEventos = [];
-let cachedInscritos = new Set();
+const META_MARKER = "\n\n[[META]]\n";
 
-function setInscritoUI({ btn, status }) {
-  if (btn) {
-    btn.textContent = "Inscrito";
-    btn.disabled = true;
-    btn.classList.add("opacity-60", "cursor-not-allowed");
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
   }
-  if (status) {
-    status.textContent = "Inscrito";
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
   }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
+}
+
+function extrairMeta(descricao) {
+  if (!descricao) return null;
+  const index = descricao.indexOf(META_MARKER);
+  if (index === -1) return null;
+  const metaRaw = descricao.slice(index + META_MARKER.length).trim();
+  try {
+    return JSON.parse(metaRaw);
+  } catch (err) {
+    console.error("Erro ao ler meta:", err);
+    return null;
+  }
+}
+
+function truncarTexto(texto, limite) {
+  const value = String(texto || "").trim();
+  if (!value) return "";
+  if (value.length <= limite) return value;
+  return `${value.slice(0, limite - 1)}…`;
 }
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
 }
 
-function renderEventos(eventos, inscritosSet) {
+function renderEventos(eventos) {
   if (!listEl) return;
   listEl.innerHTML = "";
 
@@ -35,13 +72,10 @@ function renderEventos(eventos, inscritosSet) {
     const card = document.createElement("div");
     card.className = "ticket-card";
 
-    const dataFmt = evento.dataEvento
-      ? new Date(evento.dataEvento).toLocaleDateString("pt-BR")
-      : "-";
-    const isInscrito = inscritosSet?.has(evento.id);
+    const dataFmt = formatDate(evento.dataEvento);
     const imagem = evento.imagem_url || evento.imagem || "img/fundo1.png";
     const organizador = evento.organizador || evento.organizacao || "SpeedRun";
-    const detalhesUrl = `corrida.html?id=${evento.id}`;
+    const detalhesUrl = `corrida-completa.html?id=${evento.id}`;
 
     card.innerHTML = `
       <div class="ticket-card__media">
@@ -73,90 +107,17 @@ function renderEventos(eventos, inscritosSet) {
             <span>${evento.local || "-"}</span>
           </div>
         </div>
-        <div class="ticket-card__actions">
-          <a href="${detalhesUrl}" class="ticket-card__btn ticket-card__btn--light">
-            Ver detalhes
-          </a>
-          <button data-action="inscrever" class="ticket-card__btn ticket-card__btn--primary">
-            ${isInscrito ? "Inscrito" : "Inscrever-se"}
-          </button>
-        </div>
-        <div class="ticket-card__status-text" data-status></div>
       </div>
     `;
-
-    const btn = card.querySelector('[data-action="inscrever"]');
-    const status = card.querySelector("[data-status]");
-
-    if (isInscrito) {
-      setInscritoUI({ btn, status });
-    }
-
-    btn.addEventListener("click", async () => {
-      if (!token) {
-        window.location.href = "login.html";
-        return;
-      }
-      try {
-        btn.disabled = true;
-        status.textContent = "Criando inscrição...";
-
-        const response = await fetch("http://localhost:3000/api/inscricoes", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ eventoId: evento.id }),
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          const errorMessage = data?.error || "Erro ao inscrever";
-          if (errorMessage.toLowerCase().includes("inscrito")) {
-            setInscritoUI({ btn, status });
-            return;
-          }
-          status.textContent = errorMessage;
-          btn.disabled = false;
-          return;
-        }
-
-        setInscritoUI({ btn, status });
-      } catch (err) {
-        console.error(err);
-        status.textContent = "Erro de conexão com o servidor";
-        btn.disabled = false;
-      }
-    });
 
     listEl.appendChild(card);
   });
 }
 
-async function carregarInscricoes() {
-  if (!token) return new Set();
-  try {
-    const response = await fetch("http://localhost:3000/api/inscricoes/minhas", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) return new Set();
-    const inscricoes = await response.json();
-    return new Set(
-      inscricoes
-        .filter((inscricao) => inscricao.status !== "CANCELADO")
-        .map((inscricao) => inscricao.eventoId)
-    );
-  } catch (err) {
-    console.error(err);
-    return new Set();
-  }
-}
-
 function filtrarEventos(term) {
   const query = term.trim().toLowerCase();
   if (!query) {
-    renderEventos(cachedEventos, cachedInscritos);
+    renderEventos(cachedEventos);
     return;
   }
   const filtrados = cachedEventos.filter((evento) => {
@@ -165,16 +126,13 @@ function filtrarEventos(term) {
     const org = String(evento.organizador || evento.organizacao || "").toLowerCase();
     return titulo.includes(query) || local.includes(query) || org.includes(query);
   });
-  renderEventos(filtrados, cachedInscritos);
+  renderEventos(filtrados);
 }
 
 async function carregarEventos() {
   setStatus("Carregando eventos...");
   try {
-    const [response, inscritosSet] = await Promise.all([
-      fetch("http://localhost:3000/eventos"),
-      carregarInscricoes(),
-    ]);
+    const response = await fetch("http://localhost:3000/eventos");
     const eventos = await response.json();
 
     if (!response.ok) {
@@ -183,15 +141,14 @@ async function carregarEventos() {
     }
 
     const ordenados = [...eventos].sort((a, b) => {
-      const da = a.dataEvento ? new Date(a.dataEvento).getTime() : 0;
-      const db = b.dataEvento ? new Date(b.dataEvento).getTime() : 0;
+      const da = parseDateValue(a.dataEvento)?.getTime() ?? 0;
+      const db = parseDateValue(b.dataEvento)?.getTime() ?? 0;
       return da - db;
     });
 
     cachedEventos = ordenados;
-    cachedInscritos = inscritosSet;
     setStatus("");
-    renderEventos(ordenados, inscritosSet);
+    renderEventos(ordenados);
   } catch (err) {
     console.error(err);
     setStatus("Erro de conexão com o servidor");

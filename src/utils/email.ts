@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+﻿import { Resend } from "resend";
 
 const resendApiKey = process.env.RESEND_API_KEY || "";
 const emailFrom = process.env.EMAIL_FROM || "no-reply@speedrun.local";
@@ -8,6 +8,30 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 function canSendEmail() {
   return Boolean(resend && resendApiKey && emailFrom);
+}
+
+export async function sendBoasVindasEmail(params: {
+  to: string;
+  nome: string;
+}) {
+  if (!canSendEmail()) return;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; color: #111;">
+      <h2>Bem-vindo(a) à SpeedRun!</h2>
+      <p>Olá, ${params.nome}.</p>
+      <p>Seu cadastro foi realizado com sucesso.</p>
+      <p>Agora você já pode acessar a plataforma e se inscrever nas corridas.</p>
+      <p>Para começar, acesse: ${appUrl}/calendario.html</p>
+    </div>
+  `;
+
+  await resend!.emails.send({
+    from: emailFrom,
+    to: params.to,
+    subject: "Cadastro realizado com sucesso",
+    html,
+  });
 }
 
 export async function sendInscricaoEmail(params: {

@@ -1,0 +1,386 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Evento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800 flex flex-col min-h-screen">
+<header class="bg-white sticky top-0 z-50 shadow-lg">
+  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+    <div style="position: relative; width: 200px; height: 60px; display: flex; align-items: center;">
+      <a href="index.html" style="text-decoration: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+        <img src="img/logosite.png" alt="Logo"
+             style="height: 250px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;"
+             onmouseover="this.style.transform='scale(1.1)'"
+             onmouseout="this.style.transform='scale(1.0)'"></a>
+    </div>
+
+    <nav class="hidden md:flex space-x-6 font-medium">
+      <a href="index.html" class="hover:text-blue-600">Página Inicial</a>
+      <a href="Calendário.html" class="hover:text-blue-600">Calendário</a>
+      <a href="Organização.html" class="hover:text-blue-600">Organização</a>
+    </nav>
+
+    <a id="loginLink" href="login.html"
+       class="hidden bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+      Login
+    </a>
+
+    <div id="userMenuContainer" class="relative">
+      <button id="userMenuButton"
+              class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">
+        <span id="userMenuName">Olá, usuário</span>
+      </button>
+
+      <div id="userMenuDropdown"
+           class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <a id="userMenuAdmin" href="admin.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+          Painel Admin
+        </a>
+        <a id="userMenuProfile" href="meu-perfil.html" class="hidden block px-4 py-3 hover:bg-gray-50">
+          Meu Perfil
+        </a>
+        <a href="minhas-Inscrições.html" class="block px-4 py-3 hover:bg-gray-50">
+          Minhas Inscrições
+        </a>
+        <button id="userMenuLogout"
+                class="w-full text-left px-4 py-3 hover:bg-gray-50">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container mx-auto px-4 py-10 flex-grow">
+  <div class="mb-8">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold">Cadastro de evento</h1>
+        <p class="text-gray-600 mt-2">Crie ou edite um evento sem poluir o painel.</p>
+      </div>
+      <a href="admin.html" class="border border-dashed px-4 py-2 rounded-full font-bold text-gray-600 hover:bg-gray-100">
+        Voltar ao painel
+      </a>
+    </div>
+  </div>
+
+  <section class="bg-white rounded-2xl shadow-lg p-6">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+      <h2 class="text-xl font-bold">Formulário do evento</h2>
+      <div class="flex items-center gap-2">
+        <span id="adminFormMode" class="text-xs font-bold uppercase tracking-widest text-blue-700">Criando</span>
+        <span id="adminStatus" class="text-sm text-gray-600"></span>
+      </div>
+    </div>
+
+    <form id="adminEventoForm" class="mt-6 grid gap-8">
+      <input id="adminEventoId" type="hidden">
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Nome do evento</label>
+          <input id="adminTitulo" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do evento">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Organizador</label>
+          <input id="adminOrganizador" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do organizador">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Data principal</label>
+          <input id="adminData" class="w-full border rounded-xl px-3 py-2" type="date">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Data limite de vendas</label>
+          <input id="adminDataVendas" class="w-full border rounded-xl px-3 py-2" type="date">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Horário</label>
+          <input id="adminHorário" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Largada 06h30">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Cidade / UF</label>
+          <input id="adminCidade" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Cidade - UF">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Nome do local</label>
+          <input id="adminLocal" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Endereço do local</label>
+          <input id="adminEndereçoLocal" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Endereço do local">
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Banner principal (URL)</label>
+          <input id="adminBannerUrl" class="w-full border rounded-xl px-3 py-2" type="url" placeholder="https://.../banner.jpg">
+          <div class="mt-2 flex items-center gap-3">
+            <button id="adminBannerRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover banner</button>
+            <span id="adminBannerHint" class="text-xs text-gray-500"></span>
+          </div>
+          <img id="adminBannerPreview" src="" alt="Preview do banner" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+          <input id="adminBannerFile" class="w-full border rounded-xl px-3 py-2 mt-3" type="file" accept="image/*">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Imagem destaque (URL)</label>
+          <input id="adminImagemUrl" class="w-full border rounded-xl px-3 py-2" type="url" placeholder="https://.../imagem.jpg">
+          <div class="mt-2 flex items-center gap-3">
+            <button id="adminImagemRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+            <span id="adminImagemHint" class="text-xs text-gray-500"></span>
+          </div>
+          <img id="adminImagemPreview" src="" alt="Preview" class="hidden mt-3 w-full h-40 object-cover rounded-xl border">
+          <input id="adminImagemFile" class="w-full border rounded-xl px-3 py-2 mt-3" type="file" accept="image/*">
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Resumo</label>
+          <textarea id="adminResumo" class="w-full border rounded-xl px-3 py-2" rows="4" placeholder="Experiencia inesquecivel, aniversario da cidade..."></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Regras e informacoes PCD</label>
+          <textarea id="adminPcd" class="w-full border rounded-xl px-3 py-2" rows="4" placeholder="inscrição necessita de cupom, envio de laudo..."></textarea>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Ponto de largada 1</label>
+          <input id="adminLargada1Nome" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Endereço do local</label>
+          <input id="adminLargada1Endereço" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Endereço do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Horário</label>
+          <input id="adminLargada1Horário" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="06h30 - 21k">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Ponto de largada 2</label>
+          <input id="adminLargada2Nome" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Endereço do local</label>
+          <input id="adminLargada2Endereço" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Endereço do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Horário</label>
+          <input id="adminLargada2Horário" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="07h00 - 10k e 5k">
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Percursos</h3>
+        <div class="grid gap-3 md:grid-cols-4">
+          <input id="percursoNome" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Percurso 21k">
+          <input id="percursoKm" class="w-full border rounded-xl px-3 py-2" type="number" step="0.1" placeholder="21">
+          <input id="percursoMapaUrl" class="w-full border rounded-xl px-3 py-2" type="url" placeholder="Link do mapa (opcional)">
+          <input id="percursoMapaImagemUrl" class="w-full border rounded-xl px-3 py-2" type="url" placeholder="Imagem do mapa (URL)">
+          <input id="percursoMapaImagemFile" class="w-full border rounded-xl px-3 py-2 md:col-span-2" type="file" accept="image/*">
+          <input id="percursoGpxUrl" class="w-full border rounded-xl px-3 py-2 md:col-span-2" type="url" placeholder="Arquivo GPX (URL)">
+          <input id="percursoGpxFile" class="w-full border rounded-xl px-3 py-2 md:col-span-2" type="file" accept=".gpx">
+        </div>
+        <div class="mt-2 flex items-center gap-3">
+          <button id="percursoMapaImagemRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem do mapa</button>
+          <span id="percursoMapaImagemHint" class="text-xs text-gray-500"></span>
+        </div>
+        <div class="mt-2 flex items-center gap-3">
+          <span id="percursoGpxHint" class="text-xs text-gray-500"></span>
+        </div>
+        <img id="percursoMapaImagemPreview" class="hidden mt-2 w-full h-36 object-cover rounded-xl border" alt="Preview do mapa">
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button id="percursoAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar percurso</button>
+          <button id="percursoClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar percursos</button>
+        </div>
+        <div id="percursoList" class="mt-3 space-y-2 text-sm text-gray-700"></div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Kits e beneficios</h3>
+        <div class="grid gap-3 md:grid-cols-3">
+          <input id="adminKitNome" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do kit (ex: Kit completo)">
+          <input id="adminKitImagemUrl" class="w-full border rounded-xl px-3 py-2" type="url" placeholder="Imagem do kit (URL)">
+          <input id="adminKitImagemFile" class="w-full border rounded-xl px-3 py-2" type="file" accept="image/*">
+          <div class="md:col-span-3">
+            <div class="flex items-center gap-3">
+              <button id="adminKitImagemRemove" type="button" class="hidden bg-gray-200 text-gray-800 px-3 py-1 rounded-full font-bold hover:bg-gray-300">Remover imagem</button>
+              <span id="adminKitImagemHint" class="text-xs text-gray-500"></span>
+            </div>
+            <img id="adminKitImagemPreview" class="hidden mt-2 w-full h-36 object-cover rounded-xl border" alt="Preview do kit">
+          </div>
+          <textarea id="adminKitDescricao" class="w-full border rounded-xl px-3 py-2 md:col-span-3" rows="2" placeholder="Descricao do kit"></textarea>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button id="adminKitAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar kit</button>
+          <button id="adminKitClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar kits</button>
+        </div>
+        <div id="adminKitsList" class="mt-3 space-y-2 text-sm text-gray-700"></div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Entrega 1 - data e Horário</label>
+          <input id="adminEntrega1Data" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="20/02/2026 - 11h00 as 19h00">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Entrega 1 - local</label>
+          <input id="adminEntrega1Local" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do local">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Entrega 2 - data e Horário</label>
+          <input id="adminEntrega2Data" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="21/02/2026 - 13h00 as 19h00">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Entrega 2 - local</label>
+          <input id="adminEntrega2Local" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do local">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Observacoes da entrega</label>
+          <textarea id="adminEntregaObs" class="w-full border rounded-xl px-3 py-2" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Programacao 1</label>
+          <input id="adminProg1" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Programacao 2</label>
+          <input id="adminProg2" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Programacao 3</label>
+          <input id="adminProg3" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Programacao 4</label>
+          <input id="adminProg4" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Programacao 5</label>
+          <input id="adminProg5" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Premiacao</h3>
+        <div class="grid gap-3 md:grid-cols-3">
+          <input id="adminPremiacaoTitulo" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Titulo (ex: Top 3 geral)">
+          <textarea id="adminPremiacaoDescricao" class="w-full border rounded-xl px-3 py-2 md:col-span-3" rows="2" placeholder="Descricao da premiacao"></textarea>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button id="adminPremiacaoAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar premiacao</button>
+          <button id="adminPremiacaoClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar premiacoes</button>
+        </div>
+        <div id="adminPremiacaoList" class="mt-3 space-y-2 text-sm text-gray-700"></div>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-3">Ingressos e valores</h3>
+        <div class="grid gap-3 md:grid-cols-5">
+          <input id="adminOpcaoTitulo" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Corrida 21k">
+          <select id="adminOpcaoTipo" class="w-full border rounded-xl px-3 py-2">
+            <option value="CORRIDA">Corrida</option>
+            <option value="CAMINHADA">Caminhada</option>
+          </select>
+          <input id="adminOpcaoDistancia" class="w-full border rounded-xl px-3 py-2" type="number" step="0.1" placeholder="21">
+          <input id="adminOpcaoPreco" class="w-full border rounded-xl px-3 py-2" type="number" step="0.01" placeholder="159.90">
+          <input id="adminOpcaoTaxa" class="w-full border rounded-xl px-3 py-2" type="number" step="0.01" placeholder="10">
+        </div>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <button id="adminOpcaoAdd" type="button" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">Adicionar opcao</button>
+          <button id="adminOpcaoClear" type="button" class="bg-gray-100 text-gray-700 px-3 py-2 rounded-full font-bold hover:bg-gray-200">Limpar opcoes</button>
+        </div>
+        <div id="adminOpcoesList" class="mt-3 space-y-2 text-sm text-gray-700"></div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email do organizador</label>
+          <input id="adminContatoEmail" class="w-full border rounded-xl px-3 py-2" type="email">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">WhatsApp</label>
+          <input id="adminContatoWhatsapp" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Instagram</label>
+          <input id="adminContatoInstagram" class="w-full border rounded-xl px-3 py-2" type="text">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Site oficial</label>
+          <input id="adminContatoSite" class="w-full border rounded-xl px-3 py-2" type="url">
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Link area do participante</label>
+          <input id="adminLinkArea" class="w-full border rounded-xl px-3 py-2" type="url">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Link protocolo de inscrição</label>
+          <input id="adminLinkProtocolo" class="w-full border rounded-xl px-3 py-2" type="url">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Link 2a via boleto</label>
+          <input id="adminLinkBoleto" class="w-full border rounded-xl px-3 py-2" type="url">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Link falar com organizador</label>
+          <input id="adminLinkOrganizador" class="w-full border rounded-xl px-3 py-2" type="url">
+        </div>
+      </div>
+
+      <div class="border-t pt-6">
+        <h3 class="text-sm font-bold mb-3">Pix manual</h3>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Chave Pix</label>
+            <input id="adminPixChave" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Tipo da chave</label>
+            <select id="adminPixTipo" class="w-full border rounded-xl px-3 py-2 bg-white">
+              <option value="">Selecione</option>
+              <option value="CPF">CPF</option>
+              <option value="CNPJ">CNPJ</option>
+              <option value="EMAIL">E-mail</option>
+              <option value="TELEFONE">Telefone</option>
+              <option value="ALEATORIA">Aleatória</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Beneficiário</label>
+            <input id="adminPixBeneficiario" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="Nome do beneficiário">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Categorias (separadas por vírgula)</label>
+        <input id="adminCategoriasInput" class="w-full border rounded-xl px-3 py-2" type="text" placeholder="21K, 10K, 5K">
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button id="adminSaveBtn" type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700">Salvar evento</button>
+        <button id="adminCancelEdit" type="button" class="hidden border border-dashed px-6 py-2 rounded-full font-bold text-gray-600">Cancelar edição</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+  <script src="./js/require-auth.js?v=20260206"></script>
+  <script src="./js/require-admin.js?v=20260206"></script>
+  <script src="./js/user-menu.js?v=20260206"></script>
+  <script src="./js/admin.js?v=20260206"></script>
+</body>
+</html>
+

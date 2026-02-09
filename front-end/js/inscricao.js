@@ -40,22 +40,57 @@ async function carregarPerfil() {
     if (participanteNomeEl) participanteNomeEl.textContent = data.nome_completo || "Participante";
     const nascimento = data.data_nascimento ? formatDate(data.data_nascimento) : "--/--/----";
     const cpf = data.cpf ? data.cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.***.***-$4") : "---";
-    const sexo = data.sexo || "--";
+    const sexo = normalizarSexo(data.sexo);
     if (participanteMetaEl) {
-      participanteMetaEl.textContent = `${nascimento} - ${sexo.toLowerCase()} - doc.: ${cpf}`;
+      participanteMetaEl.textContent = `${nascimento} - ${sexo} - doc.: ${cpf}`;
     }
   } catch (err) {
     console.error(err);
   }
 }
 
+function normalizarSexo(valor) {
+  const texto = String(valor || "").trim();
+  if (!texto) return "--";
+  const lower = texto.toLowerCase();
+  if (lower === "masculino" || lower === "m") return "M";
+  if (lower === "feminino" || lower === "f") return "F";
+  if (lower === "outro" || lower === "o") return "O";
+  if (lower === "prefiro nao informar" || lower === "prefiro não informar" || lower === "n") return "N";
+  return texto.toUpperCase();
+}
+
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message || "";
 }
 
+function parseDateValue(value) {
+  if (!value) return null;
+  const text = String(value).trim();
+  if (!text) return null;
+  const isoPart = text.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoPart)) {
+    const [year, month, day] = isoPart.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(text)) {
+    const [day, month, year] = text.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed;
+}
+
 function formatDate(value) {
   if (!value) return "-";
-  return new Date(value).toLocaleDateString("pt-BR");
+  const date = parseDateValue(value);
+  if (!date) return String(value);
+  return date.toLocaleDateString("pt-BR");
 }
 
 function formatMoeda(value) {

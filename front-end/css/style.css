@@ -1,16 +1,16 @@
-
+﻿
 /* A caixa branca (Card) */
 .card {
   background-color: #ffffff;
   padding: 40px 30px;
   border-radius: 22px; /* Isso faz as bordas bem arredondadas */
-  width: 400px; /* Ajuste conforme necessário */
+  width: 400px; /* Ajuste conforme necessÃ¡rio */
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1); /* Sombra suave para dar profundidade */
   font-family: sans-serif;
   text-align: left;
 }
 
-/* Título dentro da caixa */
+/* TÃ­tulo dentro da caixa */
 .card h2 {
   color: #2c3e50;
   font-size: 29px;
@@ -28,13 +28,13 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* O botão azul */
+/* O botÃ£o azul */
 .btn-blue {
   display: inline-block;
   background-color: #0066ff; /* Cor azul do Ticket Sports */
   color: white;
   padding: 12px 25px;
-  border-radius: 17px; /* Botão totalmente arredondado */
+  border-radius: 17px; /* BotÃ£o totalmente arredondado */
   text-decoration: none;
   font-weight: bold;
   font-size: 14px;
@@ -46,7 +46,7 @@
   background-color: #0058cc; /* Fica um pouco mais escuro ao passar o mouse */
 }
 
-/* estilização da barra de pesquisa do meio*/
+/* estilizaÃ§Ã£o da barra de pesquisa do meio*/
 .search-container {
   display: flex;
   align-items: center;
@@ -70,13 +70,13 @@
   display: flex;
   align-items: center;
   padding: 0 15px;
-  border-right: 1px solid #eee; /* Linha divisória entre os itens */
+  border-right: 1px solid #eee; /* Linha divisÃ³ria entre os itens */
   color: #666;
   cursor: pointer;
 }
 
 .filter-group:last-of-type {
-  border-right: none; /* Remove a linha do último item antes do botão */
+  border-right: none; /* Remove a linha do Ãºltimo item antes do botÃ£o */
 }
 
 .btn-search {
@@ -96,7 +96,7 @@
     outline: none !important;
 }
 
-/* Se você tiver um <input> dentro do filter-group, garanta que ele também não tenha borda */
+/* Se vocÃª tiver um <input> dentro do filter-group, garanta que ele tambÃ©m nÃ£o tenha borda */
 .filter-group input {
     border: none;
     outline: none;
@@ -129,8 +129,8 @@
 }
 
 .ticket-card__image {
-  width: 220px;
-  height: 240px;
+  width: 100%;
+  height: auto;
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
@@ -201,6 +201,40 @@
   color: #4b5563;
 }
 
+.ticket-card__extras {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.ticket-card__summary {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.ticket-card__detail {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ticket-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ticket-card__chip {
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .ticket-card__row {
   display: flex;
   align-items: center;
@@ -254,7 +288,7 @@
   color: #6b7280;
 }
 
-/* Banner do calendário sem corte (imagem completa) */
+/* Banner do calendÃ¡rio sem corte (imagem completa) */
 .calendario-hero {
   position: relative;
   width: 100vw;
@@ -315,7 +349,7 @@
   z-index: 2;
 }
 
-/* Banner da página de detalhes (1140px de largura) */
+/* Banner da pÃ¡gina de detalhes (1140px de largura) */
 .corrida-card {
   max-width: 1140px;
   margin: 0 auto;
@@ -325,7 +359,7 @@
 .corrida-banner {
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   background: #f3f4f6;
 }
@@ -928,3 +962,14 @@
   transform: translateY(-1px);
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
 }
+
+/* Mapas (OpenStreetMap/Leaflet) com fundo transparente */
+.leaflet-container {
+  background: transparent !important;
+}
+
+.map-embed {
+  background: transparent;
+}
+
+

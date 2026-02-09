@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middlewares/auth";
 import { apiError } from "../utils/apiError";
+import { sendBoasVindasEmail } from "../utils/email";
 
 const router = Router();
 
@@ -10,13 +11,27 @@ router.get("/", (req, res) => res.json([]));
 
 router.post("/", async (req, res) => {
   try {
-    const { nome_completo, email, cpf, senha, data_nascimento, sexo } = req.body;
+    const { nome_completo, email, cpf, senha, data_nascimento, telefone, sexo, cidade, estado } = req.body;
     const emailNormalizado = String(email || "").trim().toLowerCase();
     const senhaNormalizada = String(senha || "").trim();
     const cpfNormalizado = String(cpf || "").trim();
     const nomeNormalizado = String(nome_completo || "").trim();
+    const telefoneNormalizado = String(telefone || "").trim();
+    const sexoNormalizado = String(sexo || "").trim();
+    const cidadeNormalizada = String(cidade || "").trim();
+    const estadoNormalizado = String(estado || "").trim();
 
-    if (!nomeNormalizado || !emailNormalizado || !cpfNormalizado || !senhaNormalizada || !data_nascimento) {
+    if (
+      !nomeNormalizado ||
+      !emailNormalizado ||
+      !cpfNormalizado ||
+      !senhaNormalizada ||
+      !data_nascimento ||
+      !telefoneNormalizado ||
+      !sexoNormalizado ||
+      !cidadeNormalizada ||
+      !estadoNormalizado
+    ) {
       return res.status(400).json({ error: "Dados obrigatórios faltando" });
     }
 
@@ -39,8 +54,19 @@ router.post("/", async (req, res) => {
         cpf: cpfNormalizado,
         senha_hash,
         data_nascimento: new Date(data_nascimento),
-        sexo: sexo ? String(sexo) : null,
+        telefone: telefoneNormalizado,
+        sexo: sexoNormalizado,
+        cidade: cidadeNormalizada,
+        estado: estadoNormalizado,
       },
+    });
+
+    // Envia e-mail de boas-vindas (não bloqueia o cadastro)
+    sendBoasVindasEmail({
+      to: usuario.email,
+      nome: usuario.nome_completo,
+    }).catch((err) => {
+      console.error("Erro ao enviar e-mail de boas-vindas:", err);
     });
 
     return res.status(201).json(usuario);
@@ -82,6 +108,9 @@ router.get("/me", authMiddleware, async (req, res) => {
         cpf: true,
         data_nascimento: true,
         sexo: true,
+        telefone: true,
+        cidade: true,
+        estado: true,
         role: true,
         criadoEm: true,
       },
