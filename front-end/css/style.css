@@ -121,6 +121,11 @@
   box-shadow: 0 14px 30px rgba(17, 24, 39, 0.16);
 }
 
+/* Fundo mais escuro no cadastro de evento (admin-evento) */
+.admin-evento-bg {
+  background-color: #d3d9e2;
+}
+
 .ticket-card__media {
   position: relative;
   padding: 12px 12px 0 12px;

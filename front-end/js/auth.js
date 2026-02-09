@@ -35,6 +35,7 @@ async function login(event) {
     }
 
     localStorage.setItem("token", data.token);
+    if (data.role) localStorage.setItem("role", data.role);
 
     alert("Login realizado com sucesso!");
     window.location.href = "index.html";

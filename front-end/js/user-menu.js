@@ -7,6 +7,36 @@ const loginLink = document.getElementById("loginLink");
 const userMenuAdmin = document.getElementById("userMenuAdmin");
 const userMenuProfile = document.getElementById("userMenuProfile");
 
+function getRoleFromToken(token) {
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return null;
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const json = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    const data = JSON.parse(json);
+    return data?.role || null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function applyRole(role) {
+  if (!userMenuAdmin && !userMenuProfile) return;
+  if (userMenuAdmin) {
+    if (role === "ADMIN") userMenuAdmin.classList.remove("hidden");
+    else userMenuAdmin.classList.add("hidden");
+  }
+  if (userMenuProfile) {
+    if (role === "ADMIN") userMenuProfile.classList.add("hidden");
+    else userMenuProfile.classList.remove("hidden");
+  }
+}
+
 function toggleMenu() {
   if (!userMenuDropdown) return;
   const isHidden = userMenuDropdown.classList.contains("hidden");
@@ -30,6 +60,9 @@ async function loadUserMenu() {
   }
   if (loginLink) loginLink.classList.add("hidden");
   if (userMenuContainer) userMenuContainer.classList.remove("hidden");
+  const storedRole = localStorage.getItem("role");
+  const tokenRole = getRoleFromToken(token);
+  applyRole(storedRole || tokenRole);
 
   try {
     const response = await fetch("http://localhost:3000/usuarios/me", {
@@ -43,13 +76,9 @@ async function loadUserMenu() {
     if (userMenuName) {
       userMenuName.textContent = `Olá, ${data.nome_completo || "Usuário"}`;
     }
-    if (userMenuAdmin) {
-      if (data.role === "ADMIN") userMenuAdmin.classList.remove("hidden");
-      else userMenuAdmin.classList.add("hidden");
-    }
-    if (userMenuProfile) {
-      if (data.role === "ADMIN") userMenuProfile.classList.add("hidden");
-      else userMenuProfile.classList.remove("hidden");
+    if (data.role) {
+      localStorage.setItem("role", data.role);
+      applyRole(data.role);
     }
   } catch (err) {
     console.error(err);
@@ -61,6 +90,7 @@ function setupUserMenu() {
   if (userMenuLogout) {
     userMenuLogout.addEventListener("click", () => {
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       window.location.href = "login.html";
     });
   }
