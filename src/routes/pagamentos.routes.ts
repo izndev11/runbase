@@ -5,50 +5,91 @@ import { sendPagamentoEmail } from "../utils/email";
 
 const router = Router();
 
-const mpAccessTokenTest = process.env.MP_ACCESS_TOKEN_TEST || "";
-const mpTestPayerEmail = process.env.MP_TEST_PAYER_EMAIL || "";
-const mpTestPayerName = process.env.MP_TEST_PAYER_NAME || "";
+const asaasApiKeySandbox = process.env.ASAAS_API_KEY_SANDBOX || "";
+const asaasBaseUrl = "https://api-sandbox.asaas.com/v3";
 
-async function criarPagamentoPixMercadoPago(params: {
-  amount: number;
-  descricao: string;
-  email: string;
+async function criarClienteAsaas(params: {
   nome: string;
+  email: string;
+  cpfCnpj: string;
 }) {
-  if (!mpAccessTokenTest) return null;
-  const payerEmail = mpTestPayerEmail || params.email;
-  const payerName = mpTestPayerName || params.nome;
-  const payload = {
-    transaction_amount: Number(params.amount),
-    description: params.descricao,
-    payment_method_id: "pix",
-    payer: {
-      email: payerEmail,
-      first_name: payerName,
-    },
-  };
-
-  const response = await fetch("https://api.mercadopago.com/v1/payments", {
+  const response = await fetch(`${asaasBaseUrl}/customers`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${mpAccessTokenTest}`,
       "Content-Type": "application/json",
-      "X-Idempotency-Key": crypto.randomUUID(),
+      "User-Agent": "speedrun",
+      access_token: asaasApiKeySandbox,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      name: params.nome,
+      email: params.email,
+      cpfCnpj: params.cpfCnpj,
+    }),
   });
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data?.message || "Erro ao criar pagamento Pix");
+    throw new Error(data?.errors?.[0]?.description || "Erro ao criar cliente Asaas");
+  }
+  return data.id as string;
+}
+
+async function criarPagamentoPixAsaas(params: {
+  amount: number;
+  descricao: string;
+  email: string;
+  nome: string;
+  cpfCnpj: string;
+}) {
+  if (!asaasApiKeySandbox) return null;
+  const customerId = await criarClienteAsaas({
+    nome: params.nome,
+    email: params.email,
+    cpfCnpj: params.cpfCnpj,
+  });
+
+  const dueDate = new Date();
+  dueDate.setDate(dueDate.getDate() + 1);
+  const dueDateStr = dueDate.toISOString().slice(0, 10);
+
+  const response = await fetch(`${asaasBaseUrl}/payments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "speedrun",
+      access_token: asaasApiKeySandbox,
+    },
+    body: JSON.stringify({
+      customer: customerId,
+      billingType: "PIX",
+      value: Number(params.amount),
+      dueDate: dueDateStr,
+      description: params.descricao,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data?.errors?.[0]?.description || "Erro ao criar pagamento Pix");
   }
 
-  const tx = data?.point_of_interaction?.transaction_data;
+  const pixResp = await fetch(`${asaasBaseUrl}/payments/${data.id}/pixQrCode`, {
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "speedrun",
+      access_token: asaasApiKeySandbox,
+    },
+  });
+  const pixData = await pixResp.json();
+  if (!pixResp.ok) {
+    throw new Error(pixData?.errors?.[0]?.description || "Erro ao obter QR Code Pix");
+  }
+
   return {
-    mp_payment_id: data?.id,
-    pix_qr_code: tx?.qr_code,
-    pix_qr_code_base64: tx?.qr_code_base64,
-    ticket_url: tx?.ticket_url,
+    asaas_payment_id: data.id,
+    pix_qr_code: pixData.payload,
+    pix_qr_code_base64: pixData.encodedImage,
+    ticket_url: pixData?.encodedImage ? null : null,
   };
 }
 
@@ -122,20 +163,30 @@ router.post("/", authMiddleware, async (req, res) => {
       });
 
   let pixData = null;
+  let pixError: string | null = null;
   try {
-    if (metodo === "PIX" && inscricao.usuario?.email) {
-      pixData = await criarPagamentoPixMercadoPago({
+    if (metodo === "PIX_MANUAL") {
+      pixData = {
+        chave: inscricao.evento?.pix_chave || null,
+        tipo: inscricao.evento?.pix_tipo || null,
+        beneficiario: inscricao.evento?.pix_beneficiario || null,
+        valor: valorFinal,
+      };
+    } else if (metodo === "PIX" && inscricao.usuario?.email && inscricao.usuario?.cpf) {
+      pixData = await criarPagamentoPixAsaas({
         amount: valorFinal,
         descricao: inscricao.evento?.titulo || "Inscrição",
         email: inscricao.usuario.email,
         nome: inscricao.usuario.nome_completo || "Participante",
+        cpfCnpj: inscricao.usuario.cpf,
       });
     }
   } catch (error) {
+    pixError = (error as Error)?.message || "Erro ao gerar Pix";
     console.error("Erro ao gerar Pix:", error);
   }
 
-  return res.json({ ...pagamento, pix: pixData });
+  return res.json({ ...pagamento, pix: pixData, pix_error: pixError });
 });
 
 router.patch("/:id/confirmar", authMiddleware, async (req, res) => {

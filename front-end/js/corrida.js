@@ -9,30 +9,15 @@ const statusEl = document.getElementById("corridaStatus");
 const inscreverBtn = document.getElementById("corridaInscrever");
 const opcoesEl = document.getElementById("corridaOpcoes");
 const totalEl = document.getElementById("corridaTotal");
-const pixBoxEl = document.getElementById("corridaPixBox");
-const pixQrEl = document.getElementById("corridaPixQr");
-const pixCodeEl = document.getElementById("corridaPixCode");
-const pixLinkEl = document.getElementById("corridaPixLink");
+
 
 const params = new URLSearchParams(window.location.search);
 const eventoId = params.get("id");
 
-let eventoAtual = null;
 let opcaoSelecionadaId = null;
-let totalSelecionado = null;
 
 function setStatus(message) {
   if (statusEl) statusEl.textContent = message;
-}
-
-function irParaTermos() {
-  if (!opcaoSelecionadaId) {
-    setStatus("Selecione uma opcao antes de continuar.");
-    return;
-  }
-  if (!eventoId) return;
-  const destino = `termos.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoSelecionadaId)}`;
-  window.location.href = destino;
 }
 
 function formatDate(value) {
@@ -91,8 +76,7 @@ function renderOpcoes(opcoes) {
     const radio = card.querySelector("input");
     radio.addEventListener("change", () => {
       opcaoSelecionadaId = opcao.id;
-      totalSelecionado = total;
-      if (totalEl) totalEl.textContent = formatMoeda(totalSelecionado);
+      if (totalEl) totalEl.textContent = formatMoeda(total);
       setStatus("");
     });
     opcoesEl.appendChild(card);
@@ -122,17 +106,13 @@ async function carregarEvento() {
       return;
     }
 
-    eventoAtual = evento;
-
     if (tituloEl) tituloEl.textContent = evento.titulo || "Corrida";
     if (dataEl) dataEl.textContent = formatDate(evento.dataEvento);
     if (localEl) localEl.textContent = evento.local || "-";
-    if (orgEl) orgEl.textContent = evento.organizador || evento.organizacao || "SpeedRun";
+    if (orgEl) orgEl.textContent = evento.organizador || "SpeedRun";
 
     const banner = evento.banner_url || "img/fundo1.png";
-    if (bannerEl) {
-      bannerEl.src = banner;
-    }
+    if (bannerEl) bannerEl.src = banner;
 
     if (descEl) {
       descEl.textContent =
@@ -171,66 +151,12 @@ async function garantirInscricao(token) {
   return data.id;
 }
 
-async function inscrever() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
+function irParaTermos() {
   if (!eventoId) return;
-
-  if (!opcaoSelecionadaId) {
-    setStatus("Selecione uma opção antes de continuar.");
-    return;
-  }
-
-  try {
-    if (inscreverBtn) inscreverBtn.disabled = true;
-    setStatus("Criando inscrição...");
-
-    const inscricaoId = await garantirInscricao(token);
-
-    setStatus("Criando pagamento...");
-    const pagamentoResp = await fetch("http://localhost:3000/pagamentos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        inscricaoId,
-        metodo: "PIX",
-        opcaoId: opcaoSelecionadaId,
-      }),
-    });
-    const pagamentoData = await pagamentoResp.json();
-    if (!pagamentoResp.ok) {
-      throw new Error(pagamentoData?.error || "Erro ao criar pagamento");
-    }
-
-    if (pagamentoData?.pix?.pix_qr_code_base64) {
-      if (pixQrEl) {
-        pixQrEl.src = `data:image/png;base64,${pagamentoData.pix.pix_qr_code_base64}`;
-      }
-      if (pixCodeEl) pixCodeEl.textContent = pagamentoData.pix.pix_qr_code || "";
-      if (pixLinkEl) {
-        pixLinkEl.href = pagamentoData.pix.ticket_url || "#";
-      }
-      if (pixBoxEl) pixBoxEl.classList.remove("hidden");
-      setStatus("Pix gerado. Use o QR Code para pagar (sandbox).");
-    } else {
-      setStatus("Pagamento criado. Aguarde a confirmação.");
-    }
-    if (inscreverBtn) {
-      inscreverBtn.textContent = "AGUARDANDO PAGAMENTO";
-      inscreverBtn.disabled = true;
-      inscreverBtn.classList.add("opacity-60", "cursor-not-allowed");
-    }
-  } catch (err) {
-    console.error(err);
-    setStatus(err?.message || "Erro de conexão com o servidor");
-    if (inscreverBtn) inscreverBtn.disabled = false;
-  }
+  const destino = opcaoSelecionadaId
+    ? `termos.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoSelecionadaId)}`
+    : `termos.html?id=${encodeURIComponent(eventoId)}`;
+  window.location.href = destino;
 }
 
 if (inscreverBtn) {
@@ -238,3 +164,4 @@ if (inscreverBtn) {
 }
 
 carregarEvento();
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
@@ -70,7 +70,7 @@
 
         <div class="grid gap-8 lg:grid-cols-[2fr,1fr] p-8">
           <section>
-            <a href="calendario.html" class="text-sm text-blue-600 font-bold">Voltar para o calendário</a>
+            <a href="calendario.html" class="text-sm text-blue-600 font-bold">Voltar para o Calendário</a>
             <h1 id="corridaTitulo" class="text-2xl md:text-3xl font-black mt-3 mb-4">Corrida</h1>
 
             <div class="space-y-2 text-gray-700">
@@ -107,12 +107,8 @@
               <span class="text-xs text-gray-500">Vagas limitadas</span>
             </div>
 
-            <div class="mt-4">
-              <h4 class="text-sm font-bold text-gray-700 mb-2">Opções</h4>
-              <div id="corridaOpcoes" class="space-y-3"></div>
-              <div class="mt-3 text-sm text-gray-600">
-                <strong>Total:</strong> <span id="corridaTotal">—</span>
-              </div>
+            <div class="mt-4 text-sm text-gray-600">
+              Escolha as opções da corrida na próxima etapa.
             </div>
 
             <button id="corridaInscrever"
@@ -121,17 +117,19 @@
             </button>
             <div id="corridaStatus" class="text-sm text-gray-600 mt-3"></div>
 
-            <div id="corridaPixBox" class="hidden mt-4 border rounded-xl p-4 bg-white">
-              <h4 class="text-sm font-bold text-gray-700 mb-2">Pagamento Pix (Sandbox)</h4>
-              <img id="corridaPixQr" alt="QR Code Pix" class="w-48 h-48 mx-auto" />
-              <div class="mt-3 text-xs text-gray-600 break-all">
-                <strong>Código Pix:</strong>
-                <span id="corridaPixCode"></span>
-              </div>
-              <a id="corridaPixLink" class="mt-2 inline-block text-xs text-blue-600 font-bold" target="_blank" rel="noopener">
-                Abrir link do Pix
-              </a>
-            </div>
+                    <div id="corridaPixBox" class="hidden mt-4 border rounded-xl p-4 bg-white">
+                        <h4 class="text-sm font-bold text-gray-700 mb-2">Pagamento Pix</h4>
+                        <div class="text-sm text-gray-700">
+                            <div><strong>Chave:</strong> <span id="corridaPixChave"></span></div>
+                            <div><strong>Tipo:</strong> <span id="corridaPixTipo"></span></div>
+                            <div><strong>Beneficiário:</strong> <span id="corridaPixBeneficiario"></span></div>
+                            <div><strong>Valor:</strong> <span id="corridaPixValor"></span></div>
+                        </div>
+                        <button id="corridaPixCopiar" type="button"
+                                class="mt-3 bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">
+                            Copiar chave Pix
+                        </button>
+                    </div>
 
             <div class="mt-6">
               <h4 class="text-sm font-bold text-gray-700 mb-2">Compartilhe este evento</h4>
@@ -209,6 +207,8 @@
   <script src="./js/corrida.js"></script>
 </body>
 </html>
+
+
 
 
 

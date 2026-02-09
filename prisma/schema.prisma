@@ -29,6 +29,9 @@ model Evento {
   imagem_url String?
   banner_url String?
   organizador String?
+  pix_chave  String?
+  pix_tipo   String?
+  pix_beneficiario String?
   categorias Categoria[]
   opcoes     EventoOpcao[]
   inscricoes Inscricao[]

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
@@ -94,16 +94,26 @@
             <select id="inscricaoRegulamento" class="ficha-input">
               <option value="">Selecione a opção</option>
               <option value="SIM">Sim</option>
-              <option value="NAO">Não</option>
+              <option value="NAO">não</option>
             </select>
           </div>
           <div class="ficha-card">
-            <label class="ficha-label">Em caso de emergência devemos ligar para o número (escrever o número de emergência e o nome do contato)</label>
+            <label class="ficha-label">Em caso de Emergência devemos ligar para o número (escrever o número de Emergência e o nome do contato)</label>
             <input id="inscricaoEmergencia" type="text" class="ficha-input" placeholder="Ex.: (11) 99999-9999 - Maria">
           </div>
           <div class="ficha-card">
             <label class="ficha-label">Equipe (*Caso não possua digite: Ex.: Avulso)</label>
             <input id="inscricaoEquipe" type="text" class="ficha-input" placeholder="Informe a equipe">
+          </div>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <h2 class="ficha-section__title">Opções da corrida</h2>
+        <div class="ficha-card">
+          <div id="inscricaoOpcoes" class="space-y-3"></div>
+          <div class="mt-3 text-sm text-gray-600">
+            <strong>Total:</strong> <span id="inscricaoTotal">-</span>
           </div>
         </div>
       </div>
@@ -136,9 +146,26 @@
 
       <div class="ficha-footer">
         <button id="inscricaoConfirmar" class="ficha-btn ficha-btn--ghost" disabled>
-          INCLUIR E ADICIONAR NOVO
+          CONFIRMAR INSCRIÇÃO
         </button>
         <div id="inscricaoStatus" class="text-sm text-gray-600"></div>
+      </div>
+
+      <div id="inscricaoPixBox" class="hidden mt-8 bg-white border rounded-2xl p-5 shadow-sm">
+        <h3 class="text-sm font-bold text-gray-700 mb-2">Pagamento Pix</h3>
+        <p class="text-xs text-gray-500 mb-3">
+          Copie a chave abaixo e faça o pagamento no app do seu banco.
+        </p>
+        <div class="text-sm text-gray-700 space-y-1">
+          <div><strong>Chave:</strong> <span id="inscricaoPixChave"></span></div>
+          <div><strong>Tipo:</strong> <span id="inscricaoPixTipo"></span></div>
+          <div><strong>Beneficiário:</strong> <span id="inscricaoPixBeneficiario"></span></div>
+          <div><strong>Valor:</strong> <span id="inscricaoPixValor"></span></div>
+        </div>
+        <button id="inscricaoPixCopiar" type="button"
+                class="mt-3 bg-gray-200 text-gray-800 px-3 py-2 rounded-full font-bold hover:bg-gray-300">
+          Copiar chave Pix
+        </button>
       </div>
     </section>
   </main>
@@ -147,3 +174,5 @@
   <script src="./js/inscricao.js"></script>
 </body>
 </html>
+
+

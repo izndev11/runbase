@@ -122,6 +122,30 @@
           <textarea id="adminDescricao" rows="4" class="w-full border rounded-lg px-3 py-2" placeholder="Detalhes do evento..."></textarea>
         </div>
         <div class="border-t pt-4">
+          <h3 class="text-sm font-bold mb-2">Pix manual</h3>
+          <div class="grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-semibold mb-1">Chave Pix</label>
+              <input id="adminPixChave" type="text" class="w-full border rounded-lg px-3 py-2" placeholder="CPF, e-mail, telefone ou chave aleatória">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">Tipo da chave</label>
+              <select id="adminPixTipo" class="w-full border rounded-lg px-3 py-2 bg-white">
+                <option value="">Selecione</option>
+                <option value="CPF">CPF</option>
+                <option value="CNPJ">CNPJ</option>
+                <option value="EMAIL">E-mail</option>
+                <option value="TELEFONE">Telefone</option>
+                <option value="ALEATORIA">Aleatória</option>
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold mb-1">Beneficiário</label>
+              <input id="adminPixBeneficiario" type="text" class="w-full border rounded-lg px-3 py-2" placeholder="Nome do beneficiário">
+            </div>
+          </div>
+        </div>
+        <div class="border-t pt-4">
           <h3 class="text-sm font-bold mb-2">Opções da corrida</h3>
           <div class="grid gap-3 md:grid-cols-2">
             <div>

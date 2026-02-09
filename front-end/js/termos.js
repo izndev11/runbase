@@ -17,11 +17,13 @@ if (checkEl) {
 
 if (continuarEl) {
   continuarEl.addEventListener("click", () => {
-    if (!eventoId || !opcaoId) {
+    if (!eventoId) {
       window.location.href = "corrida.html";
       return;
     }
-    const destino = `inscricao.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoId)}`;
+    const destino = opcaoId
+      ? `inscricao.html?id=${encodeURIComponent(eventoId)}&opcao=${encodeURIComponent(opcaoId)}`
+      : `inscricao.html?id=${encodeURIComponent(eventoId)}`;
     window.location.href = destino;
   });
 }

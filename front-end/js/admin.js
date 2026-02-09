@@ -28,6 +28,9 @@ const opcaoTaxaEl = document.getElementById("adminOpcaoTaxa");
 const opcaoAddEl = document.getElementById("adminOpcaoAdd");
 const opcaoClearEl = document.getElementById("adminOpcaoClear");
 const opcoesListEl = document.getElementById("adminOpcoesList");
+const pixChaveEl = document.getElementById("adminPixChave");
+const pixTipoEl = document.getElementById("adminPixTipo");
+const pixBeneficiarioEl = document.getElementById("adminPixBeneficiario");
 
 const CLOUDINARY_CLOUD_NAME = "dfznaddhi";
 const CLOUDINARY_UPLOAD_PRESET = "rrunbasedev";
@@ -148,6 +151,9 @@ function setEditMode(evento) {
   document.getElementById("adminImagemUrl").value = evento.imagem_url || "";
   document.getElementById("adminBannerUrl").value = evento.banner_url || "";
   document.getElementById("adminDescricao").value = evento.descricao || "";
+  if (pixChaveEl) pixChaveEl.value = evento.pix_chave || "";
+  if (pixTipoEl) pixTipoEl.value = evento.pix_tipo || "";
+  if (pixBeneficiarioEl) pixBeneficiarioEl.value = evento.pix_beneficiario || "";
   const categoriasTexto = Array.isArray(evento.categorias)
     ? evento.categorias.map((c) => c.nome).join(", ")
     : "";
@@ -359,6 +365,9 @@ async function criarEvento(event) {
   const banner_url = document.getElementById("adminBannerUrl").value;
   const descricao = document.getElementById("adminDescricao").value;
   const categorias = document.getElementById("adminCategorias").value;
+  const pix_chave = pixChaveEl ? pixChaveEl.value : "";
+  const pix_tipo = pixTipoEl ? pixTipoEl.value : "";
+  const pix_beneficiario = pixBeneficiarioEl ? pixBeneficiarioEl.value : "";
   const eventoId = editIdEl ? editIdEl.value : "";
 
   if (!titulo || !dataEvento || !local) {
@@ -386,6 +395,9 @@ async function criarEvento(event) {
           descricao,
           categorias,
           opcoes,
+          pix_chave,
+          pix_tipo,
+          pix_beneficiario,
         }),
       }
     );
