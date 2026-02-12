@@ -1,24 +1,53 @@
-import { Router } from "express";
+﻿import { Router } from "express";
 import { prisma } from "../lib/prisma";
 import { authMiddleware } from "../middlewares/auth";
 import { sendPagamentoEmail } from "../utils/email";
 
 const router = Router();
 
-const asaasApiKeySandbox = process.env.ASAAS_API_KEY_SANDBOX || "";
-const asaasBaseUrl = "https://api-sandbox.asaas.com/v3";
+type PaymentProvider = "PIX_MANUAL" | "ASAAS";
+type GatewayEnv = "SANDBOX" | "PRODUCTION";
+
+const PAYMENT_PROVIDER = (
+  process.env.PAYMENT_PROVIDER || "PIX_MANUAL"
+).toUpperCase() as PaymentProvider;
+
+const GATEWAY_ENV = (
+  process.env.GATEWAY_ENV || "SANDBOX"
+).toUpperCase() as GatewayEnv;
+
+function getAsaasConfig() {
+  const sandbox = {
+    apiKey: process.env.ASAAS_API_KEY_SANDBOX || "",
+    baseUrl:
+      process.env.ASAAS_BASE_URL_SANDBOX || "https://api-sandbox.asaas.com/v3",
+  };
+
+  const production = {
+    apiKey: process.env.ASAAS_API_KEY_PRODUCTION || "",
+    baseUrl: process.env.ASAAS_BASE_URL_PRODUCTION || "https://api.asaas.com/v3",
+  };
+
+  return GATEWAY_ENV === "PRODUCTION" ? production : sandbox;
+}
 
 async function criarClienteAsaas(params: {
   nome: string;
   email: string;
   cpfCnpj: string;
 }) {
-  const response = await fetch(`${asaasBaseUrl}/customers`, {
+  const config = getAsaasConfig();
+
+  if (!config.apiKey) {
+    throw new Error("Asaas API key nao configurada para o ambiente atual");
+  }
+
+  const response = await fetch(`${config.baseUrl}/customers`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "speedrun",
-      access_token: asaasApiKeySandbox,
+      access_token: config.apiKey,
     },
     body: JSON.stringify({
       name: params.nome,
@@ -41,23 +70,27 @@ async function criarPagamentoPixAsaas(params: {
   nome: string;
   cpfCnpj: string;
 }) {
-  if (!asaasApiKeySandbox) return null;
   const customerId = await criarClienteAsaas({
     nome: params.nome,
     email: params.email,
     cpfCnpj: params.cpfCnpj,
   });
 
+  const config = getAsaasConfig();
+  if (!config.apiKey) {
+    throw new Error("Asaas API key nao configurada para o ambiente atual");
+  }
+
   const dueDate = new Date();
   dueDate.setDate(dueDate.getDate() + 1);
   const dueDateStr = dueDate.toISOString().slice(0, 10);
 
-  const response = await fetch(`${asaasBaseUrl}/payments`, {
+  const response = await fetch(`${config.baseUrl}/payments`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "speedrun",
-      access_token: asaasApiKeySandbox,
+      access_token: config.apiKey,
     },
     body: JSON.stringify({
       customer: customerId,
@@ -73,13 +106,14 @@ async function criarPagamentoPixAsaas(params: {
     throw new Error(data?.errors?.[0]?.description || "Erro ao criar pagamento Pix");
   }
 
-  const pixResp = await fetch(`${asaasBaseUrl}/payments/${data.id}/pixQrCode`, {
+  const pixResp = await fetch(`${config.baseUrl}/payments/${data.id}/pixQrCode`, {
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "speedrun",
-      access_token: asaasApiKeySandbox,
+      access_token: config.apiKey,
     },
   });
+
   const pixData = await pixResp.json();
   if (!pixResp.ok) {
     throw new Error(pixData?.errors?.[0]?.description || "Erro ao obter QR Code Pix");
@@ -98,11 +132,11 @@ router.post("/", authMiddleware, async (req, res) => {
   const usuarioId = req.userId;
 
   if (!usuarioId) {
-    return res.status(401).json({ error: "Usuário não autenticado" });
+    return res.status(401).json({ error: "Usuario nao autenticado" });
   }
 
   if (!inscricaoId || !metodo) {
-    return res.status(400).json({ error: "Dados obrigatórios" });
+    return res.status(400).json({ error: "Dados obrigatorios" });
   }
 
   const inscricao = await prisma.inscricao.findFirst({
@@ -117,7 +151,7 @@ router.post("/", authMiddleware, async (req, res) => {
   });
 
   if (!inscricao) {
-    return res.status(404).json({ error: "Inscrição não encontrada" });
+    return res.status(404).json({ error: "Inscricao nao encontrada" });
   }
 
   let valorFinal = Number(valor ?? 0);
@@ -130,9 +164,11 @@ router.post("/", authMiddleware, async (req, res) => {
     const opcao = await prisma.eventoOpcao.findUnique({
       where: { id: Number(opcaoId) },
     });
+
     if (!opcao || opcao.eventoId !== inscricao.eventoId) {
-      return res.status(400).json({ error: "Opção inválida para este evento" });
+      return res.status(400).json({ error: "Opcao invalida para este evento" });
     }
+
     valorBase = opcao.preco;
     taxaPercentual = opcao.taxa_percentual;
     valorTaxa = Number(((valorBase * taxaPercentual) / 100).toFixed(2));
@@ -141,7 +177,7 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 
   if (!valorFinal) {
-    return res.status(400).json({ error: "Valor inválido" });
+    return res.status(400).json({ error: "Valor invalido" });
   }
 
   const pagamentoExistente = await prisma.pagamento.findUnique({
@@ -164,22 +200,37 @@ router.post("/", authMiddleware, async (req, res) => {
 
   let pixData = null;
   let pixError: string | null = null;
+
   try {
-    if (metodo === "PIX_MANUAL") {
+    const usarPixManual = metodo === "PIX_MANUAL" || PAYMENT_PROVIDER === "PIX_MANUAL";
+
+    if (usarPixManual) {
       pixData = {
         chave: inscricao.evento?.pix_chave || null,
         tipo: inscricao.evento?.pix_tipo || null,
         beneficiario: inscricao.evento?.pix_beneficiario || null,
         valor: valorFinal,
       };
-    } else if (metodo === "PIX" && inscricao.usuario?.email && inscricao.usuario?.cpf) {
+
+      if (!pixData.chave) {
+        pixError = "Pix manual sem chave configurada no evento";
+      }
+    } else if (
+      metodo === "PIX" &&
+      PAYMENT_PROVIDER === "ASAAS" &&
+      inscricao.usuario?.email &&
+      inscricao.usuario?.cpf
+    ) {
       pixData = await criarPagamentoPixAsaas({
         amount: valorFinal,
-        descricao: inscricao.evento?.titulo || "Inscrição",
+        descricao: inscricao.evento?.titulo || "Inscricao",
         email: inscricao.usuario.email,
         nome: inscricao.usuario.nome_completo || "Participante",
         cpfCnpj: inscricao.usuario.cpf,
       });
+    } else if (metodo === "PIX" && PAYMENT_PROVIDER !== "ASAAS") {
+      pixError =
+        "Provider PIX automatico nao configurado. Use PIX_MANUAL ou configure PAYMENT_PROVIDER=ASAAS";
     }
   } catch (error) {
     pixError = (error as Error)?.message || "Erro ao gerar Pix";
@@ -211,6 +262,7 @@ router.patch("/:id/confirmar", authMiddleware, async (req, res) => {
   try {
     const usuario = pagamento.inscricao?.usuario;
     const evento = pagamento.inscricao?.evento;
+
     if (usuario?.email) {
       await sendPagamentoEmail({
         to: usuario.email,

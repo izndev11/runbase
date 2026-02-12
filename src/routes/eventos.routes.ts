@@ -18,7 +18,7 @@ router.post("/", authMiddleware, async (req, res) => {
       ? categorias.split(",").map((item) => item.trim()).filter(Boolean)
       : [];
 
-    const montarDescricaoComMeta = (texto, metaObj) => {
+    const montarDescricaoComMeta = (texto: unknown, metaObj: unknown): string | null => {
       const base = typeof texto === "string" ? texto : "";
       const marker = "\n\n[[META]]\n";
       if (base.includes(marker)) return base;

@@ -21,6 +21,14 @@ function normalizarCategorias(input: unknown) {
   return [];
 }
 
+type EventoOpcaoInput = {
+  titulo: string;
+  tipo: string;
+  distancia_km: number;
+  preco: number;
+  taxa_percentual: number;
+};
+
 function normalizarOpcoes(input: unknown) {
   if (!Array.isArray(input)) return [];
   return input
@@ -33,7 +41,7 @@ function normalizarOpcoes(input: unknown) {
       if (!titulo || !tipo || !distancia_km || !preco) return null;
       return { titulo, tipo, distancia_km, preco, taxa_percentual };
     })
-    .filter(Boolean);
+    .filter((opcao): opcao is EventoOpcaoInput => opcao !== null);
 }
 
 function montarDescricaoComMeta(descricao: unknown, meta: unknown) {

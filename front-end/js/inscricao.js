@@ -102,7 +102,7 @@ function renderOpcoes(opcoes) {
   if (!opcoesEl) return;
   opcoesEl.innerHTML = "";
   if (!opcoes || !opcoes.length) {
-    opcoesEl.innerHTML = "<p class=\"text-sm text-gray-500\">Nenhuma opção disponÃ­vel.</p>";
+    opcoesEl.innerHTML = "<p class=\"text-sm text-gray-500\">Nenhuma opção disponível.</p>";
     if (totalEl) totalEl.textContent = "-";
     return;
   }
@@ -158,13 +158,14 @@ async function copiarChavePix() {
     setStatus("Chave Pix copiada.");
   } catch (err) {
     console.error(err);
-    setStatus("NÃƒÂ£o foi possÃƒÂ­vel copiar a chave. Copie manualmente.");
+    setStatus("Não foi possível copiar a chave. Copie manualmente.");
   }
 }
 
 async function carregarEvento() {
   if (!eventoId) {
-    setStatus("Evento nao encontrado.");
+    setStatus("Evento nao encontrado. Abra esta tela pelo fluxo da corrida.");
+    if (confirmarEl) confirmarEl.disabled = true;
     return;
   }
 
@@ -182,12 +183,17 @@ async function carregarEvento() {
       return;
     }
 
+    const opcoes = Array.isArray(eventoAtual.opcoes) ? eventoAtual.opcoes : [];
     const opcaoParamValida =
       opcaoId && opcaoId !== "null" && opcaoId !== "undefined" ? opcaoId : null;
 
-    opcaoAtual = Array.isArray(eventoAtual.opcoes) && opcaoParamValida
-      ? eventoAtual.opcoes.find((o) => String(o.id) === String(opcaoParamValida))
+    opcaoAtual = opcaoParamValida
+      ? opcoes.find((o) => String(o.id) === String(opcaoParamValida)) || null
       : null;
+
+    if (!opcaoAtual && opcoes.length) {
+      opcaoAtual = opcoes[0];
+    }
 
     if (eventoNomeEl) eventoNomeEl.textContent = eventoAtual.titulo || "Evento";
     if (eventoDataEl) eventoDataEl.textContent = formatDate(eventoAtual.dataEvento);
@@ -221,8 +227,6 @@ function validarConfirmacao() {
     if (pixBoxEl?.classList.contains("hidden")) {
       setStatus(`Falta selecionar: ${faltando.join(", ")}.`);
     }
-  } else if (pixBoxEl?.classList.contains("hidden")) {
-    setStatus("");
   }
 }
 
@@ -233,9 +237,12 @@ async function inscrever() {
     return;
   }
 
-  if (!eventoId) return;
+  if (!eventoId) {
+    setStatus("Evento nao encontrado. Volte para a pagina da corrida.");
+    return;
+  }
   if (!opcaoAtual?.id) {
-    setStatus("Selecione uma opÃƒÂ§ÃƒÂ£o da corrida.");
+    setStatus("Selecione uma opcao da corrida.");
     return;
   }
 
@@ -262,7 +269,7 @@ async function inscrever() {
     if (resposta.ok) {
       inscricaoId = data.id;
     } else {
-      const jaInscrito = String(data?.error || "").toLowerCase().includes("jÃƒÂ¡ inscrito");
+      const jaInscrito = String(data?.error || "").toLowerCase().includes("já inscrito");
       if (!jaInscrito) {
         throw new Error(data?.error || "Erro ao inscrever");
       }
@@ -276,7 +283,7 @@ async function inscrever() {
     }
 
     if (!inscricaoId) {
-      throw new Error("NÃƒÂ£o foi possÃƒÂ­vel identificar sua inscriÃƒÂ§ÃƒÂ£o.");
+      throw new Error("Não foi possível identificar sua inscrição.");
     }
 
     setStatus("Criando pagamento Pix...");
@@ -297,11 +304,12 @@ async function inscrever() {
       throw new Error(pagamento?.error || "Erro ao gerar pagamento");
     }
 
-    if (pagamento.pix) {
+    if (pagamento.pix_error) {
+      if (pagamento.pix) renderPixManual(pagamento.pix);
+      setStatus(pagamento.pix_error);
+    } else if (pagamento.pix) {
       renderPixManual(pagamento.pix);
       setStatus("Pagamento criado. Copie a chave Pix para finalizar.");
-    } else if (pagamento.pix_error) {
-      setStatus(pagamento.pix_error);
     } else {
       setStatus("Pagamento criado. Verifique os dados do Pix.");
     }
