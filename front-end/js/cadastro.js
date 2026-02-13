@@ -1,6 +1,48 @@
 ﻿console.log("CADASTRO.JS CARREGADO");
 const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
 
+function abrirCadastro() {
+  const loginCard = document.getElementById("loginCard");
+  const cadastroModal = document.getElementById("cadastroModal");
+  if (loginCard) loginCard.style.display = "none";
+  if (cadastroModal) cadastroModal.style.display = "flex";
+}
+
+function fecharCadastro() {
+  const loginCard = document.getElementById("loginCard");
+  const cadastroModal = document.getElementById("cadastroModal");
+  if (cadastroModal) cadastroModal.style.display = "none";
+  if (loginCard) loginCard.style.display = "block";
+}
+
+function bindCadastroModal() {
+  const openLink = document.getElementById("cadastroOpenLink");
+  const closeBtn = document.getElementById("cadastroCloseBtn");
+  const modal = document.getElementById("cadastroModal");
+
+  if (openLink) {
+    openLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      abrirCadastro();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      fecharCadastro();
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        fecharCadastro();
+      }
+    });
+  }
+}
+
 function bindCadastroForm() {
   const form = document.getElementById("cadastroForm");
   if (!form) return;
@@ -85,3 +127,7 @@ async function cadastrar(event) {
 }
 
 document.addEventListener("DOMContentLoaded", bindCadastroForm);
+document.addEventListener("DOMContentLoaded", bindCadastroModal);
+
+window.abrirCadastro = abrirCadastro;
+window.fecharCadastro = fecharCadastro;
