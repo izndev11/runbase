@@ -1,5 +1,5 @@
 ﻿console.log("CADASTRO.JS CARREGADO");
-const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
+window.API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
 
 function abrirCadastro() {
   const loginCard = document.getElementById("loginCard");
@@ -93,7 +93,7 @@ async function cadastrar(event) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/usuarios`, {
+    const response = await fetch(`${window.API_BASE_URL}/usuarios`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

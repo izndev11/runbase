@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
+﻿window.API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
 
 function abrirCadastro() {
   document.getElementById("loginCard").style.display = "none";
@@ -48,9 +48,10 @@ function carregarCidades() {
     });
 }
 
-fetch(`${API_BASE_URL}/eventos`)
+fetch(`${window.API_BASE_URL}/eventos`)
   .then((res) => res.json())
   .then((dados) => console.log("Conexao bem sucedida! Corridas:", dados))
   .catch((err) =>
     console.error("O front ainda nao ve o back. Verifique se o servidor esta rodando.", err)
   );
+
