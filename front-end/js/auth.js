@@ -1,4 +1,5 @@
 ﻿console.log("AUTH.JS CARREGADO");
+const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
 
 function bindLoginForm() {
   const form = document.getElementById("loginForm");
@@ -19,7 +20,7 @@ async function login(event) {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/auth/login", {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 ﻿console.log("CADASTRO.JS CARREGADO");
+const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
 
 function bindCadastroForm() {
   const form = document.getElementById("cadastroForm");
@@ -50,7 +51,7 @@ async function cadastrar(event) {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/usuarios", {
+    const response = await fetch(`${API_BASE_URL}/usuarios`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

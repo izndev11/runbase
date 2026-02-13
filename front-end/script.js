@@ -1,18 +1,15 @@
-﻿function abrirCadastro() {
-  // Esconde o card de login
+﻿const API_BASE_URL = window.__API_BASE_URL__ || "http://localhost:3000";
+
+function abrirCadastro() {
   document.getElementById("loginCard").style.display = "none";
-  // Mostra o card de cadastro
   document.getElementById("cadastroModal").style.display = "flex";
 }
 
 function fecharCadastro() {
-  // Esconde o card de cadastro
   document.getElementById("cadastroModal").style.display = "none";
-  // Mostra o card de login novamente
   document.getElementById("loginCard").style.display = "block";
 }
 
-// Função para carregar estados do IBGE ao abrir a página
 window.onload = function () {
   fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
     .then((response) => response.json())
@@ -27,24 +24,21 @@ window.onload = function () {
     });
 };
 
-// Função para carregar cidades quando o estado mudar
 function carregarCidades() {
   const estadoSigla = document.getElementById("estado").value;
   const cidadeSelect = document.getElementById("cidade");
 
-  cidadeSelect.innerHTML = "<option value=\"\">Carregando...</option>";
+  cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
 
   if (!estadoSigla) {
-    cidadeSelect.innerHTML = "<option value=\"\">Selecione o Estado primeiro</option>";
+    cidadeSelect.innerHTML = '<option value="">Selecione o Estado primeiro</option>';
     return;
   }
 
-  fetch(
-    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSigla}/municipios`
-  )
+  fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSigla}/municipios`)
     .then((response) => response.json())
     .then((data) => {
-      cidadeSelect.innerHTML = "<option value=\"\">Selecione a Cidade</option>";
+      cidadeSelect.innerHTML = '<option value="">Selecione a Cidade</option>';
       data.forEach((cidade) => {
         const option = document.createElement("option");
         option.value = cidade.nome;
@@ -54,12 +48,9 @@ function carregarCidades() {
     });
 }
 
-fetch("http://localhost:3000/eventos")
+fetch(`${API_BASE_URL}/eventos`)
   .then((res) => res.json())
-  .then((dados) => console.log("Conexão bem sucedida! Corridas:", dados))
+  .then((dados) => console.log("Conexao bem sucedida! Corridas:", dados))
   .catch((err) =>
-    console.error("O Front ainda não vê o Back. Verifique se o servidor está rodando.", err)
+    console.error("O front ainda nao ve o back. Verifique se o servidor esta rodando.", err)
   );
-
-
-
