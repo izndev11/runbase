@@ -5,7 +5,7 @@ import { sendPagamentoEmail } from "../utils/email";
 
 const router = Router();
 
-type PaymentProvider = "PIX_MANUAL" | "ASAAS";
+type PaymentProvider = "PIX_MANUAL" | "ASAAS" | "MERCADO_PAGO";
 type GatewayEnv = "SANDBOX" | "PRODUCTION";
 
 const PAYMENT_PROVIDER = (
@@ -29,6 +29,91 @@ function getAsaasConfig() {
   };
 
   return GATEWAY_ENV === "PRODUCTION" ? production : sandbox;
+}
+
+function getMercadoPagoAccessToken() {
+  if (GATEWAY_ENV === "PRODUCTION") {
+    return process.env.MP_ACCESS_TOKEN_PRODUCTION || "";
+  }
+  return process.env.MP_ACCESS_TOKEN_TEST || "";
+}
+
+function getAppUrl() {
+  const raw = process.env.APP_URL || "";
+  return raw.endsWith("/") ? raw.slice(0, -1) : raw;
+}
+
+async function criarCheckoutMercadoPago(params: {
+  amount: number;
+  descricao: string;
+  email?: string | null;
+  inscricaoId: number;
+  paymentMode: "PIX" | "CARD";
+}) {
+  const accessToken = getMercadoPagoAccessToken();
+  if (!accessToken) {
+    throw new Error("Mercado Pago access token nao configurado para o ambiente atual");
+  }
+
+  const appUrl = getAppUrl();
+  const backUrl = appUrl ? `${appUrl}/pedidos.html` : undefined;
+
+  const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      items: [
+        {
+          title: params.descricao || "Inscricao",
+          quantity: 1,
+          currency_id: "BRL",
+          unit_price: Number(params.amount),
+        },
+      ],
+      payer: params.email ? { email: params.email } : undefined,
+      external_reference: String(params.inscricaoId),
+      payment_methods:
+        params.paymentMode === "PIX"
+          ? {
+              default_payment_method_id: "pix",
+              excluded_payment_types: [
+                { id: "credit_card" },
+                { id: "debit_card" },
+                { id: "prepaid_card" },
+                { id: "ticket" },
+                { id: "atm" },
+              ],
+            }
+          : {
+              excluded_payment_types: [
+                { id: "ticket" },
+                { id: "atm" },
+                { id: "bank_transfer" },
+              ],
+            },
+      back_urls: backUrl
+        ? {
+            success: backUrl,
+            pending: backUrl,
+            failure: backUrl,
+          }
+        : undefined,
+      auto_return: backUrl ? "approved" : undefined,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data?.message || "Erro ao criar checkout no Mercado Pago");
+  }
+
+  return {
+    id: data.id as string,
+    url: (GATEWAY_ENV === "PRODUCTION" ? data.init_point : data.sandbox_init_point) || data.init_point,
+  };
 }
 
 async function criarClienteAsaas(params: {
@@ -128,7 +213,7 @@ async function criarPagamentoPixAsaas(params: {
 }
 
 router.post("/", authMiddleware, async (req, res) => {
-  const { inscricaoId, metodo, valor, opcaoId } = req.body;
+  const { inscricaoId, metodo, valor, opcaoId, paymentMode } = req.body;
   const usuarioId = req.userId;
 
   if (!usuarioId) {
@@ -180,6 +265,12 @@ router.post("/", authMiddleware, async (req, res) => {
     return res.status(400).json({ error: "Valor invalido" });
   }
 
+  if (PAYMENT_PROVIDER === "PIX_MANUAL" && metodo === "CARD") {
+    return res.status(400).json({
+      error: "Cartao nao disponivel no modo PIX_MANUAL. Ative MERCADO_PAGO para cartao.",
+    });
+  }
+
   const pagamentoExistente = await prisma.pagamento.findUnique({
     where: { inscricaoId: Number(inscricaoId) },
   });
@@ -200,11 +291,21 @@ router.post("/", authMiddleware, async (req, res) => {
 
   let pixData = null;
   let pixError: string | null = null;
+  let checkoutData: { id: string; url: string } | null = null;
+  const mpPaymentMode: "PIX" | "CARD" = paymentMode === "CARD" ? "CARD" : "PIX";
 
   try {
     const usarPixManual = metodo === "PIX_MANUAL" || PAYMENT_PROVIDER === "PIX_MANUAL";
 
-    if (usarPixManual) {
+    if (PAYMENT_PROVIDER === "MERCADO_PAGO") {
+      checkoutData = await criarCheckoutMercadoPago({
+        amount: valorFinal,
+        descricao: inscricao.evento?.titulo || "Inscricao",
+        email: inscricao.usuario?.email,
+        inscricaoId: Number(inscricaoId),
+        paymentMode: mpPaymentMode,
+      });
+    } else if (usarPixManual) {
       pixData = {
         chave: inscricao.evento?.pix_chave || null,
         tipo: inscricao.evento?.pix_tipo || null,
@@ -237,7 +338,7 @@ router.post("/", authMiddleware, async (req, res) => {
     console.error("Erro ao gerar Pix:", error);
   }
 
-  return res.json({ ...pagamento, pix: pixData, pix_error: pixError });
+  return res.json({ ...pagamento, pix: pixData, pix_error: pixError, checkout: checkoutData });
 });
 
 router.patch("/:id/confirmar", authMiddleware, async (req, res) => {

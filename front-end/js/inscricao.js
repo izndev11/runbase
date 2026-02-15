@@ -6,6 +6,7 @@ const camisetaEl = document.getElementById("inscricaoCamiseta");
 const regulamentoEl = document.getElementById("inscricaoRegulamento");
 const emergenciaEl = document.getElementById("inscricaoEmergencia");
 const equipeEl = document.getElementById("inscricaoEquipe");
+const metodoPagamentoEl = document.getElementById("inscricaoMetodoPagamento");
 
 const eventoNomeEl = document.getElementById("inscricaoEventoNome");
 const eventoDataEl = document.getElementById("inscricaoEventoData");
@@ -218,12 +219,14 @@ function validarConfirmacao() {
   const equipeOk = true;
   const camisetaOk = Boolean(camisetaEl?.value);
   const opcaoOk = Boolean(opcaoAtual?.id);
-  confirmarEl.disabled = !(regulamentoOk && camisetaOk && opcaoOk);
+  const metodoOk = Boolean(metodoPagamentoEl?.value);
+  confirmarEl.disabled = !(regulamentoOk && camisetaOk && opcaoOk && metodoOk);
   if (confirmarEl.disabled) {
     const faltando = [];
     if (!opcaoOk) faltando.push("opção da corrida");
     if (!camisetaOk) faltando.push("tamanho da camiseta");
     if (!regulamentoOk) faltando.push("regulamento");
+    if (!metodoOk) faltando.push("forma de pagamento");
     if (pixBoxEl?.classList.contains("hidden")) {
       setStatus(`Falta selecionar: ${faltando.join(", ")}.`);
     }
@@ -248,6 +251,12 @@ async function inscrever() {
 
   if (!camisetaEl?.value) {
     setStatus("Selecione o tamanho da camiseta.");
+    return;
+  }
+
+  const metodoPagamento = (metodoPagamentoEl?.value || "PIX").toUpperCase();
+  if (metodoPagamento !== "PIX" && metodoPagamento !== "CARD") {
+    setStatus("Selecione uma forma de pagamento válida.");
     return;
   }
 
@@ -295,7 +304,8 @@ async function inscrever() {
       },
       body: JSON.stringify({
         inscricaoId,
-        metodo: "PIX_MANUAL",
+        metodo: metodoPagamento,
+        paymentMode: metodoPagamento,
         opcaoId: opcaoAtual?.id,
       }),
     });
@@ -304,7 +314,10 @@ async function inscrever() {
       throw new Error(pagamento?.error || "Erro ao gerar pagamento");
     }
 
-    if (pagamento.pix_error) {
+    if (pagamento.checkout?.url) {
+      setStatus("Pagamento criado. Redirecionando para o checkout...");
+      window.location.href = pagamento.checkout.url;
+    } else if (pagamento.pix_error) {
       if (pagamento.pix) renderPixManual(pagamento.pix);
       setStatus(pagamento.pix_error);
     } else if (pagamento.pix) {
@@ -335,6 +348,10 @@ if (emergenciaEl) {
 
 if (equipeEl) {
   equipeEl.addEventListener("input", validarConfirmacao);
+}
+
+if (metodoPagamentoEl) {
+  metodoPagamentoEl.addEventListener("change", validarConfirmacao);
 }
 
 if (confirmarEl) {
