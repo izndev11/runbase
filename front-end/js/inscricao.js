@@ -118,7 +118,7 @@ function renderOpcoes(opcoes) {
         <input type="radio" name="inscricaoOpcao" value="${opcao.id}" class="mt-1">
         <div class="flex-1">
           <div class="font-bold">${opcao.titulo}</div>
-          <div class="text-xs text-gray-500">${opcao.tipo} â€¢ ${opcao.distancia_km} km</div>
+          <div class="text-xs text-gray-500">${opcao.tipo} • ${opcao.distancia_km} km</div>
           <div class="text-sm text-blue-700 mt-1">
             ${formatMoeda(opcao.preco)} + ${formatMoeda(taxa)} taxa (${opcao.taxa_percentual}%)
           </div>
