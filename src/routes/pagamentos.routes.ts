@@ -43,6 +43,46 @@ function getAppUrl() {
   return raw.endsWith("/") ? raw.slice(0, -1) : raw;
 }
 
+async function buscarPagamentoMercadoPago(paymentId: string | number) {
+  const accessToken = getMercadoPagoAccessToken();
+  if (!accessToken) {
+    throw new Error("Mercado Pago access token nao configurado para o ambiente atual");
+  }
+
+  const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data?.message || "Erro ao consultar pagamento no Mercado Pago");
+  }
+
+  return data as {
+    id: number;
+    status: string;
+    external_reference?: string | null;
+  };
+}
+
+function mapMpStatusToLocal(status: string) {
+  const normalized = String(status || "").toLowerCase();
+  if (normalized === "approved") return "PAGO";
+  if (normalized === "pending" || normalized === "in_process") return "PENDENTE";
+  if (
+    normalized === "rejected" ||
+    normalized === "cancelled" ||
+    normalized === "refunded" ||
+    normalized === "charged_back"
+  ) {
+    return "FALHOU";
+  }
+  return "PENDENTE";
+}
+
 async function criarCheckoutMercadoPago(params: {
   amount: number;
   descricao: string;
@@ -381,6 +421,99 @@ router.patch("/:id/confirmar", authMiddleware, async (req, res) => {
   }
 
   return res.json({ message: "Pagamento confirmado" });
+});
+
+router.post("/webhook", async (req, res) => {
+  try {
+    const body = req.body || {};
+    const query = req.query || {};
+
+    const topic = String(query.topic || query.type || body.type || "").toLowerCase();
+    const action = String(body.action || "").toLowerCase();
+
+    const paymentId =
+      body?.data?.id ||
+      query?.["data.id"] ||
+      query?.id ||
+      body?.id ||
+      null;
+
+    if (!paymentId) {
+      return res.status(200).json({ ok: true, ignored: "sem_payment_id" });
+    }
+
+    // Aceita formatos comuns do MP (payment.created/payment.updated/type=payment)
+    const isPaymentEvent =
+      topic.includes("payment") ||
+      action.includes("payment.created") ||
+      action.includes("payment.updated");
+
+    if (!isPaymentEvent) {
+      return res.status(200).json({ ok: true, ignored: "evento_nao_pagamento" });
+    }
+
+    const mpPayment = await buscarPagamentoMercadoPago(paymentId);
+    const inscricaoId = Number(mpPayment.external_reference || 0);
+
+    if (!inscricaoId) {
+      return res.status(200).json({ ok: true, ignored: "sem_external_reference" });
+    }
+
+    const novoStatus = mapMpStatusToLocal(mpPayment.status);
+
+    const pagamento = await prisma.pagamento.findUnique({
+      where: { inscricaoId },
+      include: {
+        inscricao: {
+          include: { usuario: true, evento: true },
+        },
+        opcao: true,
+      },
+    });
+
+    if (!pagamento) {
+      return res.status(200).json({ ok: true, ignored: "pagamento_local_nao_encontrado" });
+    }
+
+    const statusAnterior = pagamento.status;
+
+    await prisma.pagamento.update({
+      where: { id: pagamento.id },
+      data: { status: novoStatus },
+    });
+
+    await prisma.inscricao.update({
+      where: { id: inscricaoId },
+      data: { status: novoStatus === "PAGO" ? "PAGO" : "PENDENTE" },
+    });
+
+    // Evita reenvio em eventos duplicados do webhook
+    if (novoStatus === "PAGO" && statusAnterior !== "PAGO") {
+      try {
+        const usuario = pagamento.inscricao?.usuario;
+        const evento = pagamento.inscricao?.evento;
+        if (usuario?.email) {
+          await sendPagamentoEmail({
+            to: usuario.email,
+            nome: usuario.nome_completo || "Participante",
+            eventoTitulo: evento?.titulo || "Evento",
+            valor: pagamento.valor,
+            inscricaoId,
+            opcaoTitulo: pagamento.opcao?.titulo,
+            opcaoTipo: pagamento.opcao?.tipo,
+            opcaoDistanciaKm: pagamento.opcao?.distancia_km,
+          });
+        }
+      } catch (emailError) {
+        console.error("Erro ao enviar e-mail de webhook de pagamento:", emailError);
+      }
+    }
+
+    return res.status(200).json({ ok: true, paymentId: mpPayment.id, status: novoStatus });
+  } catch (error) {
+    console.error("Erro no webhook Mercado Pago:", error);
+    return res.status(500).json({ error: "Erro interno no webhook" });
+  }
 });
 
 export default router;
